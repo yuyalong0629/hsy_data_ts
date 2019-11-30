@@ -23,6 +23,27 @@ const routes = [
         meta: { hidden: false },
         component: () => import('../views/rank/Index.vue')
       },
+      // 排行榜账号详情
+      {
+        path: '/rank/detail',
+        name: 'detail',
+        meta: { hidden: false },
+        component: () => import('../views/rank/pages/Detail.vue')
+      },
+      // 投前分析
+      {
+        path: '/analysis',
+        name: 'analysis',
+        meta: { hidden: true },
+        component: () => import('../views/analysis/Analysis.vue')
+      },
+      // 相似号
+      {
+        path: '/similar',
+        name: 'similar',
+        meta: { hidden: true },
+        component: () => import('../views/similar/Index.vue')
+      },
       // 账号搜索
       {
         path: '/search',

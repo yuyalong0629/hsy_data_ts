@@ -9,7 +9,10 @@ import { axios } from '@/utils/request'
  */
 
 const api = {
-  ranklist: '/api/ranking'
+  ranklist: '/api/ranking',
+  details: '/api/koldetails',
+  insearch: '/api/insearch',
+  histordatas: '/api/histordatas'
 }
 
 /**
@@ -23,6 +26,51 @@ export function ranklist(parameter: any) {
   return axios({
     method: 'get',
     url: api.ranklist,
+    params: parameter
+  })
+}
+
+/**
+ * @description: 详情用户信息
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @return: details
+ */
+
+export function details(parameter: any) {
+  return axios({
+    method: 'get',
+    url: api.details,
+    params: parameter
+  })
+}
+
+/**
+ * @description: 号内搜索
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @return: insearch
+ */
+
+export function insearch(parameter: any) {
+  return axios({
+    method: 'get',
+    url: api.insearch,
+    params: parameter
+  })
+}
+
+/**
+ * @description: 历史作品数据统计
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @return: histordatas
+ */
+
+export function histordatas(parameter: any) {
+  return axios({
+    method: 'get',
+    url: api.histordatas,
     params: parameter
   })
 }

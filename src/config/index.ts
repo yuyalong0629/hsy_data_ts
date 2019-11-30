@@ -4,6 +4,7 @@ import config from './defaultSettings'
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import animate from 'animate.css'
+import Echart from 'echarts'
 
 // swiper styles
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -14,3 +15,5 @@ Vue.use(VueLazyload)
 Vue.use(VueClipboard)
 Vue.use(animate)
 Vue.use(VueAwesomeSwiper /* { default global options } */)
+
+Vue.prototype.$echarts = Echart

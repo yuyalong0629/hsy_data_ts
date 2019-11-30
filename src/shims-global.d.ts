@@ -16,3 +16,5 @@ declare module 'vue-awesome-swiper' {
   const VueAwesomeSwiper: any
   export default VueAwesomeSwiper
 }
+
+declare module 'echarts' 

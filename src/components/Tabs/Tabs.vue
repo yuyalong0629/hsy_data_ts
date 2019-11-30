@@ -14,10 +14,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 
 @Component
-export default class Name extends Vue {
+export default class Tabs extends Vue {
   @Prop({ default: [] }) private tagInfos!: object[]
   @Prop({ default: '' }) private tagName!: string
 
@@ -25,13 +25,13 @@ export default class Name extends Vue {
   private activeIndex: number = 0
 
   // nav 切换
+  @Emit('onChangeTag')
   private handleChange(tag: any, checked: boolean, index: number): void {
     if (this.timer) {
       clearTimeout(this.timer)
       this.timer = null
     }
     this.timer = setTimeout(() => {
-      console.log(tag)
       this.activeIndex = index
     }, 300)
   }

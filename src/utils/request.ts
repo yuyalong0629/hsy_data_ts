@@ -2,6 +2,8 @@ import Vue from 'vue'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
 import { VueAxios } from './axios'
+import store from '../store/index'
+import router from '../router'
 
 // 创建 axios 实例
 const service = axios.create({
@@ -13,10 +15,10 @@ const err = (error: any): any => {
   if (error.response) {
     const data = error.response.data
     if (error.response.status === 403) {
-      ;(message as any).error(data.message)
+      ; (message as any).error(data.message)
     }
     if (error.response.status === 401) {
-      ;(message as any).error(data.message)
+      ; (message as any).error(data.message)
     }
   }
   return Promise.reject(error)
@@ -29,6 +31,11 @@ service.interceptors.request.use(config => {
 
 // response interceptor
 service.interceptors.response.use(response => {
+  if (response.data.code === 0) {
+    message.error('用户未登录或登录失效')
+    store.commit('user/SET_LOGIN', null)
+    router.replace({ path: '/' })
+  }
   return response.data
 }, err)
 

@@ -4,18 +4,24 @@ import router from './router'
 import store from './store'
 import { VueAxios } from './utils/request'
 import './config/index'
+import './utils/filter'
 
 import {
   Avatar,
+  Anchor,
+  Alert,
   Button,
   BackTop,
   Badge,
   Breadcrumb,
   Col,
+  Collapse,
+  Comment,
   Card,
   Divider,
   Dropdown,
   DatePicker,
+  Empty,
   Form,
   Input,
   Icon,
@@ -29,6 +35,7 @@ import {
   Popover,
   Pagination,
   Row,
+  Rate,
   Radio,
   Select,
   Skeleton,
@@ -43,16 +50,21 @@ import {
 Vue.config.productionTip = false
 Vue.use(VueAxios)
 Vue.use(Avatar)
+Vue.use(Alert)
+Vue.use(Anchor)
 Vue.use(BackTop)
 Vue.use(Badge)
 Vue.use(Button)
 Vue.use(Breadcrumb)
 Vue.use(Col)
+Vue.use(Comment)
+Vue.use(Collapse)
 Vue.use(Card)
 Vue.use(Divider)
 Vue.use(Dropdown)
 Vue.use(Dropdown)
 Vue.use(DatePicker)
+Vue.use(Empty)
 Vue.use(Form)
 Vue.use(Icon)
 Vue.use(List)
@@ -65,6 +77,7 @@ Vue.use(Upload)
 Vue.use(Popover)
 Vue.use(Pagination)
 Vue.use(Row)
+Vue.use(Rate)
 Vue.use(Radio)
 Vue.use(Spin)
 Vue.use(Table)
