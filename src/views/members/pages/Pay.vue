@@ -85,7 +85,7 @@
 
       <a-col :span="24" class="pay-agreement">
         <p>
-          点击"立即付款"表示您已阅读并接受
+          点击"立即支付"表示您已阅读并接受
           <router-link to="/agreement">《用户授权许可协议》</router-link>
         </p>
         <p>

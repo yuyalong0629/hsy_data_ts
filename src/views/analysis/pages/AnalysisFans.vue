@@ -1,11 +1,18 @@
 <template>
-  <div class="analysisFans">AnalysisFans</div>
+  <div class="analysisFans">
+    <PieChart />
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import PieChart from '@/components/Echart/PieChart.vue'
 
-@Component
+@Component({
+  components: {
+    PieChart
+  }
+})
 export default class AnalysisFans extends Vue {}
 </script>
 

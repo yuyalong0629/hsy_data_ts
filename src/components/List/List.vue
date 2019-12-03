@@ -31,7 +31,7 @@
                   tag="a"
                   target="_blank"
                   :to="{path: '/rank/detail', query: {kolId: item.kolId}}"
-                  v-html="item && heightLight(item.kolName, pageInfo.keyword)"
+                  v-html="pageInfo.keyword ? heightLight(item.kolName, pageInfo.keyword) : item.kolName"
                 ></router-link>
               </span>
               <span>{{ `LV${item.platformGrade}` }}</span>
@@ -40,7 +40,7 @@
             </span>
             <p
               class="search-middle-user-text"
-              v-html="item && heightLight(item.kolSummary, pageInfo.keyword)"
+              v-html="pageInfo.keyword ? heightLight(item.kolSummary, pageInfo.keyword) : item.kolSummary"
             ></p>
 
             <a-tag
@@ -78,14 +78,18 @@
 
         <div class="search-right">
           <span>
-            <a-rate
-              :tooltips="desc"
-              v-model="starValue[index]"
-              @change="onChangeStart(starValue, index)"
-              :count="1"
-            >
-              <a-icon slot="character" type="star" theme="filled" :style="{ fontSize: '36px' }" />
-            </a-rate>
+            <a-tooltip placement="top">
+              <template slot="title">
+                <span>收藏</span>
+              </template>
+              <a-icon
+                type="star"
+                :theme="item.star ? 'filled' : 'outlined'"
+                :style="{ fontSize: '36px', color: '#FFBE31' }"
+                class="hoverStar"
+                @click="onChangeStart(item, index)"
+              />
+            </a-tooltip>
           </span>
           <span class="search-right-cloud">
             <h3>{{ item.indexNum }}</h3>
@@ -100,23 +104,42 @@
         </div>
       </div>
     </a-col>
+
+    <a-col :span="24">
+      <!-- 收藏账号 -->
+      <a-modal
+        title="添加收藏分组"
+        :visible="visible"
+        :destroyOnClose="true"
+        width="420px"
+        :footer="null"
+        @cancel="handleCancel"
+      >
+        <Collect :kolId="kolId" @lightUp="lightUp" />
+      </a-modal>
+    </a-col>
   </a-row>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop, Ref } from 'vue-property-decorator'
 import { heightLight } from '@/utils/util'
+import Collect from '@/components/Collect/Collect.vue'
 
-@Component
+@Component({
+  components: {
+    Collect
+  }
+})
 export default class List extends Vue {
-  @Prop({ default: {} }) private pageInfo!: object
+  @Prop({ default: {} }) private pageInfo!: any
 
   @Ref() private searchBtn: any
 
-  private starValue: number[] = []
-  private desc: string[] = ['收藏']
   private active?: number = -1
   private timeout?: any = null
+  private visible: boolean = false
+  private kolId?: string = ''
 
   private data() {
     return {
@@ -180,9 +203,39 @@ export default class List extends Vue {
   }
 
   // 收藏
-  private onChangeStart(starValue: number, index: number) {
-    console.log(this.starValue[index])
-    console.log(index)
+  private onChangeStart(recored: any, index: number) {
+    const { pageInfo } = this
+    const target = pageInfo.result.filter(
+      (item: any) => item.kolId === recored.kolId
+    )[0]
+
+    if (!target.star) {
+      this.visible = true
+      this.kolId = recored.kolId
+    } else {
+      this.visible = false
+      this.$message.warning('该账户已收藏')
+    }
+
+    this.pageInfo = pageInfo
+  }
+
+  private lightUp(star: boolean, id: string) {
+    if (star) {
+      const { pageInfo } = this
+      const target = pageInfo.result.filter((item: any) => item.kolId === id)[0]
+
+      if (target) {
+        target.star = true
+      }
+
+      this.pageInfo = pageInfo
+    }
+  }
+
+  // Modal
+  private handleCancel(): void {
+    this.visible = false
   }
 }
 </script>
@@ -328,6 +381,14 @@ export default class List extends Vue {
       justify-content: space-around;
       align-items: center;
       width: 160px;
+
+      .hoverStar {
+        transition: all 0.3s;
+      }
+
+      .hoverStar:hover {
+        transform: scale(1.1);
+      }
 
       .search-right-cloud {
         display: flex;

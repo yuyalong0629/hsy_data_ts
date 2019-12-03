@@ -1,13 +1,13 @@
 <template>
-  <div id="lineChart" style="width: 100%; height: 400px;" ref="lineChart"></div>
+  <div id="barChart" style="width: 100%; height: 400px;" ref="barChart"></div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Ref } from 'vue-property-decorator'
 
 @Component
-export default class LineChart extends Vue {
-  @Ref() private lineChart: any
+export default class BarChart extends Vue {
+  @Ref() private barChart: any
 
   private $echarts: any
 
@@ -32,35 +32,35 @@ export default class LineChart extends Vue {
   private series: object[] = [
     {
       name: '邮件营销',
-      type: 'line',
+      type: 'bar',
       smooth: true,
       stack: '总量',
       data: [120, 132, 101, 134, 90, 230, 210]
     },
     {
       name: '联盟广告',
-      type: 'line',
+      type: 'bar',
       smooth: true,
       stack: '总量',
       data: [220, 182, 191, 234, 290, 330, 310]
     },
     {
       name: '视频广告',
-      type: 'line',
+      type: 'bar',
       smooth: true,
       stack: '总量',
       data: [150, 232, 201, 154, 190, 330, 410]
     },
     {
       name: '直接访问',
-      type: 'line',
+      type: 'bar',
       smooth: true,
       stack: '总量',
       data: [320, 332, 301, 334, 390, 330, 320]
     },
     {
       name: '搜索引擎',
-      type: 'line',
+      type: 'bar',
       smooth: true,
       stack: '总量',
       data: [820, 932, 901, 934, 1290, 1330, 1320]
@@ -73,7 +73,7 @@ export default class LineChart extends Vue {
 
   private drawChart() {
     // 基于准备好的dom，初始化echarts实例
-    const myChart = this.$echarts.init(this.lineChart)
+    const myChart = this.$echarts.init(this.barChart)
     // 指定图表的配置项和数据
     const options = {
       backgroundColor: '#FFF',
@@ -81,6 +81,7 @@ export default class LineChart extends Vue {
       tooltip: {
         trigger: 'axis',
         axisPointer: {
+          type: 'shadow',
           lineStyle: {
             color: '#57617B'
           }
@@ -96,14 +97,14 @@ export default class LineChart extends Vue {
         data: this.legend
       },
       grid: {
-        left: '3%',
+        left: '6%',
         right: '4%',
-        bottom: '3%',
-        containLabel: true
+        bottom: '6%',
+        containLabel: false
       },
       xAxis: {
         type: 'category',
-        boundaryGap: false,
+        boundaryGap: true,
         data: this.xAis
       },
       yAxis: {},

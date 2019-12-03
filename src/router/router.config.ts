@@ -13,98 +13,105 @@ const routes = [
       {
         path: '/index',
         name: 'index',
-        meta: { hidden: false },
+        meta: { title: '首页', hidden: false },
         component: () => import('../views/home/Home.vue')
+      },
+      // 排行榜
+      {
+        path: '/hot',
+        name: 'hot',
+        meta: { title: '火热榜', hidden: false },
+        component: () => import('../views/hot_rank/Index.vue')
       },
       // 排行榜
       {
         path: '/rank',
         name: 'rank',
-        meta: { hidden: false },
+        meta: { title: '排行榜', hidden: false },
         component: () => import('../views/rank/Index.vue')
       },
       // 排行榜账号详情
       {
         path: '/rank/detail',
         name: 'detail',
-        meta: { hidden: false },
+        meta: { title: '详情', hidden: false },
         component: () => import('../views/rank/pages/Detail.vue')
       },
       // 投前分析
       {
         path: '/analysis',
         name: 'analysis',
-        meta: { hidden: true },
+        meta: { title: '投前分析', hidden: true },
         component: () => import('../views/analysis/Analysis.vue')
       },
       // 相似号
       {
         path: '/similar',
         name: 'similar',
-        meta: { hidden: true },
+        meta: { title: '相似账号', hidden: true },
         component: () => import('../views/similar/Index.vue')
       },
       // 账号搜索
       {
         path: '/search',
         name: 'search',
-        meta: { hidden: true },
+        meta: { title: '账号搜索', hidden: true },
         component: () => import('../views/search/Index.vue')
       },
       // 内容查询
       {
         path: '/contentquery',
         name: 'contentquery',
-        meta: { hidden: true },
+        meta: { title: '内容查询', hidden: true },
         component: () => import('../views/content_query/Index.vue')
       },
       // 数据监控
       {
         path: '/monitoring',
         name: 'monitoring',
-        meta: { hidden: true },
+        meta: { title: '数据监控', hidden: true },
         component: () => import('../views/monitoring/Index.vue')
       },
       // 会员中心
       {
         path: '/center',
         name: 'center',
-        meta: { hidden: true },
+        meta: { title: '个人中心', hidden: true },
         component: () => import('../views/center/Index.vue')
       },
       // 收藏
       {
         path: '/collection',
         name: 'collection',
-        meta: { hidden: true },
+        meta: { title: '我的收藏', hidden: true },
         component: () => import('../views/collection/Index.vue')
       },
       // 购买升级会员
       {
         path: '/members',
         name: 'members',
-        meta: { hidden: true },
+        meta: { title: '会员中心', hidden: true },
         component: () => import('../views/members/Index.vue')
       },
       // 购买升级会员
       {
         path: '/pay',
         name: 'pay',
-        meta: { hidden: true },
+        meta: { title: '购买升级', hidden: true },
         component: () => import('../views/members/pages/Pay.vue')
       },
       // 付款协议
       {
         path: '/agreement',
         name: 'Agreement',
-        meta: { hidden: true },
+        meta: { title: '付款协议', hidden: true },
         component: () => import('../views/agreement/Agreenment.vue')
       },
       // 帮助中心
       {
         path: '/helper',
         name: 'helper',
-        meta: { hidden: true },
+        meta: { title: '帮助中心', hidden: true },
         component: () => import('../views/helper/Index.vue')
       },
       // 关于我们
@@ -114,14 +121,17 @@ const routes = [
         children: [
           {
             path: '/',
+            meta: { title: '-', hidden: true },
             redirect: '/mine/list'
           },
           {
             path: '/mine/list',
+            meta: { title: '-', hidden: true },
             component: () => import('../components/Classroom/List.vue')
           },
           {
             path: '/mine/detail',
+            meta: { title: '-', hidden: true },
             component: () => import('../components/Classroom/Detail.vue')
           }
         ]

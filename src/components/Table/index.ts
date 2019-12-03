@@ -95,3 +95,32 @@ export const rankOff = [
     align: 'center'
   }
 ]
+
+// 收藏列表
+export const collection = [
+  {
+    title: '特权功能',
+    dataIndex: 'media',
+    scopedSlots: { customRender: 'media' },
+    width: 300
+  },
+  {
+    title: '分组',
+    dataIndex: 'sortFlag',
+    width: 320
+  },
+  {
+    title: '收藏',
+    dataIndex: 'createTime'
+  },
+  {
+    title: '查看详情',
+    dataIndex: 'kolId',
+    scopedSlots: { customRender: 'kolId' }
+  },
+  {
+    title: '其他操作',
+    dataIndex: 'id',
+    scopedSlots: { customRender: 'id' }
+  }
+]

@@ -1,22 +1,25 @@
 <template>
   <div class="menu">
     <ul class="menu-nav">
-      <li class="nav-list" v-if="!GET_STORAGE">
+      <li class="nav-list" v-if="!GET_STORAGE" @click.stop="handleHot(0)">
         <router-link tag="span" to="/index">首页</router-link>
       </li>
       <li class="nav-renewal" v-if="GET_STORAGE">
         <router-link tag="span" to="/index">续费会员</router-link>
       </li>
-      <li class="nav-list">
+      <li class="nav-list" v-if="isHot">
+        <router-link tag="span" to="/hot">火热榜</router-link>
+      </li>
+      <li class="nav-list" @click.stop="handleHot(1)">
         <router-link tag="span" to="/rank">排行榜单</router-link>
       </li>
-      <li class="nav-list">
+      <li class="nav-list" @click.stop="handleHot(2)">
         <router-link tag="span" to="/search">账号搜索</router-link>
       </li>
-      <li class="nav-list">
+      <li class="nav-list" @click.stop="handleHot(2)">
         <router-link tag="span" to="/contentquery">内容查询</router-link>
       </li>
-      <li class="nav-list">
+      <li class="nav-list" @click.stop="handleHot(2)">
         <router-link tag="span" to="/monitoring">数据监测</router-link>
       </li>
       <li class="nav-list nav-login" v-if="!GET_STORAGE">
@@ -55,12 +58,13 @@
                 <span>购买升级</span>
               </router-link>
             </a-menu-item>
-            <a-menu-item key="4">
+            <!-- <a-menu-item key="4">
               <router-link to="/helper">
                 <a-icon type="question-circle" style="marginRight: 4px;" />
                 <span>帮助中心</span>
               </router-link>
-            </a-menu-item>
+            </a-menu-item>-->
+            <a-menu-divider />
             <a-menu-item key="5">
               <a href="javascript:;" @click="handleLogout">
                 <a-icon type="logout" style="marginRight: 4px;" />
@@ -123,6 +127,7 @@ export default class Menu extends Vue {
   private visible: boolean = false
   private componentId: string = 'Login'
   private taId?: string
+  private isHot?: boolean = false
 
   private data() {
     return {
@@ -223,6 +228,21 @@ export default class Menu extends Vue {
     !visible ? (this.iconType = 'caret-down') : (this.iconType = 'caret-up')
   }
 
+  // 火热榜 权限显示
+  private handleHot(key: number): void {
+    if (key === 0) {
+      this.isHot = false
+    }
+
+    if (key === 1) {
+      this.isHot = true
+    }
+
+    if (key === 2) {
+      this.GET_STORAGE ? (this.isHot = true) : (this.isHot = this.isHot)
+    }
+  }
+
   // 登录 Model
   private loginBtn(): void {
     this.visible = true
@@ -308,14 +328,14 @@ export default class Menu extends Vue {
       align-items: center;
       color: #f5f5f5;
       height: 100%;
-      margin: 0 24px;
+      margin: 0 18px;
       border-bottom: 0px solid @active;
       position: relative;
 
       span {
         display: flex;
         align-items: center;
-        padding: 0 24px;
+        padding: 0 18px;
         height: 100%;
         width: 100%;
       }

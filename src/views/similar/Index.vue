@@ -4,14 +4,8 @@
       <UserInfo :kolInfo="kolInfo" />
     </div>
     <div class="similar-right">
-      <a-row>
-        <Tabs :tagInfos="platformInfos" @onChangeTag="onChangeTagP" tagName="支持平台" />
-        <Tabs :tagInfos="themeInfos" @onChangeTag="onChangeTagT" tagName="行业分类" />
-        <Tabs :tagInfos="fansBasicDatas" @onChangeTag="onChangeTagS" tagName="粉丝数量" />
-      </a-row>
-
       <a-spin :spinning="spinning">
-        <a-divider>{{ `关键词 '${keyword}' 共计 ${pageInfo.count || 0} 条结果` }}</a-divider>
+        <!-- <a-divider>{{ `关键词 '${keyword}' 共计 ${pageInfo.count || 0} 条结果` }}</a-divider> -->
         <a-empty v-if="!pageInfo.result" />
         <List v-else :pageInfo="pageInfo" />
 
@@ -50,9 +44,6 @@ export default class Similar extends Vue {
   @Ref() readonly anchor?: any
 
   private kolInfo: object = {}
-  private platformInfos: object[] = [] // 支持平台 Tag
-  private themeInfos: object[] = [] // 行业分类 Tag
-  private fansBasicDatas: object[] = [] // 粉丝数量 Tag
   private spinning: boolean = false
   private keyword: string = ''
   // 分页
@@ -80,17 +71,12 @@ export default class Similar extends Vue {
       .finally(() => (this.spinning = false))
   }
 
-  // Tag 平台筛选
-  private onChangeTagP(val: any): void {}
-
-  // Tag 行业分类
-  private onChangeTagT(val: any) {}
-
-  // Tag 粉丝数量
-  private onChangeTagS(val: any) {}
-
   // 分页
   private onChangePage(pageNumber: string): void {
+    this.similarKolList({
+      kolId: this.$route.query.kolId,
+      pageNo: +pageNumber - 1
+    })
     // 锚点
     ;(this.anchor as any).scrollIntoView(true)
   }

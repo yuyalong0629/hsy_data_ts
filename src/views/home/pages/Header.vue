@@ -19,9 +19,6 @@
     </div>
     <div class="header-middle">
       <img v-lazy="require('../../../assets/images/pkbanner2.png')" alt />
-      <a-button type="primary" size="large" style="background: #ff5847;">
-        <router-link to="/rank">立即使用</router-link>
-      </a-button>
     </div>
     <div class="header-right animated bounceInRight">
       <div class="right-img">

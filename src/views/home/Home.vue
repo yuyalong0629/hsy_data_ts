@@ -1,10 +1,12 @@
 <template>
   <div class="home">
-    <Header :fansInfo="fansInfo" />
+    <HeaderCarousel />
 
     <div ref="core">
       <rote />
     </div>
+
+    <!-- <Header :fansInfo="fansInfo" /> -->
 
     <Work :helpUserData="helpUserData" :autoplay="autoplay" />
 
@@ -23,7 +25,8 @@ import { pkData } from '@/api/index'
 import Header from './pages/Header.vue'
 import Rote from './pages/Rote.vue'
 import Work from './pages/Work.vue'
-import Carousel from './pages/Carousel.vue'
+import Carousel from '@/components/Carousel/Carousel.vue'
+import HeaderCarousel from '@/components/Carousel/HeaderCarousel.vue'
 import More from './pages/More.vue'
 import Classroom from './pages/Classroom.vue'
 
@@ -35,7 +38,8 @@ import Classroom from './pages/Classroom.vue'
     Work,
     Carousel,
     More,
-    Classroom
+    Classroom,
+    HeaderCarousel
   }
 })
 export default class Home extends Vue {

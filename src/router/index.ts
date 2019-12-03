@@ -16,6 +16,10 @@ const router = new VueRouter({
 // 路由守卫
 router.beforeEach((to, from, next) => {
   NProgress.start()
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+
   if (to.meta.hidden) {
     const isLogin = store.getters['user/GET_STORAGE']
 
