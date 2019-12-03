@@ -18,9 +18,11 @@
                   ></p>
                 </div>
               </div>
+
               <div class="similar-label">
                 <a-tag v-for="item of item.sortFlag" :key="item.id" v-html="item.name"></a-tag>
               </div>
+
               <div class="similar-time">
                 <p>发布时间:&nbsp;{{ item.publishTime | formatDate }}</p>
                 <p>

@@ -20,7 +20,12 @@ const api: Api = {
   register: '/api/goregister',
   weixinLogin: '/api/weixinLogin',
   weixinBinding: '/api/user/weixinBinding',
-  forgetpwd: '/api/forgetpwd'
+  forgetpwd: '/api/forgetpwd',
+  userInfo: '/api/user/userInfo',
+  setCoverImage: '/api/user/setCoverImage',
+  updatepwd: '/api/user/updatepwd',
+  updatePhone: '/api/user/updatePhone',
+  verifyOldPhone: '/api/user/verifyOldPhone'
 }
 
 /**
@@ -138,6 +143,75 @@ export function forgetpwd(parameter: any) {
   return axios({
     method: 'post',
     url: api.forgetpwd,
+    data: qs.stringify(parameter)
+  })
+}
+
+/**
+ * @description: 获取用户信息
+ * @param {Object} parameter [注册信息]
+ * @return: userInfo
+ */
+
+export function userInfo() {
+  return axios({
+    method: 'get',
+    url: api.userInfo
+  })
+}
+
+/**
+ * @description: 更新头像
+ * @param {Object} parameter [*]
+ * @return: setCoverImage
+ */
+
+export function setCoverImage(parameter: any) {
+  return axios({
+    method: 'post',
+    url: api.setCoverImage,
+    data: qs.stringify(parameter)
+  })
+}
+
+/**
+ * @description: 修改密码
+ * @param {Object} parameter [注册信息]
+ * @return: updatepwd
+ */
+
+export function updatepwd(parameter: any) {
+  return axios({
+    method: 'post',
+    url: api.updatepwd,
+    data: qs.stringify(parameter)
+  })
+}
+
+/**
+ * @description: 更新手机号
+ * @param {Object} parameter [注册信息]
+ * @return: updatePhone
+ */
+
+export function updatePhone(parameter: any) {
+  return axios({
+    method: 'post',
+    url: api.updatePhone,
+    data: qs.stringify(parameter)
+  })
+}
+
+/**
+ * @description: 验证原手机号
+ * @param {Object} parameter [注册信息]
+ * @return: erifyOldPhone
+ */
+
+export function verifyOldPhone(parameter: any) {
+  return axios({
+    method: 'post',
+    url: api.verifyOldPhone,
     data: qs.stringify(parameter)
   })
 }

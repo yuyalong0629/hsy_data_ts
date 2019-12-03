@@ -38,19 +38,19 @@
           </div>
           <a-menu slot="overlay" class="user-dropdown-menu-wrapper" style="marginTop: 24px;">
             <a-menu-item key="0">
-              <router-link to="/members">
+              <router-link to="/center">
                 <a-icon type="user" style="marginRight: 4px;" />
                 <span>个人中心</span>
               </router-link>
             </a-menu-item>
             <a-menu-item key="1">
-              <router-link to="/myCollection">
+              <router-link to="/collection">
                 <a-icon type="star" style="marginRight: 4px;" />
                 <span>我的收藏</span>
               </router-link>
             </a-menu-item>
             <a-menu-item key="3">
-              <router-link to="/buyMembers">
+              <router-link to="/members">
                 <a-icon type="crown" style="marginRight: 4px;" />
                 <span>购买升级</span>
               </router-link>

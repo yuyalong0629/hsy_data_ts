@@ -11,7 +11,7 @@
       <a-col :span="24" :style="{ margin: '6px 0' }">
         <strong :style="{ marginRight: 8 }">搜索记录:&nbsp;</strong>
         <template v-for=" tag in tags">
-          <a-checkable-tag :key="tag.id" @click="handleChangeTag(tag)">{{ tag.word }}</a-checkable-tag>
+          <a-checkable-tag :key="tag.id" @change="handleChangeTag(tag)">{{ tag.word }}</a-checkable-tag>
         </template>
       </a-col>
 
@@ -131,8 +131,19 @@ export default class Search extends Vue {
   }
 
   // 搜索记录
-  private handleChangeTag(tag: object): void {
+  private handleChangeTag(tag: { id: string; word: string }): void {
     console.log(tag)
+    const { params } = this
+    const target: any[] = params.map((item: any) => {
+      return {
+        ...item,
+        keyword: encodeURI(encodeURI(tag.word)),
+        pageNo: 0
+      }
+    })
+
+    this.params = [...target]
+    this.searchInfo(...target)
   }
 
   // Tag 平台筛选

@@ -65,6 +65,41 @@ const routes = [
         meta: { hidden: true },
         component: () => import('../views/monitoring/Index.vue')
       },
+      // 会员中心
+      {
+        path: '/center',
+        name: 'center',
+        meta: { hidden: true },
+        component: () => import('../views/center/Index.vue')
+      },
+      // 收藏
+      {
+        path: '/collection',
+        name: 'collection',
+        meta: { hidden: true },
+        component: () => import('../views/collection/Index.vue')
+      },
+      // 购买升级会员
+      {
+        path: '/members',
+        name: 'members',
+        meta: { hidden: true },
+        component: () => import('../views/members/Index.vue')
+      },
+      // 购买升级会员
+      {
+        path: '/pay',
+        name: 'pay',
+        meta: { hidden: true },
+        component: () => import('../views/members/pages/Pay.vue')
+      },
+      // 付款协议
+      {
+        path: '/agreement',
+        name: 'Agreement',
+        meta: { hidden: true },
+        component: () => import('../views/agreement/Agreenment.vue')
+      },
       // 帮助中心
       {
         path: '/helper',
