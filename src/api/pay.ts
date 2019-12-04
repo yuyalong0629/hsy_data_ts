@@ -66,10 +66,9 @@ export function alipayReturn(parameter: any) {
  * @return: similarKolList
  */
 
-export function payQuery(parameter: any) {
+export function payQuery() {
   return axios({
     method: 'get',
-    url: api.payQuery,
-    params: parameter
+    url: api.payQuery
   })
 }

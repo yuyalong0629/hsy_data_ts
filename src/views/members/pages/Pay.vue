@@ -20,18 +20,18 @@
         <strong>选择会员套餐：</strong>
         <ul class="pay-interval-list">
           <li
-            v-for="item of interval"
-            :class="{ activeIndex: isInterval === item.id }"
+            v-for="(item, index) of monthlyPriceInfos"
+            :class="{ activeIndex: isInterval === index }"
             :key="item.id"
-            @click="handleInterval(item)"
+            @click="handleInterval(item, index)"
           >
-            <img v-if="isInterval === item.id" v-lazy="require('@/assets/images/gouzi.png')" alt />
-            <span class="pay-interval-list-time">{{ `${item.time}个月` }}</span>
+            <img v-if="isInterval === index" v-lazy="require('@/assets/images/gouzi.png')" alt />
+            <span class="pay-interval-list-time">{{ `${item.monthNum}个月` }}</span>
             <span class="pay-interval-list-price">
-              <strong>{{ item.price }}</strong>
+              <strong>{{ item.unitPrice }}</strong>
               元/月
             </span>
-            <del class="pay-interval-list-save">立省{{ item.save }}</del>
+            <del class="pay-interval-list-save">立省{{ item.saveMoney }}</del>
           </li>
         </ul>
       </a-col>
@@ -60,9 +60,9 @@
         <strong>支付金额：</strong>
         <div class="pay-amount-wrapper">
           <p class="pay-amount-wrapper-price">
-            <span>{{ '123' }}</span> 元(原价
-            <del>{{ '123' }}</del>元，节省
-            <span>{{ '123' }}</span>元)
+            <span>{{ price.price }}</span> 元(原价
+            <del>{{ price.originalPrice }}</del>元，节省
+            <span>{{ price.saveMoney }}</span>元)
           </p>
           <a-popover placement="topLeft" :title="false">
             <template slot="content">
@@ -100,7 +100,24 @@
       </a-col>
 
       <a-col :span="24" class="pay-submit">
-        <a-button type="primary" size="large">立即支付</a-button>
+        <a-button type="primary" size="large" @click="handlePayment">立即支付</a-button>
+      </a-col>
+
+      <!-- Modal -->
+      <a-col :span="24">
+        <a-modal
+          :destroyOnClose="true"
+          width="400px"
+          title="微信扫码支付"
+          :visible="visible"
+          @cancel="handleCancel"
+          :footer="null"
+        >
+          <div class="wechart">
+            <img v-if="applyImg" class="wechart-img" :src="applyImg" alt="微信支付" />
+          </div>
+          <a-divider>请使用微信扫码支付，支付完成后关闭窗口</a-divider>
+        </a-modal>
       </a-col>
     </a-row>
   </div>
@@ -110,18 +127,18 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { buyPrice, confirmPay, alipayReturn, payQuery } from '@/api/pay'
 import { userInfo } from '@/api/user'
+import { Mutation, namespace } from 'vuex-class'
+
+const user = namespace('user')
 
 @Component
 export default class Pay extends Vue {
+  @user.Mutation SET_LOGIN!: (params: any) => void
+
   private level: any[] = [
     { id: 0, name: '高级版会员' },
     { id: 1, name: '专业级会员' },
     { id: 2, name: '企业级会员' }
-  ]
-  private interval: any[] = [
-    { id: 0, time: 12, price: '459', save: '2320' },
-    { id: 1, time: 6, price: '559', save: '1320' },
-    { id: 2, time: 1, price: '79', save: '200' }
   ]
   private way: any[] = [
     { id: 0, src: require('@/assets/images/weixin.png') },
@@ -131,12 +148,62 @@ export default class Pay extends Vue {
   private isLevel: number = 1
   private isInterval: number = 0
   private isWay: number = 0
+  private monthlyPriceInfos: any[] = []
+  private price: any = {}
+  private visible: boolean = false
+  private applyImg: string = ''
 
   private mounted() {
     // 初始化价格列表
-    buyPrice().then((res: any) => {
-      console.log(res)
-    })
+    buyPrice()
+      .then((res: any) => {
+        if (res.code === 200) {
+          this.monthlyPriceInfos = res.monthlyPriceInfos
+
+          // 会员套餐默认值
+          this.isInterval = res.monthlyPriceInfos.findIndex((item: any) => {
+            return item.isDefault === 1
+          })
+
+          // 支付金额
+          this.price = res.monthlyPriceInfos.filter(
+            (item: any) => item.isDefault === 1
+          )[0]
+        }
+      })
+      .catch(() => this.$message.error('请求超时'))
+
+    // 支付订单回调
+    if (this.$route.query.out_trade_no && this.$route.query.trade_no) {
+      this.alipyBack({
+        out_trade_no: this.$route.query.out_trade_no,
+        trade_no: this.$route.query.trade_no
+      })
+    }
+  }
+
+  // 支付订单回调
+  private alipyBack(params: any) {
+    return alipayReturn(params)
+      .then((res: any) => {
+        if (res.code === 200) {
+          this.$message.success('支付成功')
+          return
+        }
+        if (res.code === 303) {
+          this.$message.warn('订单取消')
+          return
+        }
+        this.$message.error('支付失败')
+      })
+      .finally(() => {
+        // 更新会员信息
+        userInfo().then((res: any) => {
+          if (res.code === 200) {
+            this.SET_LOGIN(res.userInfoMap)
+          }
+        })
+      })
   }
 
   // 会员等级
@@ -145,13 +212,66 @@ export default class Pay extends Vue {
   }
 
   // 会员套餐
-  private handleInterval(item: any): void {
-    this.isInterval = item.id
+  private handleInterval(item: any, index: number): void {
+    this.isInterval = index
+    this.price = item
   }
 
   // 支付方式
   private handleWay(item: any): void {
     this.isWay = item.id
+  }
+
+  // 支付
+  private handlePayment(): void {
+    confirmPay({
+      type: 1,
+      priceId: this.price.id,
+      payType: this.isWay === 0 ? '2' : '1'
+    }).then((res: any) => {
+      if (res.code === 200) {
+        // 支付宝
+        if (this.isWay !== 0) {
+          const routerData = this.$router.resolve({
+            path: '/apply',
+            query: { htmls: res.payResult }
+          })
+          // 打开新页面
+          window.open(routerData.href, '_ blank')
+        } else {
+          // 微信
+          this.visible = true
+          if (res.imgStr) {
+            this.applyImg = `data:image/png;base64,${res.imgStr}`
+          }
+        }
+      } else {
+        this.$message.error(res.message)
+      }
+    })
+  }
+
+  // cancel
+  private handleCancel(): void {
+    this.visible = false
+    // 微信支付关闭回调
+    payQuery()
+      .then((res: any) => {
+        if (res.code === 200) {
+          this.$message.success('支付成功', 3)
+          // this.$router.push('/buyMembers')
+          return
+        }
+        this.$message.error('支付失败', 3)
+      })
+      .finally(() => {
+        // 更新会员信息
+        userInfo().then((res: any) => {
+          if (res.code === 200) {
+            this.SET_LOGIN(res.userInfoMap)
+          }
+        })
+      })
   }
 }
 </script>

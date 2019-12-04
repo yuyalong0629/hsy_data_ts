@@ -30,7 +30,7 @@
                 </p>
               </div>
               <div class="members-senior-btn">
-                <a-button>立即升级</a-button>
+                <a-button @click="handleUpgrade">立即升级</a-button>
               </div>
             </div>
           </template>
@@ -45,7 +45,7 @@
                 </p>
               </div>
               <div class="members-professiona-btn">
-                <a-button>立即升级</a-button>
+                <a-button @click="handleUpgrade">立即升级</a-button>
               </div>
             </div>
           </template>
@@ -60,7 +60,7 @@
                 </p>
               </div>
               <div class="members-enterprise-btn">
-                <a-button>立即升级</a-button>
+                <a-button @click="handleUpgrade">立即升级</a-button>
               </div>
             </div>
           </template>
@@ -113,7 +113,9 @@ export default class Members extends Vue {
   }
 
   // 购买升级
-  private onClickPay(): void {}
+  private handleUpgrade(): void {
+    this.$router.push({ path: '/members/pay' })
+  }
 }
 </script>
 

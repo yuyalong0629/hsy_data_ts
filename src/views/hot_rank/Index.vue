@@ -4,7 +4,7 @@
       <!-- bilibili -->
       <a-col :span="24">
         <div class="hot-bilibili-title">
-          <img src="../../assets/images/about1.png" alt />
+          <img src="@/assets/images/about1.png" alt />
           <strong>排行榜</strong>
         </div>
 
@@ -22,7 +22,7 @@
               <a-select
                 defaultValue="lucy"
                 size="small"
-                style="width: 80px; margin-right: 6px;"
+                style="width: 100px; margin-right: 6px;"
                 @change="handleChangeSelect"
               >
                 <a-select-option value="jack">Jack</a-select-option>
@@ -32,7 +32,7 @@
               <a-select
                 defaultValue="lucy"
                 size="small"
-                style="width: 80px"
+                style="width: 100px"
                 @change="handleChangeSelect"
               >
                 <a-select-option value="jack">Jack</a-select-option>
@@ -53,10 +53,33 @@
             </div>
 
             <section class="hot-bilibili-content-list">
-              <div class="hot-bilibili-content-top">1</div>
-              <div class="hot-bilibili-content-img">1</div>
-              <div class="hot-bilibili-content-text">1</div>
-              <div class="hot-bilibili-content-score">1</div>
+              <div class="hot-bilibili-content-top">
+                <h3>1</h3>
+              </div>
+              <div class="hot-bilibili-content-img">
+                <img v-lazy="require('@/assets/images/about1.png')" alt />
+              </div>
+              <div class="hot-bilibili-content-text">
+                <h4>如何在晒超黑之白修复？！亲身实践美东方故事白大亲身实</h4>
+                <ul class="hot-bilibili-content-text-label">
+                  <li>
+                    <a-icon type="youtube" theme="filled" />
+                    <span>云指数</span>
+                  </li>
+                  <li>
+                    <a-icon type="youtube" theme="filled" />
+                    <span>云指数</span>
+                  </li>
+                  <li>
+                    <a-icon type="youtube" theme="filled" />
+                    <span>云指数</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="hot-bilibili-content-score">
+                <h3>8383424</h3>
+                <p>综合得分</p>
+              </div>
             </section>
           </div>
         </div>
@@ -142,18 +165,64 @@ export default class Hot extends Vue {
 
         .hot-bilibili-content-top {
           flex: 0 0 80px;
+
+          h3 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #9099a3;
+          }
         }
 
         .hot-bilibili-content-img {
           flex: 0 0 180px;
+
+          img {
+            width: 140px;
+            height: 88px;
+          }
         }
 
         .hot-bilibili-content-text {
           flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+
+          h4 {
+            color: #202020;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 24px 0;
+          }
+
+          .hot-bilibili-content-text-label {
+            display: flex;
+            align-items: center;
+
+            li {
+              margin-right: 8px;
+            }
+          }
         }
 
         .hot-bilibili-content-score {
           flex: 0 0 200px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          h3 {
+            color: #5496d4;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 30px;
+          }
+
+          p {
+            color: #b3b9c6;
+            font-weight: 500;
+          }
         }
       }
     }
