@@ -62,8 +62,8 @@
           @change="onChangeRadioNum"
           :style="{ margin: '12px 0' }"
         >
-          <a-radio-button value="0">周增量</a-radio-button>
-          <a-radio-button value="1">周总量</a-radio-button>
+          <a-radio-button value="0">增量</a-radio-button>
+          <a-radio-button value="1">总量</a-radio-button>
         </a-radio-group>
       </a-col>
 

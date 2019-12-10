@@ -1,6 +1,15 @@
 <template>
   <div class="analysisFans">
-    <PieChart />
+    <a-row :gutter="16">
+      <a-col :span="12">
+        <strong>粉丝性别分布</strong>
+        <PieChart />
+      </a-col>
+      <a-col :span="12">
+        <strong>粉丝性别分布</strong>
+        <PieChart />
+      </a-col>
+    </a-row>
   </div>
 </template>
 

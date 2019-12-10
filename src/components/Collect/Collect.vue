@@ -27,6 +27,7 @@
         <a-list-item-meta :description="false" @click="addCollect(item.id)">
           <a slot="title" href="javascript:;">{{item.themeName}}</a>
         </a-list-item-meta>
+        <div>{{item.countNum}}</div>
       </a-list-item>
     </a-list>
   </div>
@@ -84,11 +85,14 @@ export default class Collect extends Vue {
         addCollectGroup({ ...values })
           .then((res: any) => {
             if (res.code === 200) {
-              setTimeout(() => {
+              const timer = setTimeout(() => {
                 this.$message.success(res.message)
+
                 this.visible = false
                 this.confirmLoading = false
                 this.collectGroupList()
+
+                window.clearTimeout(timer)
               }, 1000)
             } else {
               this.$message.error(res.message)
@@ -105,7 +109,6 @@ export default class Collect extends Vue {
 
   // 取消
   private handleCancel(e: any) {
-    console.log('Clicked cancel button')
     this.visible = false
   }
 

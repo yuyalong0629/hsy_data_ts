@@ -11,19 +11,13 @@ export default class BarChart extends Vue {
 
   private $echarts: any
 
-  private legend: string[] = [
-    '直接访问',
-    '邮件营销',
-    '联盟广告',
-    '视频广告',
-    '搜索引擎'
-  ]
+  private legend: string[] = ['男', '女']
 
   private series: object[] = [
     {
       name: '访问来源',
       type: 'pie',
-      radius: ['50%', '70%'],
+      radius: ['30%', '50%'],
       avoidLabelOverlap: false,
       label: {
         emphasis: {
@@ -34,18 +28,14 @@ export default class BarChart extends Vue {
           }
         }
       },
-      data: [
-        { value: 335, name: '直接访问' },
-        { value: 310, name: '邮件营销' },
-        { value: 234, name: '联盟广告' },
-        { value: 135, name: '视频广告' },
-        { value: 1548, name: '搜索引擎' }
-      ]
+      data: [{ value: 335, name: '男' }, { value: 310, name: '女' }]
     }
   ]
 
   private mounted() {
-    this.drawChart()
+    this.$nextTick(() => {
+      this.drawChart()
+    })
   }
 
   private drawChart() {
@@ -54,7 +44,7 @@ export default class BarChart extends Vue {
     // 指定图表的配置项和数据
     const options = {
       backgroundColor: '#FFF',
-      title: false,
+      color: ['#008FD9', 'pink'],
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -70,6 +60,8 @@ export default class BarChart extends Vue {
         }
       },
       legend: {
+        orient: 'vertical',
+        x: 'left',
         data: this.legend
       },
       grid: {

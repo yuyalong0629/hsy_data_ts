@@ -17,4 +17,6 @@ declare module 'vue-awesome-swiper' {
   export default VueAwesomeSwiper
 }
 
-declare module 'echarts' 
+declare module 'echarts'
+
+declare module 'vue-virtual-scroller' 

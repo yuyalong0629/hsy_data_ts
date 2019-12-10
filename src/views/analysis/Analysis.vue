@@ -25,6 +25,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { videoData } from '@/api/analysis'
 import UserInfo from '@/components/UserInfo/UserInfo.vue'
 import UserNumber from '@/components/UserInfo/UserNumber.vue'
 import AnalysisInfo from './pages/AnalysisInfo.vue'
@@ -46,6 +47,10 @@ export default class Analysis extends Vue {
   private kolTotalData: object = {}
   private componentId: string = 'AnalysisInfo'
 
+  private mounted() {
+    this.getVideoData({ kolId: this.$route.query.kolId, pageNo: 0 })
+  }
+
   // Radio
   private onChangeRadio(e: any): void {
     e.preventDefault()
@@ -58,6 +63,27 @@ export default class Analysis extends Vue {
     if (e.target.value === '2') {
       this.componentId = 'AnalysisFans'
     }
+  }
+
+  //  初始化 信息 Function
+  public getVideoData(params: any): any {
+    this.spinning = true
+    return videoData(params)
+      .then((res: any) => {
+        if (res.code === 200) {
+          this.kolInfo = {
+            ...res.kolInfoMap,
+            fansNum: res.kolTotalDataMap.fansNum,
+            playNum: res.kolTotalDataMap.playNum,
+            chargingNum: res.kolTotalDataMap.chargingNum,
+            indexNum: res.kolTotalDataMap.indexNum
+          }
+
+          this.kolTotalData = res.kolTotalDataMap
+        }
+      })
+      .catch(() => this.$message.error('请求超时'))
+      .finally(() => (this.spinning = false))
   }
 }
 </script>

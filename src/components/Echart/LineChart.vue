@@ -3,72 +3,26 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from 'vue-property-decorator'
+import { Component, Vue, Ref, Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export default class LineChart extends Vue {
   @Ref() private lineChart: any
 
+  @Prop({ default: () => [] }) private xAis?: any[]
+  @Prop({ default: () => [] }) private series?: any[]
+  @Prop({ default: () => [] }) private legend?: any[]
+
+  private xAisData: any[] = []
+  private seriesData: any[] = []
+  private legendData: any[] = []
+
   private $echarts: any
 
-  private legend: string[] = [
-    '邮件营销',
-    '联盟广告',
-    '视频广告',
-    '直接访问',
-    '搜索引擎'
-  ]
-
-  private xAis: string[] = [
-    '周一',
-    '周二',
-    '周三',
-    '周四',
-    '周五',
-    '周六',
-    '周日'
-  ]
-
-  private series: object[] = [
-    {
-      name: '邮件营销',
-      type: 'line',
-      smooth: true,
-      stack: '总量',
-      data: [120, 132, 101, 134, 90, 230, 210]
-    },
-    {
-      name: '联盟广告',
-      type: 'line',
-      smooth: true,
-      stack: '总量',
-      data: [220, 182, 191, 234, 290, 330, 310]
-    },
-    {
-      name: '视频广告',
-      type: 'line',
-      smooth: true,
-      stack: '总量',
-      data: [150, 232, 201, 154, 190, 330, 410]
-    },
-    {
-      name: '直接访问',
-      type: 'line',
-      smooth: true,
-      stack: '总量',
-      data: [320, 332, 301, 334, 390, 330, 320]
-    },
-    {
-      name: '搜索引擎',
-      type: 'line',
-      smooth: true,
-      stack: '总量',
-      data: [820, 932, 901, 934, 1290, 1330, 1320]
-    }
-  ]
-
-  private mounted() {
-    this.drawChart()
+  private created() {
+    this.$nextTick(() => {
+      this.drawChart()
+    })
   }
 
   private drawChart() {
@@ -93,7 +47,7 @@ export default class LineChart extends Vue {
         }
       },
       legend: {
-        data: this.legend
+        data: this.legendData
       },
       grid: {
         left: '3%',
@@ -104,12 +58,45 @@ export default class LineChart extends Vue {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: this.xAis
+        data: this.xAisData
       },
       yAxis: {},
-      series: this.series
+      series: this.seriesData
     }
     myChart.setOption(options)
+  }
+
+  @Watch('xAis', { immediate: true, deep: true })
+  private getXAis(val: any[]): void {
+    this.xAisData = []
+    if (val.length) {
+      this.$nextTick(() => {
+        this.xAisData = val
+        this.drawChart()
+      })
+    }
+  }
+
+  @Watch('series', { immediate: true, deep: true })
+  private getSeries(val: any[]): void {
+    this.seriesData = []
+    if (val.length) {
+      this.$nextTick(() => {
+        this.seriesData = val
+        this.drawChart()
+      })
+    }
+  }
+
+  @Watch('legend', { immediate: true, deep: true })
+  private getLegend(val: any[]): void {
+    this.legendData = []
+    if (val.length) {
+      this.$nextTick(() => {
+        this.legendData = val
+        this.drawChart()
+      })
+    }
   }
 }
 </script>

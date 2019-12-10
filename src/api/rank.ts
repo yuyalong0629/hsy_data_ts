@@ -12,7 +12,8 @@ const api = {
   ranklist: '/api/ranking',
   details: '/api/koldetails',
   insearch: '/api/insearch',
-  histordatas: '/api/histordatas'
+  histordatas: '/api/histordatas',
+  hostRanking: '/api/hostRanking'
 }
 
 /**
@@ -71,6 +72,21 @@ export function histordatas(parameter: any) {
   return axios({
     method: 'get',
     url: api.histordatas,
+    params: parameter
+  })
+}
+
+/**
+ * @description: 火热帮
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @return: hostRanking
+ */
+
+export function hostRanking(parameter: any) {
+  return axios({
+    method: 'get',
+    url: api.hostRanking,
     params: parameter
   })
 }

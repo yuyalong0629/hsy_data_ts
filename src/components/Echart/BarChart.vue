@@ -68,7 +68,9 @@ export default class BarChart extends Vue {
   ]
 
   private mounted() {
-    this.drawChart()
+    this.$nextTick(() => {
+      this.drawChart()
+    })
   }
 
   private drawChart() {

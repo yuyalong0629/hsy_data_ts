@@ -5,7 +5,6 @@
     </div>
     <div class="similar-right">
       <a-spin :spinning="spinning">
-        <!-- <a-divider>{{ `关键词 '${keyword}' 共计 ${pageInfo.count || 0} 条结果` }}</a-divider> -->
         <a-empty v-if="!pageInfo.result" />
         <List v-else :pageInfo="pageInfo" />
 
@@ -45,7 +44,6 @@ export default class Similar extends Vue {
 
   private kolInfo: object = {}
   private spinning: boolean = false
-  private keyword: string = ''
   // 分页
   private total: number = 0
   private current: number = 1
@@ -62,10 +60,18 @@ export default class Similar extends Vue {
     this.spinning = true
     return similarKolList(params)
       .then((res: any) => {
-        this.pageInfo = { ...res.page, keyword: '' }
-        this.keyword = res.keyword
-        this.total = res.page.count
-        this.current = +res.page.index + 1
+        if (res.code === 200) {
+          this.kolInfo = {
+            ...res.kolInfoMap,
+            fansNum: res.kolTotalDataMap.fansNum,
+            playNum: res.kolTotalDataMap.playNum,
+            chargingNum: res.kolTotalDataMap.chargingNum,
+            indexNum: res.kolTotalDataMap.indexNum
+          }
+
+          this.total = res.page.count
+          this.current = +res.page.index + 1
+        }
       })
       .catch(() => this.$message.error('请求超时'))
       .finally(() => (this.spinning = false))

@@ -11,7 +11,8 @@ const api = {
   pkData: '/api/index',
   newsContentInfoList: '/api/newsContentInfoList',
   newsContentInfoDetail: '/api/newsContentInfoDetail',
-  navFilter: '/api/searchFilter'
+  navFilter: '/api/searchFilter',
+  twoSortFlag: '/api/twoSortFlag'
 }
 
 /**
@@ -70,6 +71,23 @@ export function navFilter(parameter: any) {
   return axios({
     method: 'get',
     url: api.navFilter,
+    params: parameter
+  })
+}
+
+/**
+ * @description: 账号搜索 二级分类查询
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @param {String} pId [平台ID]
+ * @param {String} tId [行业分类ID]
+ * @return: twoSortFlag
+ */
+
+export function twoSortFlag(parameter: any) {
+  return axios({
+    method: 'get',
+    url: api.twoSortFlag,
     params: parameter
   })
 }

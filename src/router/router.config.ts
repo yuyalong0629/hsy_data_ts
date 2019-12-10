@@ -16,7 +16,7 @@ const routes = [
         meta: { title: '首页', hidden: false },
         component: () => import('../views/home/Home.vue')
       },
-      // 排行榜
+      // 火热榜
       {
         path: '/hot',
         name: 'hot',

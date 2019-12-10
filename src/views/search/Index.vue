@@ -195,14 +195,7 @@ export default class Search extends Vue {
     return searchKol(params)
       .then((res: any) => {
         if (res.code === 200) {
-          const result = res.page.result.map((item: any) => {
-            return {
-              ...item,
-              star: false
-            }
-          })
-
-          this.pageInfo = { ...res.page, keyword: res.keyword, result }
+          this.pageInfo = { ...res.page, keyword: res.keyword }
           this.keyword = res.keyword
           this.total = res.page.count
           this.current = +res.page.index + 1

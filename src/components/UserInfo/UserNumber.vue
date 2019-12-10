@@ -2,11 +2,11 @@
   <ul class="userInfo">
     <li>总数</li>
     <li>
-      <h5>8888万</h5>
+      <h5>{{ kolTotalData.videoNum }}</h5>
       <p>作品数</p>
     </li>
     <li>
-      <h5>8888万</h5>
+      <h5>{{ kolTotalData.barrageNum }}</h5>
       <p>点赞数</p>
     </li>
     <li>
@@ -14,16 +14,16 @@
       <p>收藏数</p>
     </li>
     <li>
-      <h5>8888万</h5>
+      <h5>{{ kolTotalData.shareNum }}</h5>
       <p>分享数</p>
     </li>
     <li>平均</li>
     <li>
-      <h5>8888万</h5>
+      <h5>{{ kolTotalData.avgPlayNum }}</h5>
       <p>播放数</p>
     </li>
     <li>
-      <h5>8888万</h5>
+      <h5>{{ kolTotalData.avgPraiseNum }}</h5>
       <p>点赞数</p>
     </li>
     <li>

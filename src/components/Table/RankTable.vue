@@ -1,5 +1,6 @@
 <template>
   <a-table
+    class="rank-table"
     :columns="columns"
     :rowKey="record => record.kolId"
     :dataSource="dataSource.result"
@@ -42,11 +43,16 @@ export default class RankTable extends Vue {
 
   private data() {
     return {
-      rowClick: (record: object, index: number) => ({
+      rowClick: (record: any) => ({
         on: {
           click: () => {
-            console.log(record, 'record')
-            console.log(index, 'index')
+            const { href } = this.$router.resolve({
+              path: '/rank/detail',
+              query: {
+                kolId: record.kolId
+              }
+            })
+            window.open(href, '_blank')
           }
         }
       })
@@ -56,11 +62,17 @@ export default class RankTable extends Vue {
 </script>
 
 <style lang="less" scoped>
+.rank-table /deep/ .ant-table-tbody > tr {
+  cursor: pointer;
+}
+
 .rank-tab-media {
   height: 42px;
+
   div {
     padding-left: 12px;
   }
+
   img {
     border: 0;
     margin-right: 8px;
@@ -68,6 +80,7 @@ export default class RankTable extends Vue {
     float: left;
     border-radius: 50%;
   }
+
   p {
     display: inline-block;
     height: 42px;

@@ -84,7 +84,7 @@
               </template>
               <a-icon
                 type="star"
-                :theme="item.star ? 'filled' : 'outlined'"
+                :theme="item.isCollect ? 'filled' : 'outlined'"
                 :style="{ fontSize: '36px', color: '#FFBE31' }"
                 class="hoverStar"
                 @click="onChangeStart(item, index)"
@@ -209,7 +209,7 @@ export default class List extends Vue {
       (item: any) => item.kolId === recored.kolId
     )[0]
 
-    if (!target.star) {
+    if (!target.isCollect) {
       this.visible = true
       this.kolId = recored.kolId
     } else {
@@ -226,7 +226,7 @@ export default class List extends Vue {
       const target = pageInfo.result.filter((item: any) => item.kolId === id)[0]
 
       if (target) {
-        target.star = true
+        target.isCollect = true
       }
 
       this.pageInfo = pageInfo

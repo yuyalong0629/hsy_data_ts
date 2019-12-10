@@ -1,13 +1,13 @@
 <template>
   <div class="video">
-    <a-row :gutter="16">
+    <a-row :gutter="16" v-if="detailType === '1'">
       <a-col :span="12">
         <a-radio-group @change="onChange" v-model="type">
-          <a-radio :value="1">全部</a-radio>
-          <a-radio :value="2">标题</a-radio>
-          <a-radio :value="3">简介</a-radio>
-          <a-radio :value="4">标签</a-radio>
-          <a-radio :value="5">评论</a-radio>
+          <a-radio :value="0">全部</a-radio>
+          <a-radio :value="1">标题</a-radio>
+          <a-radio :value="2">简介</a-radio>
+          <a-radio :value="3">标签</a-radio>
+          <a-radio :value="4">评论</a-radio>
         </a-radio-group>
       </a-col>
       <a-col :span="12">
@@ -15,15 +15,22 @@
       </a-col>
     </a-row>
 
+    <a-row :gutter="16" v-if="detailType === '2'">
+      <a-col :span="24">
+        <a-input-search placeholder="号内搜  请输入关键词、商品名称、品牌名" @search="onSearch" enterButton />
+      </a-col>
+    </a-row>
+
     <div class="video-container">
       <div class="video-content-title">
-        <h4>{{ `历史作品数据(${pageInfo.count})` }}</h4>
-        <p>数据更新时间：2019-11-18 15:05</p>
+        <h4 v-if="detailType === '1'">{{ `历史作品数据(${pageInfo.count})` }}</h4>
+        <h4 v-if="detailType === '2'">{{ `相册图文数据(${pageInfo.count})` }}</h4>
+        <p v-if="updateTime">{{ `数据更新时间：${updateTime}` }}</p>
       </div>
 
       <a-empty v-if="pageInfo.result && !pageInfo.result.length" />
 
-      <div class="video-content-wrapper" v-else v-for="item of pageInfo.result" :key="item.id">
+      <div class="video-content-wrapper" v-else v-for="(item) of pageInfo.result" :key="item.id">
         <div class="video-content">
           <div class="video-content-img">
             <a target="_blank" :href="item.sourceUrl">
@@ -37,6 +44,7 @@
             <h3 class="video-content-info-title">
               <a
                 :href="item.sourceUrl"
+                target="_blank"
                 v-html="decodeURI(decodeURI(pageInfo.keyword)) ? heightLight(item.title, decodeURI(decodeURI(pageInfo.keyword))) : item.title"
               ></a>
             </h3>
@@ -54,9 +62,21 @@
             <div class="video-content-info-label">
               <p class="video-content-info-label-time">发布时间：{{ item.publishTime | formatDate }}</p>
               <ul class="video-content-info-label-num">
-                <li :style="{ paddingLeft: '8px', cursor: 'pointer' }">
+                <li v-if="detailType === '1'" :style="{ paddingLeft: '8px', cursor: 'pointer' }">
+                  <icon-font type="icon-danmu" />
+                  <span :style="{ paddingLeft: '4px' }">{{ item.barrageNum }}</span>
+                </li>
+                <li v-if="detailType === '1'" :style="{ paddingLeft: '8px', cursor: 'pointer' }">
                   <a-icon type="youtube" theme="filled" />
                   <span :style="{ paddingLeft: '4px' }">{{ item.playNum }}</span>
+                </li>
+                <li v-if="detailType === '2'" :style="{ paddingLeft: '8px', cursor: 'pointer' }">
+                  浏览：
+                  <span>{{ item.playNum }}</span>
+                </li>
+                <li v-if="detailType === '2'" :style="{ paddingLeft: '8px', cursor: 'pointer' }">
+                  支持：
+                  <span>{{ item.playNum }}</span>
                 </li>
                 <li :style="{ paddingLeft: '8px', cursor: 'pointer' }">
                   <a-icon type="like" theme="filled" />
@@ -67,7 +87,7 @@
                   <span :style="{ paddingLeft: '4px' }">{{ item.collectNum }}</span>
                 </li>
                 <li :style="{ paddingLeft: '8px', cursor: 'pointer' }">
-                  <a-icon type="message" theme="filled" />
+                  <a-icon :style="{ color: '#DA5054' }" type="message" theme="filled" />
                   <span :style="{ paddingLeft: '4px' }">{{ item.commentNum }}</span>
                 </li>
               </ul>
@@ -77,7 +97,7 @@
         <!-- 评论 -->
         <div class="video-comments">
           <a-collapse :bordered="false" :activeKey="activeKey">
-            <a-collapse-panel header="精选评论 20条" key="1">
+            <a-collapse-panel header="展开评论" key="1">
               <a-list
                 class="comment-list"
                 :header="false"
@@ -124,23 +144,34 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator'
 import { heightLight } from '@/utils/util'
+import { Icon } from 'ant-design-vue'
 
-@Component
+const MyIcon: any = Icon.createFromIconfontCN({
+  scriptUrl: require('@/assets/font/iconfont')
+})
+
+@Component({
+  components: {
+    'icon-font': MyIcon
+  }
+})
 export default class Video extends Vue {
   @Prop({ default: {} }) private pageInfo!: object
   @Prop({ default: 0 }) private videoType!: number
+  @Prop({ default: '1' }) private detailType!: string
+  @Prop({ default: '' }) private updateTime!: string
 
   // 分页
   private total: number = 0
   private current: number = 1
   private pageSize: number = 20
 
-  private type: number = 1
+  private type: number = 0
   private activeKey?: string
   private data() {
     return {
       heightLight,
-      activeKey: '0'
+      activeKey: '-1'
     }
   }
 
@@ -181,10 +212,10 @@ export default class Video extends Vue {
     this.total = params.count
     this.current = +params.index + 1
 
-    if (params.type === 5) {
+    if (params.type === 4) {
       this.activeKey = '1'
     } else {
-      this.activeKey = ''
+      this.activeKey = '-1'
     }
   }
 }
@@ -293,6 +324,12 @@ export default class Video extends Vue {
 
             .video-content-info-label-num {
               display: flex;
+              align-items: center;
+
+              li {
+                display: flex;
+                align-items: center;
+              }
             }
           }
         }

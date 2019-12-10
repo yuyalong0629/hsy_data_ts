@@ -1,25 +1,25 @@
 <template>
   <div class="menu">
     <ul class="menu-nav">
-      <li class="nav-list" v-if="!GET_STORAGE" @click.stop="handleHot(0)">
+      <li class="nav-list" v-if="!GET_STORAGE">
         <router-link tag="span" to="/index">首页</router-link>
       </li>
       <li class="nav-renewal" v-if="GET_STORAGE">
-        <router-link tag="span" to="/index">续费会员</router-link>
+        <router-link tag="span" to="/members/pay">续费会员</router-link>
       </li>
-      <li class="nav-list" v-if="isHot">
+      <li class="nav-list" v-if="GET_HOT">
         <router-link tag="span" to="/hot">火热榜</router-link>
       </li>
-      <li class="nav-list" @click.stop="handleHot(1)">
+      <li class="nav-list">
         <router-link tag="span" to="/rank">排行榜单</router-link>
       </li>
-      <li class="nav-list" @click.stop="handleHot(2)">
+      <li class="nav-list">
         <router-link tag="span" to="/search">账号搜索</router-link>
       </li>
-      <li class="nav-list" @click.stop="handleHot(2)">
+      <li class="nav-list">
         <router-link tag="span" to="/contentquery">内容查询</router-link>
       </li>
-      <li class="nav-list" @click.stop="handleHot(2)">
+      <li class="nav-list">
         <router-link tag="span" to="/monitoring">数据监测</router-link>
       </li>
       <li class="nav-list nav-login" v-if="!GET_STORAGE">
@@ -119,6 +119,7 @@ const user = namespace('user')
 })
 export default class Menu extends Vue {
   @user.Getter GET_STORAGE!: () => any
+  @user.Getter GET_HOT!: () => any
   @user.State loginModal!: boolean
   @user.Mutation SET_LOGIN!: (info: any) => void
   @user.Mutation LOGIN_MODAL!: (modal: boolean) => void
@@ -127,7 +128,6 @@ export default class Menu extends Vue {
   private visible: boolean = false
   private componentId: string = 'Login'
   private taId?: string
-  private isHot?: boolean = false
 
   private data() {
     return {
@@ -226,21 +226,6 @@ export default class Menu extends Vue {
   // drop下拉菜单状态回调
   private visibleChange(visible: boolean): void {
     !visible ? (this.iconType = 'caret-down') : (this.iconType = 'caret-up')
-  }
-
-  // 火热榜 权限显示
-  private handleHot(key: number): void {
-    if (key === 0) {
-      this.isHot = false
-    }
-
-    if (key === 1) {
-      this.isHot = true
-    }
-
-    if (key === 2) {
-      this.GET_STORAGE ? (this.isHot = true) : (this.isHot = this.isHot)
-    }
   }
 
   // 登录 Model

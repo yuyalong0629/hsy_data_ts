@@ -34,13 +34,16 @@ import {
   Upload,
   Popover,
   Pagination,
+  Progress,
   Row,
   Rate,
   Radio,
   Select,
   Skeleton,
   Spin,
+  Steps,
   Table,
+  Timeline,
   Tabs,
   Tag,
   Tooltip,
@@ -76,12 +79,15 @@ Vue.use(Modal)
 Vue.use(Upload)
 Vue.use(Popover)
 Vue.use(Pagination)
+Vue.use(Progress)
 Vue.use(Row)
 Vue.use(Rate)
 Vue.use(Radio)
-Vue.use(Spin)
 Vue.use(Table)
 Vue.use(Tabs)
+Vue.use(Timeline)
+Vue.use(Spin)
+Vue.use(Steps)
 Vue.use(Select)
 Vue.use(Skeleton)
 Vue.use(Tag)

@@ -1,7 +1,7 @@
 <template>
   <div class="detail" ref="anchor">
     <div class="detail-left">
-      <DetailUserInfo :kolInfo="kolInfo" />
+      <DetailUserInfo :kolInfo="kolInfo" :isCollect="isCollect" />
     </div>
 
     <div class="detail-right">
@@ -26,6 +26,8 @@
             <component
               :is="componentId"
               :pageInfo="pageInfo"
+              :detailType="detailType"
+              :updateTime="updateTime"
               @videoChangePage="videoChangePage"
               @videoSearch="videoSearch"
             ></component>
@@ -35,7 +37,7 @@
 
       <a-row v-if="GET_STORAGE.userType !== 1" :style="{ margin: '12px 0' }">
         <a-col :span="24">
-          <Permissions alert="免费版仅可查看20个信息" />
+          <!-- <Permissions alert="免费版仅可查看20个信息" /> -->
         </a-col>
       </a-row>
     </div>
@@ -50,11 +52,12 @@ import DetailUserInfo from '@/components/UserInfo/UserInfo.vue'
 import DetailNumber from '@/components/UserInfo/UserNumber.vue'
 import VideoStatistics from './VideoStatistics.vue'
 import UpDataTrend from './UpDataTrend.vue'
+import Advertisements from './Advertisements.vue'
+import CompetingGoods from './CompetingGoods.vue'
 import Permissions from '@/components/Permissions/Permissions.vue'
 
 interface Params {
-  kolId: string
-  pageNo: number
+  [key: string]: number | string
 }
 
 const user = namespace('user')
@@ -65,6 +68,8 @@ const user = namespace('user')
     DetailNumber,
     VideoStatistics,
     UpDataTrend,
+    Advertisements,
+    CompetingGoods,
     Permissions
   }
 })
@@ -78,20 +83,40 @@ export default class Detail extends Vue {
   private kolInfo: object = {}
   private kolTotalData: object = {}
   private pageInfo: object = {}
+  private isCollect: boolean = false
+  private updateTime?: string = ''
+
+  // 视频 |图文 默认 type
+  private detailType: string = '1'
 
   private mounted() {
-    this.getDetails({ kolId: (this.$route.query as any).kolId, pageNo: 0 })
+    this.getDetails({
+      kolId: (this.$route.query as any).kolId,
+      type: this.detailType,
+      pageNo: 0
+    })
   }
 
   // 初始化账号详情 Function
-  private getDetails(params: Params) {
+  private getDetails(params?: Params) {
     this.spinning = true
     return details(params)
       .then((res: any) => {
         if (res.code === 200) {
-          this.kolInfo = { ...res.kolInfo, indexNum: res.kolTotalData.indexNum }
+          this.kolInfo = {
+            ...res.kolInfo,
+            fansNum: res.kolTotalData.fansNum,
+            playNum: res.kolTotalData.playNum,
+            chargingNum: res.kolTotalData.chargingNum,
+            indexNum: res.kolTotalData.indexNum
+          }
           this.kolTotalData = res.kolTotalData
-          this.pageInfo = { ...res.page, type: 0 }
+          this.pageInfo = {
+            ...res.page,
+            type: 0
+          }
+          this.updateTime = res.kolTotalData.updateTime
+          this.isCollect = res.isCollect
         }
       })
       .catch(() => this.$message.error('请求超时'))
@@ -103,12 +128,41 @@ export default class Detail extends Vue {
     e.preventDefault()
     // 视频作品
     if (e.target.value === '0') {
+      this.detailType = '1'
+      const params = {
+        kolId: (this.$route.query as any).kolId,
+        type: this.detailType,
+        pageNo: 0
+      }
+      this.getDetails(params)
       this.componentId = 'VideoStatistics'
     }
+
+    // 图文作品
+    if (e.target.value === '1') {
+      this.detailType = '2'
+      const params = {
+        kolId: (this.$route.query as any).kolId,
+        type: this.detailType,
+        pageNo: 0
+      }
+      this.getDetails(params)
+      this.componentId = 'VideoStatistics'
+    }
+
     // UP主数据趋势
     if (e.target.value === '2') {
       this.componentId = 'UpDataTrend'
     }
+
+    // UP主数监测新作
+    if (e.target.value === '3') {
+      const { href } = this.$router.resolve({
+        path: '/monitoring'
+      })
+      window.open(href, '_blank')
+    }
+
     // 投前分析
     if (e.target.value === '4') {
       const { href } = this.$router.resolve({
@@ -119,27 +173,52 @@ export default class Detail extends Vue {
       })
       window.open(href, '_blank')
     }
+
+    // 商品广告报告
+    if (e.target.value === '5') {
+      this.componentId = 'Advertisements'
+    }
+
+    // 竞品投放
+    if (e.target.value === '6') {
+      this.componentId = 'CompetingGoods'
+    }
   }
 
   // 视频作品统计 分页
   private videoChangePage(pageInfo: any, pageNumber: string): void {
-    // 初始化分页
-    if (pageInfo.type === 0) {
-      this.getDetails({
-        kolId: (this.$route.query as any).kolId,
-        pageNo: +pageNumber - 1
-      })
+    if (this.detailType === '1') {
+      // 初始化分页
+      if (pageInfo.type === 0) {
+        this.getDetails({
+          kolId: (this.$route.query as any).kolId,
+          type: '1',
+          pageNo: +pageNumber - 1
+        })
+      }
+
+      // 号内搜分页
+      if (pageInfo.type !== 0) {
+        this.insearchData({
+          kolId: this.$route.query.kolId,
+          pageNo: +pageNumber - 1,
+          keyword: encodeURI(encodeURI(pageInfo.keyword)),
+          type: pageInfo.type,
+          searchType: '1'
+        })
+      }
     }
 
-    // 号内搜分页
-    if (pageInfo.type !== 0) {
+    if (this.detailType === '2') {
       this.insearchData({
         kolId: this.$route.query.kolId,
         pageNo: +pageNumber - 1,
         keyword: encodeURI(encodeURI(pageInfo.keyword)),
-        type: pageInfo.type
+        type: '0',
+        searchType: '2'
       })
     }
+
     // 锚点
     ;(this.anchor as any).scrollIntoView(true)
   }
@@ -169,12 +248,26 @@ export default class Detail extends Vue {
       this.$message.warning('关键词不能为空')
       return
     }
-    this.insearchData({
-      kolId: this.$route.query.kolId,
-      pageNo: 0,
-      keyword: encodeURI(encodeURI(value)),
-      type: type
-    })
+
+    if (this.detailType === '1') {
+      this.insearchData({
+        kolId: this.$route.query.kolId,
+        pageNo: 0,
+        keyword: encodeURI(encodeURI(value)),
+        searchType: '1',
+        type: type
+      })
+    }
+
+    if (this.detailType === '2') {
+      this.insearchData({
+        kolId: this.$route.query.kolId,
+        pageNo: 0,
+        keyword: encodeURI(encodeURI(value)),
+        searchType: '2',
+        type: '0'
+      })
+    }
   }
 }
 </script>
@@ -186,17 +279,17 @@ export default class Detail extends Vue {
 .detail {
   .basicWidth();
   display: flex;
-  margin-top: 48px;
-  position: relative;
+  padding: 24px 0;
+  // position: relative;
 
   .detail-left {
-    position: absolute;
+    // position: absolute;
     width: 280px;
   }
 
   .detail-right {
     width: 900px;
-    margin-left: 300px;
+    margin-left: 20px;
 
     .ant-radio-group {
       display: flex;

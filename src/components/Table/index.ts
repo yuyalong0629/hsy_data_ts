@@ -47,7 +47,7 @@ export const rankRose = [
   {
     title: '排行',
     dataIndex: 'top',
-    width: 80,
+    width: 100,
     align: 'center'
   },
   {
@@ -59,14 +59,15 @@ export const rankRose = [
   {
     title: '涨粉数',
     dataIndex: 'fansNum',
-    align: 'center'
-  },
-  {
-    title: '其他操作',
-    dataIndex: 'kolId',
-    scopedSlots: { customRender: 'kolId' },
+    scopedSlots: { customRender: 'fansNum' },
     align: 'center'
   }
+  // {
+  //   title: '其他操作',
+  //   dataIndex: 'kolId',
+  //   scopedSlots: { customRender: 'kolId' },
+  //   align: 'center'
+  // }
 ]
 
 // 掉粉榜
@@ -74,7 +75,7 @@ export const rankOff = [
   {
     title: '排行',
     dataIndex: 'top',
-    width: 80,
+    width: 100,
     align: 'center'
   },
   {
@@ -86,14 +87,15 @@ export const rankOff = [
   {
     title: '掉粉数',
     dataIndex: 'fansNum',
-    align: 'center'
-  },
-  {
-    title: '其他操作',
-    dataIndex: 'kolId',
-    scopedSlots: { customRender: 'kolId' },
+    scopedSlots: { customRender: 'fansNum' },
     align: 'center'
   }
+  // {
+  //   title: '其他操作',
+  //   dataIndex: 'kolId',
+  //   scopedSlots: { customRender: 'kolId' },
+  //   align: 'center'
+  // }
 ]
 
 // 收藏列表

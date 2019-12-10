@@ -5,6 +5,7 @@ import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import animate from 'animate.css'
 import Echart from 'echarts'
+import 'echarts-wordcloud'
 
 // swiper styles
 import VueAwesomeSwiper from 'vue-awesome-swiper'

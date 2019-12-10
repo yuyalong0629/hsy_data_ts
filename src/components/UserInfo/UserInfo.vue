@@ -10,15 +10,15 @@
       <a-icon type="question-circle" :style="{ color: '#fff' }" />
     </a-popover>
 
-    <a-avatar :size="80" :style="{ margin: '12px 0' }" :src="kolInfo.kolImg" icon="user" />
+    <a href="javascript:;" class="userInfo-avatar">
+      <a-avatar :size="80" :src="kolInfo.kolImg" icon="user" />
+    </a>
 
     <p class="userinfo-name">{{ kolInfo.kolName }}</p>
 
     <p class="userinfo-text">{{ `认证信息：${kolInfo.isApprove}, ${kolInfo.approveDescription}` }}</p>
 
     <p class="userinfo-text">{{ `账户简介：${kolInfo.kolSummary}` }}</p>
-
-    <p class="userinfo-text">公众号：小宅酱的后花园</p>
 
     <ul class="userInfo-level">
       <li>{{ `LV${kolInfo.platformGrade}` }}</li>
@@ -28,15 +28,15 @@
 
     <ul class="userInfo-number">
       <li>
-        <h4>88.8万</h4>
+        <h4>{{ kolInfo.fansNum }}</h4>
         <p>粉丝数</p>
       </li>
       <li>
-        <h4>88.8万</h4>
+        <h4>{{ kolInfo.playNum }}</h4>
         <p>播放数</p>
       </li>
       <li>
-        <h4>88.8万</h4>
+        <h4>{{ kolInfo.chargingNum }}</h4>
         <a-popover
           placement="bottomLeft"
           :style="{ color: '#c6c6c6', fontSize: '12px',  fontWeight: '400', lineHeight: '23px' }"
@@ -64,30 +64,98 @@
           <template slot="title">
             <span>查看相似号</span>
           </template>
-          <a-icon type="team" />
+          <a-icon
+            class="hoverStar"
+            :style="{ cursor: 'pointer' }"
+            type="team"
+            @click="onChangeSimilar(kolInfo.kolId)"
+          />
         </a-tooltip>
       </li>
       <li>
-        <a-tooltip
-          placement="bottom"
-          :style="{ color: '#c6c6c6', fontSize: '34px',  fontWeight: '400', lineHeight: '23px' }"
-        >
+        <a-tooltip placement="bottom">
           <template slot="title">
             <span>收藏账号</span>
           </template>
-          <a-icon type="star" />
+          <a-icon
+            type="star"
+            :theme="collect ? 'filled' : 'outlined'"
+            :style="{ fontSize: '36px', color: '#FFBE31' }"
+            class="hoverStar"
+            @click="onChangeStart(kolInfo.kolId)"
+          />
         </a-tooltip>
       </li>
     </ul>
+
+    <!-- 收藏账号 -->
+    <a-modal
+      title="添加收藏分组"
+      :visible="visible"
+      :destroyOnClose="true"
+      width="420px"
+      :footer="null"
+      @cancel="handleCancel"
+    >
+      <Collect :kolId="kolId" @lightUp="lightUp" />
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
+import Collect from '@/components/Collect/Collect.vue'
 
-@Component
+@Component({
+  components: {
+    Collect
+  }
+})
 export default class UserInfo extends Vue {
   @Prop({ default: {} }) private kolInfo!: object
+  @Prop({ default: false }) private isCollect!: boolean
+
+  private visible: boolean = false
+  private kolId?: string = ''
+  private collect?: boolean = false
+
+  // Modal
+  private handleCancel(): void {
+    this.visible = false
+  }
+
+  // 查看相似号
+  private onChangeSimilar(kolId: string) {
+    const { href } = this.$router.resolve({
+      path: '/similar',
+      query: {
+        kolId: kolId
+      }
+    })
+    window.open(href, '_blank')
+  }
+
+  // 收藏
+  private onChangeStart(kolId: string) {
+    if (!this.collect) {
+      this.visible = true
+      this.kolId = kolId
+    } else {
+      this.visible = false
+      this.$message.warning('该账户已收藏')
+    }
+  }
+
+  private lightUp(star: boolean, id: string) {
+    if (star) {
+      this.collect = true
+    }
+  }
+
+  @Watch('isCollect')
+  private function(val: boolean) {
+    this.collect = val
+  }
 }
 </script>
 
@@ -102,14 +170,34 @@ export default class UserInfo extends Vue {
   align-items: center;
   overflow: hidden;
   padding: 12px;
-  background: #008fd9;
+  background: url('../../assets/images/detail1.png') no-repeat top left;
   width: 100%;
+  border: 1px solid #ececec;
+  border-color: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  transition: all 0.3s;
+
+  .userInfo-avatar {
+    padding: 8px;
+    background: #fff;
+    border-radius: 50%;
+    margin: 12px 0;
+
+    .ant-avatar {
+      border: 1px solid #ececec;
+    }
+  }
+
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.09);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  }
 
   .userInfo-cloud {
     color: #ffffff;
     font-size: 26px;
     font-weight: bold;
-    line-height: 30px;
+    line-height: 32px;
   }
 
   .userinfo-name {
@@ -266,5 +354,13 @@ export default class UserInfo extends Vue {
       align-items: center;
     }
   }
+}
+
+.hoverStar {
+  transition: all 0.3s;
+}
+
+.hoverStar:hover {
+  transform: scale(1.1);
 }
 </style>

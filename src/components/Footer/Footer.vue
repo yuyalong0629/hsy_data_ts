@@ -25,8 +25,8 @@
             tag="p"
             :to="{path: '/mine', query: {index: 2}}"
           >联系我们</router-link>
-          <p>客服中心：wx6888888</p>
-          <p>简历投递邮箱：123456789@qq.com</p>
+          <p>客服中心：0571-87954102</p>
+          <p>简历投递邮箱：sunjuanjuan@dameicm.cn</p>
         </li>
         <li>
           <icon-font class="footer-icon" type="icon-xuexi1" />
