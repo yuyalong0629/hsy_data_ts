@@ -1,7 +1,7 @@
 <template>
   <div class="analysis">
     <div class="analysis-left">
-      <UserInfo :kolInfo="kolInfo" />
+      <UserInfo :kolInfo="kolInfo" :isCollect="isCollect" />
     </div>
     <div class="analysis-right">
       <UserNumber :kolTotalData="kolTotalData" />
@@ -43,6 +43,7 @@ import AnalysisFans from './pages/AnalysisFans.vue'
 })
 export default class Analysis extends Vue {
   private spinning: boolean = false
+  private isCollect: boolean = false
   private kolInfo: object = {}
   private kolTotalData: object = {}
   private componentId: string = 'AnalysisInfo'
@@ -78,6 +79,8 @@ export default class Analysis extends Vue {
             chargingNum: res.kolTotalDataMap.chargingNum,
             indexNum: res.kolTotalDataMap.indexNum
           }
+
+          this.isCollect = res.isCollect
 
           this.kolTotalData = res.kolTotalDataMap
         }

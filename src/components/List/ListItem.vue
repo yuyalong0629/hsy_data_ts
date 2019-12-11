@@ -1,48 +1,50 @@
 <template>
   <div class="video-content">
-    <div class="video-content-img">
-      <a target="_blank" href="item.sourceUrl">
-        <img src="../../assets/images/about1.png" alt />
-      </a>
-      <a href="javascript:;" style="color: #888;">
-        <a-icon type="link" />复制作品链接
-      </a>
-    </div>
-    <div class="video-content-info">
-      <h3 class="video-content-info-title">
-        <a href="item.sourceUrl" target="_blank">123333333333</a>
-      </h3>
-      <p class="video-content-info-text">1233333333333333333333333333</p>
-      <a-tag
-        color="pink"
-        :style="{ marginBottom: '6px' }"
-        v-for="(item, index) in 5"
-        :key="index"
-      >{{ item }}</a-tag>
-      <div class="video-content-info-label">
-        <p class="video-content-info-label-time">发布时间：123</p>
-        <ul class="video-content-info-label-num">
-          <li :style="{ paddingLeft: '8px' }">
-            <icon-font type="icon-danmu" />
-            <span :style="{ paddingLeft: '4px' }">{{ `123` }}</span>
-          </li>
-          <li :style="{ paddingLeft: '8px' }">
-            <a-icon type="youtube" theme="filled" />
-            <span :style="{ paddingLeft: '4px' }">{{ `123` }}</span>
-          </li>
-          <li :style="{ paddingLeft: '8px' }">
-            <a-icon type="like" theme="filled" />
-            <span :style="{ paddingLeft: '4px' }">{{ `123` }}</span>
-          </li>
-          <li :style="{ paddingLeft: '8px' }">
-            <a-icon type="star" theme="filled" />
-            <span :style="{ paddingLeft: '4px' }">{{ `123` }}</span>
-          </li>
-          <li :style="{ paddingLeft: '8px' }">
-            <a-icon :style="{ color: '#DA5054' }" type="message" theme="filled" />
-            <span :style="{ paddingLeft: '4px' }">{{ `123` }}</span>
-          </li>
-        </ul>
+    <div class="video-content-wrapper" v-for="item of dataList" :key="item.id">
+      <div class="video-content-img">
+        <a target="_blank" :href="item.sourceUrl">
+          <img v-lazy="item.coverImg" alt />
+        </a>
+        <a href="javascript:;" style="color: #888;" @click="copylink(item.sourceUrl)">
+          <a-icon type="link" />复制作品链接
+        </a>
+      </div>
+      <div class="video-content-info">
+        <h3 class="video-content-info-title">
+          <a :href="item.sourceUrl" target="_blank">{{ item.title }}</a>
+        </h3>
+        <p class="video-content-info-text">{{ item.summary }}</p>
+        <a-tag
+          color="pink"
+          :style="{ marginBottom: '6px' }"
+          v-for="(item, index) in JSON.parse(item.tags)"
+          :key="index"
+        >{{ item }}</a-tag>
+        <div class="video-content-info-label">
+          <p class="video-content-info-label-time">发布时间：{{ item.publishTime | formatDate }}</p>
+          <ul class="video-content-info-label-num">
+            <li :style="{ paddingLeft: '8px' }">
+              <icon-font type="icon-danmu" />
+              <span :style="{ paddingLeft: '4px' }">{{ item.barrageNum }}</span>
+            </li>
+            <li :style="{ paddingLeft: '8px' }">
+              <a-icon type="youtube" theme="filled" />
+              <span :style="{ paddingLeft: '4px' }">{{ item.playNum }}</span>
+            </li>
+            <li :style="{ paddingLeft: '8px' }">
+              <a-icon type="like" theme="filled" />
+              <span :style="{ paddingLeft: '4px' }">{{ item.praiseNum }}</span>
+            </li>
+            <li :style="{ paddingLeft: '8px' }">
+              <a-icon type="star" theme="filled" />
+              <span :style="{ paddingLeft: '4px' }">{{ item.collectNum }}</span>
+            </li>
+            <li :style="{ paddingLeft: '8px' }">
+              <a-icon type="message" theme="filled" />
+              <span :style="{ paddingLeft: '4px' }">{{ item.commentNum }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -63,6 +65,8 @@ const MyIcon: any = Icon.createFromIconfontCN({
   }
 })
 export default class ListItem extends Vue {
+  @Prop({ default: () => [] }) private dataList!: any[]
+
   private data() {
     return {
       heightLight
@@ -89,9 +93,14 @@ export default class ListItem extends Vue {
 
 .video-content {
   display: flex;
-  border-bottom: 1px solid #d9d9d9;
-  min-height: 158px;
-  align-items: center;
+  flex-direction: column;
+
+  .video-content-wrapper {
+    display: flex;
+    border-bottom: 1px solid #d9d9d9;
+    min-height: 158px;
+    align-items: center;
+  }
 
   .video-content-img {
     flex: 0 0 180px;

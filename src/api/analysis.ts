@@ -11,7 +11,9 @@ import { axios } from '@/utils/request'
 const api = {
   videoData: '/api/videoData',
   fansPortrait: '/api/fansPortrait',
-  videoDayData: '/api/videoDayData'
+  videoDayData: '/api/videoDayData',
+  workDataAnalysis: '/api/workDataAnalysis',
+  workDataList: '/api/workDataList'
 }
 
 /**
@@ -55,6 +57,36 @@ export function videoDayData(parameter: any) {
   return axios({
     method: 'get',
     url: api.videoDayData,
+    params: parameter
+  })
+}
+
+/**
+ * @description: 作品画像分析
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @return: workDataAnalysis
+ */
+
+export function workDataAnalysis(parameter: any) {
+  return axios({
+    method: 'get',
+    url: api.workDataAnalysis,
+    params: parameter
+  })
+}
+
+/**
+ * @description: 作品画像分析 - 数据详情
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @return: workDataList
+ */
+
+export function workDataList(parameter: any) {
+  return axios({
+    method: 'get',
+    url: api.workDataList,
     params: parameter
   })
 }

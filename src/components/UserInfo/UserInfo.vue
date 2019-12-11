@@ -43,7 +43,7 @@
           :title="false"
         >
           <template slot="content">
-            <p style="width: 200px;">充电数充电数充电数充电数充电数充电数</p>
+            <p style="width: 200px;">充电数是粉丝对喜欢的UP主进行的一种赞赏数据，UP主可以拿到粉丝给的充电电池数量按照一定的比例兑换成现金，然后申请提现。</p>
           </template>
           <span>充电数</span>
           <a-icon type="question-circle" />
