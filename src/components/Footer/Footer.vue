@@ -3,7 +3,7 @@
     <div class="footer-container">
       <ul class="footer-top">
         <li>
-          <img v-lazy="require('@/assets/images/about1.png')" alt />
+          <img v-lazy="require('@/assets/images/logof.png')" alt />
         </li>
         <li>
           <p>
@@ -51,7 +51,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Icon } from 'ant-design-vue'
 
 const MyIcon: any = Icon.createFromIconfontCN({
-  scriptUrl: require('../../assets/font/iconfont')
+  scriptUrl: require('@/assets/font/iconfont')
 })
 
 @Component({
@@ -89,7 +89,7 @@ export default class Footer extends Vue {}
 
         img {
           width: 80px;
-          height: 52px;
+          height: 60px;
         }
       }
 

@@ -22,10 +22,11 @@ const api = {
  * @return: buyPrice
  */
 
-export function buyPrice() {
+export function buyPrice(parameter: any) {
   return axios({
     method: 'get',
-    url: api.buyPrice
+    url: api.buyPrice,
+    params: parameter
   })
 }
 

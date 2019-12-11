@@ -1,7 +1,7 @@
 <template>
   <div class="similar" ref="anchor">
     <div class="similar-left">
-      <UserInfo :kolInfo="kolInfo" />
+      <UserInfo :kolInfo="kolInfo" :isCollect="isCollect" />
     </div>
     <div class="similar-right">
       <a-spin :spinning="spinning">
@@ -42,6 +42,7 @@ import { similarKolList } from '@/api/similar'
 export default class Similar extends Vue {
   @Ref() readonly anchor?: any
 
+  private isCollect: boolean = false
   private kolInfo: object = {}
   private spinning: boolean = false
   // 分页
@@ -62,12 +63,18 @@ export default class Similar extends Vue {
       .then((res: any) => {
         if (res.code === 200) {
           this.kolInfo = {
-            ...res.kolInfoMap,
-            fansNum: res.kolTotalDataMap.fansNum,
-            playNum: res.kolTotalDataMap.playNum,
-            chargingNum: res.kolTotalDataMap.chargingNum,
-            indexNum: res.kolTotalDataMap.indexNum
+            ...res.kolInfo,
+            fansNum: res.kolTotalData.fansNum,
+            playNum: res.kolTotalData.playNum,
+            chargingNum: res.kolTotalData.chargingNum,
+            indexNum: res.kolTotalData.indexNum
           }
+
+          // 收藏
+          this.isCollect = res.isCollect
+
+          // List
+          this.pageInfo = res.page
 
           this.total = res.page.count
           this.current = +res.page.index + 1
@@ -83,6 +90,7 @@ export default class Similar extends Vue {
       kolId: this.$route.query.kolId,
       pageNo: +pageNumber - 1
     })
+
     // 锚点
     ;(this.anchor as any).scrollIntoView(true)
   }

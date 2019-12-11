@@ -18,8 +18,8 @@ export default class Funnel extends Vue {
   }
 
   private drawChart() {
-    // 基于准备好的dom，初始化echarts实例
     const myChart = this.$echarts.init(this.funnel)
+
     // 指定图表的配置项和数据
     const options = {
       title: false,

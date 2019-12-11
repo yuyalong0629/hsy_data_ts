@@ -31,6 +31,19 @@ export default class BarChart extends Vue {
     // 指定图表的配置项和数据
     const options = {
       backgroundColor: '#FFF',
+      color: [
+        '#008FD9',
+        '#2f4554',
+        '#61a0a8',
+        '#d48265',
+        '#91c7ae',
+        '#749f83',
+        '#ca8622',
+        '#bda29a',
+        '#6e7074',
+        '#546570',
+        '#c4ccd3'
+      ],
       title: false,
       tooltip: {
         trigger: 'axis',

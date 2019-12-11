@@ -94,7 +94,7 @@
             <template slot="title">
               <span>联系客服：15067158565</span>
             </template>
-            <a href="javscript:;">联系客服</a>
+            <a href="javscript:;">联系客服</a> .
           </a-tooltip>
         </p>
       </a-col>
@@ -154,8 +154,26 @@ export default class Pay extends Vue {
   private applyImg: string = ''
 
   private mounted() {
-    // 初始化价格列表
-    buyPrice()
+    if (this.$route.query.priceType) {
+      // 初始化价格列表
+      this.getPrice({ type: (this.$route.query as any).priceType })
+      this.isLevel = +(this.$route.query as any).priceType - 1
+    } else {
+      this.getPrice({ type: '2' })
+    }
+
+    // 支付订单回调
+    if (this.$route.query.out_trade_no && this.$route.query.trade_no) {
+      this.alipyBack({
+        out_trade_no: this.$route.query.out_trade_no,
+        trade_no: this.$route.query.trade_no
+      })
+    }
+  }
+
+  // 获取价格列表
+  private getPrice(params?: { type: string }): any {
+    return buyPrice(params)
       .then((res: any) => {
         if (res.code === 200) {
           this.monthlyPriceInfos = res.monthlyPriceInfos
@@ -172,14 +190,6 @@ export default class Pay extends Vue {
         }
       })
       .catch(() => this.$message.error('请求超时'))
-
-    // 支付订单回调
-    if (this.$route.query.out_trade_no && this.$route.query.trade_no) {
-      this.alipyBack({
-        out_trade_no: this.$route.query.out_trade_no,
-        trade_no: this.$route.query.trade_no
-      })
-    }
   }
 
   // 支付订单回调
@@ -209,6 +219,7 @@ export default class Pay extends Vue {
   // 会员等级
   private handleLevel(item: any): void {
     this.isLevel = item.id
+    this.getPrice({ type: +item.id + 1 + '' })
   }
 
   // 会员套餐

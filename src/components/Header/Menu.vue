@@ -5,7 +5,9 @@
         <router-link tag="span" to="/index">首页</router-link>
       </li>
       <li class="nav-renewal" v-if="GET_STORAGE">
-        <router-link tag="span" to="/members/pay">续费会员</router-link>
+        <router-link tag="span" to="/members/pay">
+          <img v-lazy="require('@/assets/images/VIPup.png')" alt />
+        </router-link>
       </li>
       <li class="nav-list" v-if="GET_HOT">
         <router-link tag="span" to="/hot">火热榜</router-link>
@@ -383,6 +385,10 @@ export default class Menu extends Vue {
       color: #f5f5f5;
       height: 100%;
       margin: 0 24px;
+
+      img {
+        height: 70px;
+      }
     }
 
     .nav-login {

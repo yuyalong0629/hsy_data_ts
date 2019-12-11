@@ -32,6 +32,21 @@ export default class BarChart extends Vue {
     // 指定图表的配置项和数据
     const options = {
       backgroundColor: '#FFF',
+      color: [
+        '#008fd9',
+        '#f399bc',
+        '#c23531',
+        '#2f4554',
+        '#61a0a8',
+        '#d48265',
+        '#91c7ae',
+        '#749f83',
+        '#ca8622',
+        '#bda29a',
+        '#6e7074',
+        '#546570',
+        '#c4ccd3'
+      ],
       title: this.setTitle,
       tooltip: {
         trigger: 'item',
@@ -74,7 +89,6 @@ export default class BarChart extends Vue {
     if (val) {
       this.$nextTick(() => {
         this.setLegend = val
-        console.log(this.setLegend)
         this.drawChart()
       })
     }
@@ -87,7 +101,6 @@ export default class BarChart extends Vue {
     if (val.length) {
       this.$nextTick(() => {
         this.setSeries = val
-        console.log(this.setSeries)
         this.drawChart()
       })
     }
