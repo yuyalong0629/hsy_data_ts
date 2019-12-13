@@ -120,6 +120,21 @@ export default class Monitoring extends Vue {
 
   private mounted() {
     this.monitorHistoryInfo({ pageNo: 0 })
+
+    // 判断是否从详情页跳转
+    if (this.$route.query.kolId && this.$route.query.name) {
+      this.monitor = 2
+
+      searchKol({
+        keyword: encodeURI(encodeURI((this.$route.query as any).name))
+      }).then((res: any) => {
+        if (res.code === 200) {
+          this.searchInfo = res.kolInfos
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    }
   }
 
   // 监控 radio

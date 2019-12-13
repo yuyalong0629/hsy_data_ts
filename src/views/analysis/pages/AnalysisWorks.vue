@@ -5,36 +5,54 @@
         <a-col :span="24" class="analysiswork-title">
           <h4>作品类型分布</h4>
         </a-col>
+      </a-row>
+
+      <a-row :gutter="16">
         <a-col :span="24" :style="{ marginBottom: '12px' }">
           <strong>TA发布作品总量 (112)</strong>
         </a-col>
-        <a-col :span="12">
+        <a-col :span="12" v-if="legendAllOne.length">
           <PieChart :title="titleAllOne" :legend="legendAllOne" :series="seriesAllOne" />
         </a-col>
-        <a-col :span="12">
+        <a-col :span="12" v-if="legendAllTwo.length">
           <PieChart :title="titleAllTwo" />
         </a-col>
+        <a-col :span="24">
+          <a-empty v-if="!legendAllOne.length && !legendAllTwo.length" />
+        </a-col>
+      </a-row>
 
+      <a-row :gutter="16">
         <a-col :span="24" :style="{ marginBottom: '12px' }">
-          <strong>作品关键词分布</strong>
+          <strong>作品高频关键词分布</strong>
         </a-col>
         <a-col :span="12">
-          <PieChart />
+          <PieChart v-if="legendAllWorks.length" :title="titleAllWorks" />
         </a-col>
         <a-col :span="12">
-          <PieChart />
+          <PieChart v-if="legendAllLabel.length" :title="titleAllLabel" />
         </a-col>
+        <a-col :span="24">
+          <a-empty v-if="!legendAllWorks.length && !legendAllLabel.length" />
+        </a-col>
+      </a-row>
 
+      <a-row :gutter="16">
         <a-col :span="24" :style="{ marginBottom: '12px' }">
           <strong>作品简介 前20</strong>
         </a-col>
         <a-col :span="12">
-          <PieChart />
+          <PieChart v-if="legendAllExpress.length" :title="titleAllExpress" />
         </a-col>
         <a-col :span="12">
-          <PieChart />
+          <PieChart v-if="legendAllComments.length" :title="titleAllComments" />
         </a-col>
+        <a-col :span="24">
+          <a-empty v-if="!legendAllExpress.length && !legendAllComments.length" />
+        </a-col>
+      </a-row>
 
+      <a-row :gutter="16">
         <a-col :span="24" class="analysiswork-title">
           <h4>作品发布时间分布</h4>
           <div :style="{ marginTop: '16px' }">
@@ -45,8 +63,15 @@
             </a-radio-group>
           </div>
         </a-col>
+
         <a-col :span="24" class="analysiswork-barChart">
-          <BarChart :xAis="dataMapListX" :legend="legend" :series="dataMapListY" />
+          <BarChart
+            v-if="dataMapListX.length"
+            :xAis="dataMapListX"
+            :legend="legend"
+            :series="dataMapListY"
+          />
+          <a-empty v-else />
         </a-col>
 
         <a-col :span="24" class="analysiswork-title">
@@ -100,24 +125,58 @@ export default class Analysiswork extends Vue {
   private dataMapListY: any[] = []
   private legend: string[] = ['作品发布条数']
 
-  // 饼状图
+  // 饼状图 => 一级分类
   private titleAllOne: object = {
     subtext: '一级分类',
     x: 'center'
   }
-
   private legendAllOne: object = {}
-
   private seriesAllOne: any = []
 
+  // 饼状图 => 二级分类
   private titleAllTwo: object = {
     subtext: '二级分类',
     x: 'center'
   }
+  private legendAllTwo: object = {}
+  private seriesAllTwo: any = []
+
+  // 饼状图 => 作品标题
+  private titleAllWorks: object = {
+    subtext: '作品标题',
+    x: 'center'
+  }
+  private legendAllWorks: object = {}
+  private seriesAllWorks: any = []
+
+  // 饼状图 => 作品标签
+  private titleAllLabel: object = {
+    subtext: '作品标签',
+    x: 'center'
+  }
+  private legendAllLabel: object = {}
+  private seriesAllLabel: any = []
+
+  // 饼状图 => 作品简介
+  private titleAllExpress: object = {
+    subtext: '作品简介',
+    x: 'center'
+  }
+  private legendAllExpress: object = {}
+  private seriesAllExpress: any = []
+
+  // 饼状图 => 作品评论
+  private titleAllComments: object = {
+    subtext: '作品评论',
+    x: 'center'
+  }
+  private legendAllComments: object = {}
+  private seriesAllComments: any = []
 
   private mounted() {
     this.getWorkDataAnalysis({
-      kolId: (this.$route.query as any).kolId,
+      kolId:
+        (this.$route.query as any).kolId || (this.$route.query as any).videoId,
       type: '1'
     })
   }
@@ -271,6 +330,10 @@ export default class Analysiswork extends Vue {
 @import '~@/assets/styles/variable.less';
 
 .analysiswork {
+  .ant-empty {
+    padding: 24px 0;
+  }
+
   .analysiswork-title {
     display: flex;
     justify-content: space-between;

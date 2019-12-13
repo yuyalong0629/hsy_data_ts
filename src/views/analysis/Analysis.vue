@@ -16,7 +16,12 @@
 
       <div class="analysis-container">
         <a-spin :spinning="spinning">
-          <component :is="componentId"></component>
+          <component
+            :is="componentId"
+            :kolVideoInfoMap="kolVideoInfoMap"
+            :dayDataMap="dayDataMap"
+            @handlePageNo="handlePageNo"
+          ></component>
         </a-spin>
       </div>
     </div>
@@ -47,9 +52,25 @@ export default class Analysis extends Vue {
   private kolInfo: object = {}
   private kolTotalData: object = {}
   private componentId: string = 'AnalysisInfo'
+  private kolVideoInfoMap: object = {}
+  private dayDataMap: object = {}
 
   private mounted() {
-    this.getVideoData({ kolId: this.$route.query.kolId, pageNo: 0 })
+    // 默认 =>
+    if (this.$route.query.kolId) {
+      this.getVideoData({
+        kolId: this.$route.query.kolId || (this.$route.query as any).videoId,
+        pageNo: 0
+      })
+    }
+
+    // 监控 =>
+    if (this.$route.query.videoId) {
+      this.getVideoData({
+        type: '1',
+        videoId: this.$route.query.videoId
+      })
+    }
   }
 
   // Radio
@@ -57,6 +78,18 @@ export default class Analysis extends Vue {
     e.preventDefault()
     if (e.target.value === '0') {
       this.componentId = 'AnalysisInfo'
+
+      if (this.$route.query.videoId) {
+        this.getVideoData({
+          videoId: this.$route.query.videoId,
+          type: '1'
+        })
+      } else {
+        this.getVideoData({
+          kolId: this.$route.query.kolId,
+          pageNo: 0
+        })
+      }
     }
     if (e.target.value === '1') {
       this.componentId = 'AnalysisWork'
@@ -80,6 +113,9 @@ export default class Analysis extends Vue {
             indexNum: res.kolTotalDataMap.indexNum
           }
 
+          this.kolVideoInfoMap = res.kolVideoInfoMap || {}
+          this.dayDataMap = res.dayDataMap || {}
+
           this.isCollect = res.isCollect
 
           this.kolTotalData = res.kolTotalDataMap
@@ -87,6 +123,11 @@ export default class Analysis extends Vue {
       })
       .catch(() => this.$message.error('请求超时'))
       .finally(() => (this.spinning = false))
+  }
+
+  // @Emit
+  private handlePageNo(val: number): void {
+    this.getVideoData({ kolId: this.$route.query.kolId, pageNo: val })
   }
 }
 </script>

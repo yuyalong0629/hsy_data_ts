@@ -9,14 +9,14 @@
       <DetailNumber :kolTotalData="kolTotalData" />
 
       <div :style="{ margin: '16px 0' }">
-        <a-radio-group defaultValue="0" buttonStyle="solid" @change="onChangeRadio">
-          <a-radio-button value="0">视频作品统计</a-radio-button>
-          <a-radio-button value="1">图文动态统计</a-radio-button>
-          <a-radio-button value="2">UP主数据趋势</a-radio-button>
-          <a-radio-button value="3">监测UP主新作</a-radio-button>
-          <a-radio-button value="4">投前分析</a-radio-button>
-          <a-radio-button value="5">商品广告报告</a-radio-button>
-          <a-radio-button value="6">竞品投放查询</a-radio-button>
+        <a-radio-group defaultValue="0" buttonStyle="solid">
+          <a-radio-button value="0" @click="onChangeRadio('0')">视频作品统计</a-radio-button>
+          <a-radio-button value="1" @click="onChangeRadio('1')">图文动态统计</a-radio-button>
+          <a-radio-button value="2" @click="onChangeRadio('2')">UP主数据趋势</a-radio-button>
+          <a-radio-button value="3" @click="onChangeRadio('3')">监测UP主新作</a-radio-button>
+          <a-radio-button value="4" @click="onChangeRadio('4')">投前分析</a-radio-button>
+          <a-radio-button value="5" @click="onChangeRadio('5')">商品广告报告</a-radio-button>
+          <a-radio-button value="6" @click="onChangeRadio('6')">竞品投放查询</a-radio-button>
         </a-radio-group>
       </div>
 
@@ -28,6 +28,7 @@
               :pageInfo="pageInfo"
               :detailType="detailType"
               :updateTime="updateTime"
+              :videoNum="kolTotalData.videoNum"
               @videoChangePage="videoChangePage"
               @videoSearch="videoSearch"
             ></component>
@@ -124,10 +125,9 @@ export default class Detail extends Vue {
   }
 
   // 初始页 Radio 导航
-  private onChangeRadio(e: any): void {
-    e.preventDefault()
+  private onChangeRadio(key: string): void {
     // 视频作品
-    if (e.target.value === '0') {
+    if (key === '0') {
       this.detailType = '1'
       const params = {
         kolId: (this.$route.query as any).kolId,
@@ -139,7 +139,7 @@ export default class Detail extends Vue {
     }
 
     // 图文作品
-    if (e.target.value === '1') {
+    if (key === '1') {
       this.detailType = '2'
       const params = {
         kolId: (this.$route.query as any).kolId,
@@ -151,20 +151,24 @@ export default class Detail extends Vue {
     }
 
     // UP主数据趋势
-    if (e.target.value === '2') {
+    if (key === '2') {
       this.componentId = 'UpDataTrend'
     }
 
     // UP主数监测新作
-    if (e.target.value === '3') {
+    if (key === '3') {
       const { href } = this.$router.resolve({
-        path: '/monitoring'
+        path: '/monitoring',
+        query: {
+          kolId: (this.$route.query as any).kolId,
+          name: (this.kolInfo as any).kolName
+        }
       })
       window.open(href, '_blank')
     }
 
     // 投前分析
-    if (e.target.value === '4') {
+    if (key === '4') {
       const { href } = this.$router.resolve({
         path: '/analysis',
         query: {
@@ -175,12 +179,12 @@ export default class Detail extends Vue {
     }
 
     // 商品广告报告
-    if (e.target.value === '5') {
+    if (key === '5') {
       this.componentId = 'Advertisements'
     }
 
     // 竞品投放
-    if (e.target.value === '6') {
+    if (key === '6') {
       this.componentId = 'CompetingGoods'
     }
   }

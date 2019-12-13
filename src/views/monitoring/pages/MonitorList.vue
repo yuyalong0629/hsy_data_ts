@@ -18,7 +18,7 @@
             <div class="monitor-list-item">
               <p>{{ item.monitorStartTime }}</p>
               <h4
-                @click="clickAnalysis(item.monitorStatus, item.monitorType, item.id)"
+                @click="clickAnalysis(item.monitorStatus, item.monitorType, item.id, item.kolId)"
               >{{ item.monitorType === 1 ? (item.title || item.monitorContent) : item.kolInfoMap.kolName }}</h4>
               <p>
                 <a-tag v-for="(item, index) of item.tags" :key="index">{{ item }}</a-tag>
@@ -30,7 +30,7 @@
               <span>{{ item.remark }}</span>
             </template>
             <a-button
-              @click="item.monitorStatus === 3 && clickAnalysis(item.monitorStatus, item.monitorType, item.id)"
+              @click="item.monitorStatus === 3 && clickAnalysis(item.monitorStatus, item.monitorType, item.id, item.kolId)"
             >{{ item.monitorStatus === 1 ? '监控中' : (item.monitorStatus === 2 ? '监控失败' : (item.monitorStatus === 0 ? '等待监控' : '监控完成')) }}</a-button>
           </a-tooltip>
         </a-list-item>
@@ -46,13 +46,18 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 export default class MonitorList extends Vue {
   @Prop({ default: {} }) private monitorInfo!: object
 
-  private clickAnalysis(status: number, type: number, id: string) {
+  private clickAnalysis(
+    status: number,
+    type: number,
+    id: string,
+    kolId: string
+  ) {
     if (type === 1 && (status === 1 || status === 3)) {
       this.$router.push({
         path: '/analysis',
         query: {
-          type: '1',
-          videoId: id
+          videoId: id,
+          kolId: kolId
         }
       })
     }

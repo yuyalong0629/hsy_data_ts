@@ -37,6 +37,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { brandKeyword } from '@/api/rank'
 import Tabs from '@/components/Tabs/Tabs.vue'
 import Wordcloud from '@/components/Echart/Wordcloud.vue'
 import WordRank from '@/components/Echart/WordRank.vue'
@@ -57,6 +58,14 @@ export default class Advertisements extends Vue {
 
   // 商品分类 二级分类
   private onChangeTagClassTwo(value: any) {}
+
+  private mounted() {
+    brandKeyword({ kolId: (this.$route.query as any).kolId }).then(
+      (res: any) => {
+        console.log(res)
+      }
+    )
+  }
 }
 </script>
 

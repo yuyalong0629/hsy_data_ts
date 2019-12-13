@@ -17,7 +17,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (to.meta.title) {
-    document.title = to.meta.title
+    document.title = `火烧云数据-${to.meta.title}`
   }
 
   if (to.fullPath === '/index') {

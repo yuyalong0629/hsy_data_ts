@@ -25,7 +25,7 @@
             tag="p"
             :to="{path: '/mine', query: {index: 2}}"
           >联系我们</router-link>
-          <p>客服中心：0571-87954102</p>
+          <p>客服中心：0571-8256 5101</p>
           <p>简历投递邮箱：sunjuanjuan@dameicm.cn</p>
         </li>
         <li>

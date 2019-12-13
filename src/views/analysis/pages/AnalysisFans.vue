@@ -1,31 +1,38 @@
 <template>
   <div class="analysisFans">
     <a-spin :spinning="spinning">
-      <a-row :gutter="16">
+      <a-row :gutter="16" v-if="seriesGender.length">
         <a-col :span="12">
           <strong>粉丝性别分布</strong>
           <PieChart :title="titleGender" :legend="legendGender" :series="seriesGender" />
         </a-col>
         <a-col :span="12">
-          <strong>粉丝性别分布</strong>
-          <PieChart :title="titleAge" :legend="legendAge" :series="seriesAge" />
+          <strong>粉丝年龄分布</strong>
+          <PieChart
+            v-if="seriesAge.length"
+            :title="titleAge"
+            :legend="legendAge"
+            :series="seriesAge"
+          />
         </a-col>
       </a-row>
 
-      <a-row :gutter="16">
+      <a-row :gutter="16" v-if="seriesGender.length">
         <a-col :span="24">
-          <strong>星座分布</strong>
+          <strong>粉丝星座分布</strong>
           <BarChart :xAis="constellationX" :legend="legendConstellation" :series="constellationY" />
         </a-col>
         <a-col :span="24" :style="{ marginTop: '12px' }">
-          <strong>地域分布</strong>
+          <strong>粉丝地域分布</strong>
           <BarChart :xAis="areaX" :legend="legendArea" :series="areaY" />
         </a-col>
         <a-col :span="24" :style="{ marginTop: '12px' }">
-          <strong>等级分布</strong>
+          <strong>粉丝等级分布</strong>
           <BarChart :xAis="gradeX" :legend="legendGrade" :series="gradeY" />
         </a-col>
       </a-row>
+
+      <a-empty v-else />
     </a-spin>
   </div>
 </template>
@@ -70,7 +77,10 @@ export default class AnalysisFans extends Vue {
   private gradeY: any[] = []
 
   private mounted() {
-    this.getFansPortrait({ kolId: (this.$route.query as any).kolId })
+    this.getFansPortrait({
+      kolId:
+        (this.$route.query as any).kolId || (this.$route.query as any).videoId
+    })
   }
 
   // Echart Function
@@ -78,6 +88,7 @@ export default class AnalysisFans extends Vue {
     this.spinning = true
     return fansPortrait(params)
       .then((res: any) => {
+        console.log(res.fansPortraitDataMap)
         if (res.code === 200) {
           // 性别
           const genderPortrait = JSON.parse(
@@ -259,7 +270,7 @@ export default class AnalysisFans extends Vue {
           ]
         }
       })
-      .catch(() => this.$message.error('请求超时'))
+      .catch((err: any) => console.log(err))
       .finally(() => (this.spinning = false))
   }
 }

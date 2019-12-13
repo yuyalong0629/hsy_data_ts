@@ -5,7 +5,7 @@
         <h4>竞品投放解析</h4>
       </a-col>
       <a-col :span="12">
-        <a-radio-group @change="onChangeRadio" v-model="timeStatus">
+        <a-radio-group @change="onChangeRadio" v-model="type">
           <a-radio :value="1">30天内</a-radio>
           <a-radio :value="2">60天内</a-radio>
           <a-radio :value="3">90天内</a-radio>
@@ -20,70 +20,72 @@
       </a-col>
     </a-row>
 
-    <a-row :gutter="16">
-      <a-col :span="24" class="competingGoods-title">
-        <h4>竞品投放报告（3）</h4>
-      </a-col>
-      <a-col :span="24" class="competingGoods-report">
-        <span class="competingGoods-report-name">
-          <p>竞品名称：</p>
-          <p>风残月sadfsdfsfsfaasdf读</p>
-        </span>
-        <span class="competingGoods-report-time">
-          <p>查询时间：6个月-2019年11月08日-5月07日</p>
-        </span>
-        <span class="competingGoods-report-change">
-          <a href="javascript:;">上一篇</a>
-          <a href="javascript:;">下一篇</a>
-        </span>
-      </a-col>
+    <a-spin :spinning="spinning">
+      <a-row :gutter="16" v-if="dataNum !== 0">
+        <a-col :span="24" class="competingGoods-title">
+          <h4>竞品投放报告（{{ dataNum }}）</h4>
+        </a-col>
+        <a-col :span="24" class="competingGoods-report">
+          <span class="competingGoods-report-name">
+            <p>竞品名称：</p>
+            <p>{{ keyword }}</p>
+          </span>
+          <span class="competingGoods-report-time">
+            <p>查询时间：{{ `${publishTimeStart} - ${publishTimeEnd}` }}</p>
+          </span>
+          <!-- <span class="competingGoods-report-change">
+            <a href="javascript:;">上一篇</a>
+            <a href="javascript:;">下一篇</a>
+          </span>-->
+        </a-col>
 
-      <a-col :span="24" class="competingGoods-progress">
-        <span>
+        <a-col :span="24" class="competingGoods-progress">
+          <span>
+            <strong>关联作品</strong>
+            <a-progress
+              :percent="percent"
+              :strokeWidth="12"
+              strokeColor="#00a1d6"
+              :showInfo="false"
+            />
+          </span>
+          <span>
+            <p>{{ dataNum }}部</p>
+            <p>{{ videoNum }}部（发布总数）</p>
+          </span>
+        </a-col>
+
+        <a-col :span="24" class="competingGoods-steps">
           <strong>关联作品</strong>
-          <a-progress
-            :percent="15/20 * 100"
-            :strokeWidth="12"
-            strokeColor="#00a1d6"
-            :showInfo="false"
-          />
-        </span>
-        <span>
-          <p>15部</p>
-          <p>20部（发布总数）</p>
-        </span>
-      </a-col>
+          <a-timeline mode="left">
+            <a-timeline-item v-for="(item, index) of datasPublish" :key="index">{{ item.name }}</a-timeline-item>
+          </a-timeline>
+        </a-col>
 
-      <a-col :span="24" class="competingGoods-steps">
-        <strong>关联作品</strong>
-        <a-timeline mode="left">
-          <a-timeline-item>2015-09-01</a-timeline-item>
-          <a-timeline-item>2015-09-01</a-timeline-item>
-          <a-timeline-item>2015-09-01</a-timeline-item>
-          <a-timeline-item>2015-09-01</a-timeline-item>
-          <a-timeline-item>2015-09-01</a-timeline-item>
-        </a-timeline>
-      </a-col>
+        <a-col :span="24" class="competingGoods-zone">
+          <strong>商品广告作品发布时区</strong>
+          <BarChart :xAis="dataMapListX" :legend="legend" :series="dataMapListY" />
+        </a-col>
 
-      <a-col :span="24" class="competingGoods-zone">
-        <strong>商品广告作品发布时区</strong>
-        <BarChart />
-      </a-col>
+        <a-col :span="24" class="competingGoods-exposure">
+          <strong>曝光数据</strong>
+          <PieChart :title="titleExposure" :legend="legendExposure" :series="seriesExposure" />
+        </a-col>
 
-      <a-col :span="24" class="competingGoods-exposure">
-        <strong>曝光数据</strong>
-        <PieChart />
-      </a-col>
-      <!-- <a-col :span="24" class="competingGoods-conversion">
-        <strong>转化数据</strong>
-        <FunnelChart />
-      </a-col>-->
-    </a-row>
+        <!-- <a-col :span="24" class="competingGoods-conversion">
+          <strong>转化数据</strong>
+          <FunnelChart />
+        </a-col>-->
+      </a-row>
+
+      <a-empty v-else />
+    </a-spin>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import { boutiqueAnalysis } from '@/api/rank'
 import BarChart from '@/components/Echart/BarChart.vue'
 import FunnelChart from '@/components/Echart/FunnelChart.vue'
 import PieChart from '@/components/Echart/PieChart.vue'
@@ -96,17 +98,120 @@ import PieChart from '@/components/Echart/PieChart.vue'
   }
 })
 export default class CompetingGoods extends Vue {
-  private timeStatus: number = 1
+  @Prop({ default: () => {} }) private pageInfo!: any
+  @Prop({ default: 0 }) private videoNum!: number
+
+  private type: number = 1
+  private keyword: string = ''
+  private spinning: boolean = false
+  private dataNum: number = 0
+  private percent: number = 0
+  private datasPublish: any[] = []
+  private publishTimeStart: string = ''
+  private publishTimeEnd: string = ''
+
+  // 柱状图
+  private dataMapListX: any[] = []
+  private dataMapListY: any[] = []
+  private legend: string[] = ['作品发布时区']
+
+  // 饼状图 => 曝光数据
+  private titleExposure: object = {
+    subtext: false,
+    x: 'center'
+  }
+  private legendExposure: object = {}
+  private seriesExposure: any = []
+
+  // 竞品投放 Function
+  private getBoutiqueAnalysis(params?: any): any {
+    this.spinning = true
+    return boutiqueAnalysis(params)
+      .then((res: any) => {
+        if (res.code === 200) {
+          // 竞品名称
+          this.keyword = decodeURI(decodeURI(params.keyword))
+          this.datasPublish = res.datasPublish
+
+          this.dataNum = res.dataNum
+          this.percent = (this.dataNum / this.videoNum) * 100
+          this.publishTimeStart = res.publishTimeStart
+          this.publishTimeEnd = res.publishTimeEnd
+          // 柱状图
+          this.dataMapListX = res.dataMap.map((item: any) => {
+            return item.name
+          })
+
+          const dataMapListY = res.dataMap.map((item: any) => {
+            return item.value
+          })
+
+          this.dataMapListY = [
+            {
+              name: '作品发布条数',
+              type: 'bar',
+              smooth: true,
+              stack: '总量',
+              data: dataMapListY
+            }
+          ]
+
+          // 曝光数据
+          this.legendExposure = {
+            orient: 'vertical',
+            x: 'left',
+            data: []
+          }
+
+          const seriesExposure = [
+            { name: '品牌曝光量', value: res.playNum },
+            { name: '获得弹幕量', value: res.barrageNum },
+            { name: '获得评论量', value: res.commentNum },
+            { name: '获得点赞量', value: res.praiseNum },
+            { name: '获得收藏量', value: res.collectNum },
+            { name: '获得分享量', value: res.shareNum },
+            { name: '获得投币量', value: res.castCurrencyNum }
+          ]
+
+          this.seriesExposure = [
+            {
+              name: '曝光数据',
+              type: 'pie',
+              minAngle: '10',
+              radius: ['50%', '80%'],
+              avoidLabelOverlap: false,
+              label: {
+                formatter: '{b}: {c}',
+                emphasis: {
+                  show: true,
+                  textStyle: {
+                    fontSize: '20',
+                    fontWeight: '600'
+                  }
+                }
+              },
+              data: seriesExposure
+            }
+          ]
+        }
+      })
+      .finally(() => (this.spinning = false))
+  }
 
   // 竞品投放解析 Radio
   private onChangeRadio(e: any): void {
     console.log(e)
+    this.type = e.target.value
   }
 
   // 竞品投放解析 Search
   private onSearch(value: string, e: any): void {
     e.preventDefault()
-    console.log(value)
+    this.getBoutiqueAnalysis({
+      keyword: encodeURI(encodeURI(value)),
+      kolId: (this.$route.query as any).kolId,
+      type: this.type
+    })
   }
 }
 </script>
@@ -119,6 +224,10 @@ export default class CompetingGoods extends Vue {
   border: 1px solid #d9d9d9;
   border-radius: 4px;
   padding: 12px;
+
+  .ant-empty {
+    padding: 24px 0;
+  }
 
   .ant-radio-group {
     border: 1px solid #d9d9d9;
@@ -204,7 +313,7 @@ export default class CompetingGoods extends Vue {
 
   .competingGoods-steps {
     display: flex;
-    padding: 24px 0 12px;
+    margin: 24px 0 12px;
     align-items: flex-start;
     max-height: 400px;
     overflow: auto;

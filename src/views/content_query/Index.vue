@@ -10,6 +10,7 @@
           <a-radio :value="4">纯评论内容</a-radio>
         </a-radio-group>
       </a-col>
+
       <a-col :span="18">
         <a-input-search placeholder="请输入账号名称,达人名等关键词搜索" @search="onSearch" size="large">
           <a-button type="primary" slot="enterButton">搜索</a-button>
@@ -26,6 +27,12 @@
       <a-col :span="24">
         <Tabs :tagInfos="platformInfos" @onChangeTag="onChangeTagPlat" tagName="支持平台" />
         <Tabs :tagInfos="themeInfos" @onChangeTag="onChangeTagTheme" tagName="行业分类" />
+        <Tabs
+          v-if="themeInfosTwo.length"
+          :tagInfos="themeInfosTwo"
+          @onChangeTag="onChangeTagTTwo"
+          tagName="二级分类"
+        />
         <Tabs :tagInfos="fansBasicDatas" @onChangeTag="onChangeTagFans" tagName="粉丝数量" />
         <Tabs :tagInfos="playBasicDatas" @onChangeTag="onChangeTagPlay" tagName="播放数量" />
         <Tabs :tagInfos="praiseBasicDatas" @onChangeTag="onChangeTagPraise" tagName="点赞数量" />
@@ -59,7 +66,7 @@
 import { Component, Vue, Ref } from 'vue-property-decorator'
 import Tabs from '@/components/Tabs/Tabs.vue'
 import ContentList from '@/components/List/ContentList.vue'
-import { navFilter } from '@/api/index'
+import { navFilter, twoSortFlag } from '@/api/index'
 import { searchKeyword, searchContent } from '@/api/search'
 
 interface Params {
@@ -84,6 +91,8 @@ export default class ContentQuery extends Vue {
   private publishTimeBasicDatas: object[] = [] // 发布时间
   private spinning: boolean = false
   private keyword: string = ''
+  private themeInfosTwo: object[] = [] // 行业分类 Tag 二级分类
+
   // 分页
   private total: number = 0
   private current: number = 1
@@ -95,7 +104,8 @@ export default class ContentQuery extends Vue {
     {
       keyword: '', // 关键词
       pId: '1', // 平台Id
-      tId: '', // 题材Id
+      tId: '0', // 题材Id
+      ttId: '0', // 行业分类 二级
       fansNum: '', // 粉丝数据区间
       grade: '', // 会员等级
       playNum: '', // 播放数
@@ -211,17 +221,35 @@ export default class ContentQuery extends Vue {
       return {
         ...item,
         tId: val.id,
+        ttId: '0',
         pageNo: 0
       }
     })
 
     this.params = [...target]
+    this.searchInfo(...target)
 
-    if (target[0].keyword) {
-      this.searchInfo(...target)
-      return
-    }
-    this.$message.warning('关键词不能为空')
+    // 二级分类查询
+    twoSortFlag({ pId: target[0].pId, tId: target[0].tId }).then((res: any) => {
+      if (res.code === 200) {
+        this.themeInfosTwo = res.themeInfos
+      }
+    })
+  }
+
+  // Tag 行业分类 二级分类查询
+  private onChangeTagTTwo(val: any) {
+    const { params } = this
+    const target = params.map((item: any) => {
+      return {
+        ...item,
+        ttId: val.id,
+        pageNo: 0
+      }
+    })
+
+    this.params = [...target]
+    this.searchInfo(...target)
   }
 
   // Tag 粉丝数量
@@ -236,12 +264,7 @@ export default class ContentQuery extends Vue {
     })
 
     this.params = [...target]
-
-    if (target[0].keyword) {
-      this.searchInfo(...target)
-      return
-    }
-    this.$message.warning('关键词不能为空')
+    this.searchInfo(...target)
   }
 
   // 播放数
@@ -256,12 +279,7 @@ export default class ContentQuery extends Vue {
     })
 
     this.params = [...target]
-
-    if (target[0].keyword) {
-      this.searchInfo(...target)
-      return
-    }
-    this.$message.warning('关键词不能为空')
+    this.searchInfo(...target)
   }
 
   // 点赞数
@@ -276,12 +294,7 @@ export default class ContentQuery extends Vue {
     })
 
     this.params = [...target]
-
-    if (target[0].keyword) {
-      this.searchInfo(...target)
-      return
-    }
-    this.$message.warning('关键词不能为空')
+    this.searchInfo(...target)
   }
 
   // 发布时间
@@ -296,12 +309,7 @@ export default class ContentQuery extends Vue {
     })
 
     this.params = [...target]
-
-    if (target[0].keyword) {
-      this.searchInfo(...target)
-      return
-    }
-    this.$message.warning('关键词不能为空')
+    this.searchInfo(...target)
   }
 
   // 搜索 Function

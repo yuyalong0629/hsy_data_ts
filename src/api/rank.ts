@@ -13,7 +13,9 @@ const api = {
   details: '/api/koldetails',
   insearch: '/api/insearch',
   histordatas: '/api/histordatas',
-  hostRanking: '/api/hostRanking'
+  hostRanking: '/api/hostRanking',
+  brandKeyword: '/api/brandKeyword',
+  boutiqueAnalysis: '/api/boutiqueAnalysis'
 }
 
 /**
@@ -87,6 +89,36 @@ export function hostRanking(parameter: any) {
   return axios({
     method: 'get',
     url: api.hostRanking,
+    params: parameter
+  })
+}
+
+/**
+ * @description: 词云图
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @return: brandKeyword
+ */
+
+export function brandKeyword(parameter: any) {
+  return axios({
+    method: 'get',
+    url: api.brandKeyword,
+    params: parameter
+  })
+}
+
+/**
+ * @description: 竞品投放
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @return: boutiqueAnalysis
+ */
+
+export function boutiqueAnalysis(parameter: any) {
+  return axios({
+    method: 'get',
+    url: api.boutiqueAnalysis,
     params: parameter
   })
 }
