@@ -3,6 +3,6 @@ export default {
   storageOptions: {
     namespace: 'hsy_', // key prefix
     name: 'ls', // name variable Vue.[ls] or this.[$ls],
-    storage: 'session' // storage name session, local, memory
+    storage: 'local' // storage name session, local, memory
   }
 }

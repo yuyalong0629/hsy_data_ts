@@ -35,7 +35,7 @@
                     {{item.praiseNum}}
                   </span>
                   <span style="margin-right: 12px">
-                    <icon-font type="icon-danmushu" />
+                    <icon-font type="icon-danmu" />
                     {{item.barrageNum}}
                   </span>
                 </p>
@@ -44,7 +44,7 @@
             <div class="similar-content-left-fans">
               <p>
                 评论:
-                <span></span>
+                <span>暂无</span>
               </p>
             </div>
           </div>
@@ -52,7 +52,7 @@
             <router-link
               tag="a"
               target="_blank"
-              :to="{path: '/rank/details', query: {kolId: item.kolId}}"
+              :to="{path: '/rank/detail', query: {kolId: item.kolId}}"
             >
               <img :src="item.kolImg" alt />
             </router-link>

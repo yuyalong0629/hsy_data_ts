@@ -16,15 +16,30 @@
       </a-col>
 
       <a-col :span="24">
-        <Tabs :tagInfos="platformInfos" @onChangeTag="onChangeTagP" tagName="支持平台" />
-        <Tabs :tagInfos="themeInfos" @onChangeTag="onChangeTagT" tagName="行业分类" />
+        <Tabs
+          v-if="platformInfos.length"
+          :tagInfos="platformInfos"
+          @onChangeTag="onChangeTagP"
+          tagName="支持平台"
+        />
+        <Tabs
+          v-if="themeInfos.length"
+          :tagInfos="themeInfos"
+          @onChangeTag="onChangeTagT"
+          tagName="行业分类"
+        />
         <Tabs
           v-if="themeInfosTwo.length"
           :tagInfos="themeInfosTwo"
           @onChangeTag="onChangeTagTTwo"
           tagName="二级分类"
         />
-        <Tabs :tagInfos="fansBasicDatas" @onChangeTag="onChangeTagS" tagName="粉丝数量" />
+        <Tabs
+          v-if="fansBasicDatas.length"
+          :tagInfos="fansBasicDatas"
+          @onChangeTag="onChangeTagS"
+          tagName="粉丝数量"
+        />
       </a-col>
     </a-row>
 
@@ -51,10 +66,11 @@
 
 <script lang="ts">
 import { Component, Vue, Ref } from 'vue-property-decorator'
-import Tabs from '@/components/Tabs/Tabs.vue'
-import List from '@/components/List/List.vue'
 import { navFilter, twoSortFlag } from '@/api/index'
 import { searchKeyword, searchKol } from '@/api/search'
+import { vipNotice } from '@/utils/util'
+import Tabs from '@/components/Tabs/Tabs.vue'
+import List from '@/components/List/List.vue'
 
 interface Params {
   [key: string]: string | number
@@ -226,6 +242,9 @@ export default class Search extends Vue {
           this.keyword = res.keyword
           this.total = res.page.count
           this.current = +res.page.index + 1
+        }
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {})
         }
       })
       .catch(() => this.$message.error('请求超时'))

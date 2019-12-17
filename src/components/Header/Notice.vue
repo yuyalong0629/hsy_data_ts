@@ -5,14 +5,14 @@
     placement="bottomRight"
     :autoAdjustOverflow="true"
     :arrowPointAtCenter="true"
-    :overlayStyle="{ width: '300px' }"
+    :overlayStyle="{ width: '400px' }"
   >
     <template slot="content">
       <a-spin :spinning="loadding">
-        <a-tabs>
-          <a-tab-pane tab="通知" key="1">暂无通知</a-tab-pane>
-          <a-tab-pane tab="消息" key="2">暂无消息</a-tab-pane>
-          <a-tab-pane tab="待办" key="3">暂无待办</a-tab-pane>
+        <a-tabs :tabBarStyle="{'text-align': 'center'}">
+          <a-tab-pane tab="全部通知" key="1">暂无通知</a-tab-pane>
+          <a-tab-pane tab="未读通知" key="2">暂无消息</a-tab-pane>
+          <a-tab-pane tab="已读通知" key="3">暂无待办</a-tab-pane>
         </a-tabs>
       </a-spin>
     </template>

@@ -45,7 +45,7 @@ export default class Carousel extends Vue {
         effect: 'fade',
         autoplay: {
           disableOnInteraction: false,
-          delay: 3000 // 1秒切换一次
+          delay: 5000 // 1秒切换一次
         },
         pagination: {
           el: '.swiper-pagination',

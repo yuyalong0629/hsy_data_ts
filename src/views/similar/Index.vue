@@ -31,6 +31,7 @@ import UserInfo from '@/components/UserInfo/UserInfo.vue'
 import Tabs from '@/components/Tabs/Tabs.vue'
 import List from '@/components/List/List.vue'
 import { similarKolList } from '@/api/similar'
+import { vipNotice } from '@/utils/util'
 
 @Component({
   components: {
@@ -78,6 +79,13 @@ export default class Similar extends Vue {
 
           this.total = res.page.count
           this.current = +res.page.index + 1
+        }
+
+        // 非会员无权限访问
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {
+            window.close()
+          })
         }
       })
       .catch(() => this.$message.error('请求超时'))

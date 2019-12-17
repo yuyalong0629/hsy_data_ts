@@ -36,6 +36,7 @@ import UserNumber from '@/components/UserInfo/UserNumber.vue'
 import AnalysisInfo from './pages/AnalysisInfo.vue'
 import AnalysisWork from './pages/AnalysisWorks.vue'
 import AnalysisFans from './pages/AnalysisFans.vue'
+import { vipNotice } from '@/utils/util'
 
 @Component({
   components: {
@@ -56,21 +57,19 @@ export default class Analysis extends Vue {
   private dayDataMap: object = {}
 
   private mounted() {
-    // 默认 =>
-    if (this.$route.query.kolId) {
-      this.getVideoData({
-        kolId: this.$route.query.kolId || (this.$route.query as any).videoId,
-        pageNo: 0
-      })
-    }
-
     // 监控 =>
     if (this.$route.query.videoId) {
       this.getVideoData({
         type: '1',
         videoId: this.$route.query.videoId
       })
+      return
     }
+    // 默认 =>
+    this.getVideoData({
+      kolId: this.$route.query.kolId,
+      pageNo: 0
+    })
   }
 
   // Radio
@@ -119,6 +118,13 @@ export default class Analysis extends Vue {
           this.isCollect = res.isCollect
 
           this.kolTotalData = res.kolTotalDataMap
+        }
+
+        // 非会员无权限访问
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {
+            window.close()
+          })
         }
       })
       .catch(() => this.$message.error('请求超时'))

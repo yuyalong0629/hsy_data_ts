@@ -38,11 +38,11 @@
                 :items="bilibiliRankingDayDatas"
                 :item-size="120"
                 key-field="id"
-                v-slot="{ item }"
+                v-slot="{ item, index }"
               >
                 <section class="hot-bilibili-content-list">
                   <div class="hot-bilibili-content-top">
-                    <h3>{{ item.id }}</h3>
+                    <h3>{{ +index + 1 }}</h3>
                   </div>
                   <div class="hot-bilibili-content-img">
                     <img v-lazy="item.coverImg" alt />

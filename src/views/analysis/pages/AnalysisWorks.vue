@@ -11,14 +11,14 @@
         <a-col :span="24" :style="{ marginBottom: '12px' }">
           <strong>TA发布作品总量 (112)</strong>
         </a-col>
-        <a-col :span="12" v-if="legendAllOne.length">
+        <a-col :span="12" v-if="legendAllOne.data.length">
           <PieChart :title="titleAllOne" :legend="legendAllOne" :series="seriesAllOne" />
         </a-col>
-        <a-col :span="12" v-if="legendAllTwo.length">
-          <PieChart :title="titleAllTwo" />
+        <a-col :span="12" v-if="legendAllTwo.data.length">
+          <PieChart :title="titleAllTwo" :legend="legendAllTwo" :series="seriesAllTwo" />
         </a-col>
         <a-col :span="24">
-          <a-empty v-if="!legendAllOne.length && !legendAllTwo.length" />
+          <a-empty v-if="!legendAllOne.data.length && !legendAllTwo.data.length" />
         </a-col>
       </a-row>
 
@@ -27,13 +27,13 @@
           <strong>作品高频关键词分布</strong>
         </a-col>
         <a-col :span="12">
-          <PieChart v-if="legendAllWorks.length" :title="titleAllWorks" />
+          <Wordcloud v-if="seriesAllWorks.length" :title="titleAllWorks" :words="seriesAllWorks" />
         </a-col>
         <a-col :span="12">
-          <PieChart v-if="legendAllLabel.length" :title="titleAllLabel" />
+          <Wordcloud v-if="seriesAllLabel.length" :title="titleAllLabel" :words="seriesAllLabel" />
         </a-col>
         <a-col :span="24">
-          <a-empty v-if="!legendAllWorks.length && !legendAllLabel.length" />
+          <a-empty v-if="!seriesAllLabel.length && !seriesAllWorks.length" />
         </a-col>
       </a-row>
 
@@ -42,13 +42,21 @@
           <strong>作品简介 前20</strong>
         </a-col>
         <a-col :span="12">
-          <PieChart v-if="legendAllExpress.length" :title="titleAllExpress" />
+          <Wordcloud
+            v-if="seriesAllExpress.length"
+            :title="titleAllExpress"
+            :words="seriesAllExpress"
+          />
         </a-col>
         <a-col :span="12">
-          <PieChart v-if="legendAllComments.length" :title="titleAllComments" />
+          <Wordcloud
+            v-if="seriesAllComments.length"
+            :title="titleAllComments"
+            :words="seriesAllComments"
+          />
         </a-col>
         <a-col :span="24">
-          <a-empty v-if="!legendAllExpress.length && !legendAllComments.length" />
+          <a-empty v-if="!seriesAllExpress.length && !seriesAllComments.length" />
         </a-col>
       </a-row>
 
@@ -97,9 +105,11 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import PieChart from '@/components/Echart/PieChart.vue'
+import Wordcloud from '@/components/Echart/Wordcloud.vue'
 import BarChart from '@/components/Echart/BarChart.vue'
 import ListItem from '@/components/List/ListItem.vue'
 import { workDataAnalysis } from '@/api/analysis'
+import { vipNotice } from '@/utils/util'
 
 interface Params {
   kolId: string
@@ -109,6 +119,7 @@ interface Params {
 @Component({
   components: {
     PieChart,
+    Wordcloud,
     BarChart,
     ListItem
   }
@@ -130,7 +141,11 @@ export default class Analysiswork extends Vue {
     subtext: '一级分类',
     x: 'center'
   }
-  private legendAllOne: object = {}
+  private legendAllOne: any = {
+    orient: 'vertical',
+    x: 'left',
+    data: []
+  }
   private seriesAllOne: any = []
 
   // 饼状图 => 二级分类
@@ -138,23 +153,25 @@ export default class Analysiswork extends Vue {
     subtext: '二级分类',
     x: 'center'
   }
-  private legendAllTwo: object = {}
+  private legendAllTwo: any = {
+    orient: 'vertical',
+    x: 'left',
+    data: []
+  }
   private seriesAllTwo: any = []
 
   // 饼状图 => 作品标题
-  private titleAllWorks: object = {
+  private titleAllWorks: any = {
     subtext: '作品标题',
     x: 'center'
   }
-  private legendAllWorks: object = {}
   private seriesAllWorks: any = []
 
   // 饼状图 => 作品标签
-  private titleAllLabel: object = {
+  private titleAllLabel: any = {
     subtext: '作品标签',
     x: 'center'
   }
-  private legendAllLabel: object = {}
   private seriesAllLabel: any = []
 
   // 饼状图 => 作品简介
@@ -162,7 +179,6 @@ export default class Analysiswork extends Vue {
     subtext: '作品简介',
     x: 'center'
   }
-  private legendAllExpress: object = {}
   private seriesAllExpress: any = []
 
   // 饼状图 => 作品评论
@@ -170,7 +186,6 @@ export default class Analysiswork extends Vue {
     subtext: '作品评论',
     x: 'center'
   }
-  private legendAllComments: object = {}
   private seriesAllComments: any = []
 
   private mounted() {
@@ -267,11 +282,7 @@ export default class Analysiswork extends Vue {
             }
           )
 
-          this.legendAllOne = {
-            orient: 'vertical',
-            x: 'left',
-            data: legendAllOne
-          }
+          this.legendAllOne.data = legendAllOne
 
           const seriesAllOne = res.kolThemeProportionInfoList.map(
             (item: any) => {
@@ -304,11 +315,96 @@ export default class Analysiswork extends Vue {
           ]
 
           // 发布作品总量 => 二级分类 饼状图
+          const legendAllTwo = res.kolTwoThemeProportionInfoList.map(
+            (item: any) => {
+              return item.themeName
+            }
+          )
+
+          this.legendAllTwo.data = legendAllTwo
+
+          const seriesAllTwo = res.kolTwoThemeProportionInfoList.map(
+            (item: any) => {
+              return { value: item.videoNum, name: item.themeName }
+            }
+          )
+
+          this.seriesAllTwo = [
+            {
+              name: '作品数量',
+              type: 'pie',
+              minAngle: '5',
+              radius: ['30%', '50%'],
+              avoidLabelOverlap: false,
+              label: {
+                normal: {
+                  show: false,
+                  position: 'center'
+                },
+                emphasis: {
+                  show: true,
+                  textStyle: {
+                    fontSize: '20',
+                    fontWeight: '600'
+                  }
+                }
+              },
+              data: seriesAllTwo
+            }
+          ]
+
+          // 发布高频关键词分布 => 作品标题 饼状图
+          const videoTitleData = JSON.parse(res.videoTitleData)
+
+          const seriesAllWorks = videoTitleData.map((item: any) => {
+            const name = Object.keys(item).join('')
+            const value = Object.values(item).join('')
+            return { name: name, value: value }
+          })
+
+          this.seriesAllWorks = seriesAllWorks
+
+          // 发布高频关键词分布 => 作品标签 饼状图
+          const videoTagData = JSON.parse(res.videoTagData)
+
+          const seriesAllLabel = videoTagData.map((item: any) => {
+            const name = Object.keys(item).join('')
+            const value = Object.values(item).join('')
+            return { name: name, value: Number(value) }
+          })
+
+          this.seriesAllLabel = seriesAllLabel
+
+          // 发布高频关键词分布 => 作品简介 饼状图
+          const videoIntroData = JSON.parse(res.videoIntroData)
+
+          const seriesAllExpress = videoIntroData.map((item: any) => {
+            const name = Object.keys(item).join('')
+            const value = Object.values(item).join('')
+            return { name: name, value: Number(value) }
+          })
+
+          this.seriesAllExpress = seriesAllExpress
+
+          // 发布高频关键词分布 => 作品简介 饼状图
+          const videoCommentData = JSON.parse(res.videoCommentData)
+
+          const seriesAllComments = videoCommentData.map((item: any) => {
+            const name = Object.keys(item).join('')
+            const value = Object.values(item).join('')
+            return { name: name, value: Number(value) }
+          })
+
+          this.seriesAllComments = seriesAllComments
+        }
+
+        // 非会员无权限访问
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {})
         }
       })
       .catch((err: any) => {
         console.log(err)
-        this.$message.error('请求超时')
       })
       .finally(() => (this.spinning = false))
   }

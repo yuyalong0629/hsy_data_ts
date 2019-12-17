@@ -42,6 +42,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import PieChart from '@/components/Echart/PieChart.vue'
 import BarChart from '@/components/Echart/BarChart.vue'
 import { fansPortrait } from '@/api/analysis'
+import { vipNotice } from '@/utils/util'
 
 @Component({
   components: {
@@ -268,6 +269,11 @@ export default class AnalysisFans extends Vue {
               })
             }
           ]
+        }
+
+        // 非会员无权限访问
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {})
         }
       })
       .catch((err: any) => console.log(err))

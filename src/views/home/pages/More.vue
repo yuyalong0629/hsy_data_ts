@@ -19,6 +19,7 @@
             <h3>{{ item.title }}</h3>
             <p>{{ item.text }}</p>
             <a-button
+              v-if="!GET_STORAGE"
               type="primary"
               size="large"
               style="width: 140px; height: 42px; background: #ff5847;"
@@ -33,9 +34,15 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Mutation, Getter, namespace } from 'vuex-class'
+
+const user = namespace('user')
 
 @Component
 export default class More extends Vue {
+  @user.Mutation REGISTER_MODAL!: (modal: boolean) => void
+  @user.Getter GET_STORAGE!: () => any
+
   private isActiveMore: number = 0
   private moreList: object[] = [
     { index: 0, text: `相似账号` },
@@ -82,7 +89,9 @@ export default class More extends Vue {
   }
 
   // 免费注册体验
-  private handelExperience(): void {}
+  private handelExperience(): void {
+    this.REGISTER_MODAL(true)
+  }
 }
 </script>
 

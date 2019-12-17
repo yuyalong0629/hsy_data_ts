@@ -38,7 +38,7 @@
       </a-col>
     </a-row>
 
-    <a-row :style="{ marginTop: '12px' }">
+    <a-row :style="{ marginTop: '12px' }" class="permission">
       <a-col :span="24">
         <a-spin :spinning="spinning">
           <component :is="componentId" :dataSource="dataSource" :dataSourceasc="dataSourceasc"></component>
@@ -59,7 +59,7 @@
 
     <a-row v-if="GET_STORAGE && GET_STORAGE.userType !== 1" :style="{ margin: '12px 0' }">
       <a-col :span="24">
-        <Permissions alert="免费版仅可查看100个结果" />
+        <!-- <Permissions alert="免费版仅可查看100个结果" /> -->
       </a-col>
     </a-row>
   </div>
@@ -74,6 +74,7 @@ import OtherTable from '@/components/Table/OtherTable.vue'
 import Permissions from '@/components/Permissions/Permissions.vue'
 import { navFilter, twoSortFlag } from '@/api/index'
 import { ranklist } from '@/api/rank'
+import { vipNotice } from '@/utils/util'
 
 interface Params {
   [key: string]: number | string
@@ -302,6 +303,10 @@ export default class Rank extends Vue {
           this.total = res.page && res.page.count
           this.current = res.page && res.page.index + 1
         }
+
+        if (res.code === -1) {
+          vipNotice.call(this, res.message)
+        }
       })
       .catch(() => this.$message.error('请求超时'))
       .finally(() => (this.spinning = false))
@@ -334,6 +339,10 @@ export default class Rank extends Vue {
   .ant-pagination {
     display: flex;
     justify-content: flex-end;
+  }
+
+  .permission {
+    position: relative;
   }
 }
 </style>

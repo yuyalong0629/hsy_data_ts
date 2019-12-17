@@ -3,68 +3,32 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from 'vue-property-decorator'
+import { Component, Vue, Ref, Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export default class Wordcloud extends Vue {
   @Ref() private wordcloud: any
 
-  private $echarts: any
-  private words: any[] = [
-    {
-      name: '考研',
-      value: 10000
-    },
-    {
-      name: '兼职',
-      value: 6181
-    },
-    {
-      name: '食堂',
-      value: 4386
-    },
-    {
-      name: '家教',
-      value: 4055
-    },
-    {
-      name: '大四',
-      value: 2467
-    },
-    {
-      name: '研友',
-      value: 2244
-    },
-    {
-      name: '食堂',
-      value: 4386
-    },
-    {
-      name: '家教',
-      value: 4055
-    },
-    {
-      name: '大四',
-      value: 2467
-    },
-    {
-      name: '研友',
-      value: 2244
-    }
-  ]
+  @Prop({ default: () => [] }) private words!: any
+  @Prop({ default: () => [] }) private title!: any
 
-  private mounted() {
-    this.$nextTick(() => {
-      this.initEchart()
-    })
-  }
+  private $echarts: any
+  private setWords: any = []
+  private setTitle: object = {}
 
   private initEchart() {
     const myChart = this.$echarts.init(this.wordcloud)
 
-    let option = {
+    const option = {
+      title: this.setTitle,
       tooltip: {
         show: true
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          saveAsImage: {}
+        }
       },
       series: [
         {
@@ -74,7 +38,7 @@ export default class Wordcloud extends Vue {
           // size: ['95%', '95%'],
           sizeRange: [12, 60],
           textPadding: 0,
-          gridSize: 40, // 间隔
+          gridSize: 12, // 间隔
           autoSize: {
             enable: true,
             minSize: 14
@@ -96,13 +60,35 @@ export default class Wordcloud extends Vue {
               }
             }
           },
-          data: this.words
+          data: this.setWords
         }
       ]
     }
-
     // 设置图表的参数
     myChart.setOption(option)
+  }
+
+  // 设置标题
+  @Watch('title', { immediate: true, deep: true })
+  private watchTitle(val: object) {
+    this.setTitle = {}
+    if (val) {
+      this.$nextTick(() => {
+        this.setTitle = val
+        this.initEchart()
+      })
+    }
+  }
+
+  @Watch('words', { immediate: true, deep: true })
+  private watchWords(val: any): void {
+    this.setWords = []
+    if (val.length) {
+      this.$nextTick(() => {
+        this.setWords = val
+        this.initEchart()
+      })
+    }
   }
 }
 </script>

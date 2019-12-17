@@ -53,13 +53,14 @@ export default class MonitorList extends Vue {
     kolId: string
   ) {
     if (type === 1 && (status === 1 || status === 3)) {
-      this.$router.push({
+      const { href } = this.$router.resolve({
         path: '/analysis',
         query: {
           videoId: id,
           kolId: kolId
         }
       })
+      window.open(href, '_blank')
     }
   }
 }

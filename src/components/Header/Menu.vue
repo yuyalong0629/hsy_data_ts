@@ -9,7 +9,7 @@
           <img v-lazy="require('@/assets/images/VIPup.png')" alt />
         </router-link>
       </li>
-      <li class="nav-list" v-if="GET_HOT">
+      <li class="nav-list" v-if="GET_STORAGE">
         <router-link tag="span" to="/hot">火热榜</router-link>
       </li>
       <li class="nav-list">
@@ -37,7 +37,9 @@
             <a-avatar :size="42" :src="GET_STORAGE.userImage" icon="user" />
             <div class="nav-user-icon-userinfo">
               <p class="nav-user-icon-name">{{ GET_STORAGE.username }}</p>
-              <p class="nav-user-icon-vip">{{ GET_STORAGE.userType !== 1 ? '免费会员' : 'VIP会员' }}</p>
+              <p
+                class="nav-user-icon-vip"
+              >{{ GET_STORAGE.userType === 0 ? '免费版会员' : GET_STORAGE.userType === 1 ? '高级版会员' : GET_STORAGE.userType === 2 ? '专业版会员' : '企业版会员' }}</p>
             </div>
             <a-icon :type="iconType" />
           </div>
@@ -121,10 +123,11 @@ const user = namespace('user')
 })
 export default class Menu extends Vue {
   @user.Getter GET_STORAGE!: () => any
-  @user.Getter GET_HOT!: () => any
   @user.State loginModal!: boolean
+  @user.State registerModal!: boolean
   @user.Mutation SET_LOGIN!: (info: any) => void
   @user.Mutation LOGIN_MODAL!: (modal: boolean) => void
+  @user.Mutation REGISTER_MODAL!: (modal: boolean) => void
 
   private iconType: string = 'caret-down'
   private visible: boolean = false
@@ -274,6 +277,7 @@ export default class Menu extends Vue {
   private handleCancel(): void {
     this.visible = false
     this.LOGIN_MODAL(false)
+    this.REGISTER_MODAL(false)
   }
 
   // emit
@@ -283,8 +287,15 @@ export default class Menu extends Vue {
   }
 
   @Watch('loginModal')
-  function(val: boolean): void {
+  private watchLogin(val: boolean): void {
     this.visible = val
+    this.componentId = 'Login'
+  }
+
+  @Watch('registerModal')
+  private watchRegister(val: boolean): void {
+    this.visible = val
+    this.componentId = 'Register'
   }
 }
 </script>

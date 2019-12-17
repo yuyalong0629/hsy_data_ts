@@ -84,6 +84,7 @@ import { Component, Vue, Ref } from 'vue-property-decorator'
 import moment from 'moment'
 import { addMonitor, searchKol, monitorHistory } from '@/api/monitor'
 import MonitorList from './pages/MonitorList.vue'
+import { vipNotice } from '@/utils/util'
 
 @Component({
   components: {
@@ -232,8 +233,10 @@ export default class Monitoring extends Vue {
         console.log(res)
         this.$message.success(res.message)
         // 每次添加初始化列表
-      } else {
-        this.$message.error(res.message)
+      }
+      // 非会员无权限访问
+      if (res.code === -1) {
+        vipNotice.call(this, res.message, () => {})
       }
     })
   }

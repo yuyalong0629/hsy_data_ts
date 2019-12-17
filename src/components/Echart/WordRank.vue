@@ -2,20 +2,28 @@
   <div class="word-rank" style="width: 100%; height: 340px;">
     <a-row :gutter="16" class="word-rank-wrapper">
       <a-col :span="12" class="word-rank-left">
-        <p v-for="(item, index) of 10" :key="index">{{`${index}-美康粉黛（35）`}}</p>
+        <p
+          v-for="(item, index) of word.slice(0, 10)"
+          :key="index"
+        >{{`${index + 1}-${item.name}（${item.value}）`}}</p>
       </a-col>
       <a-col :span="12" class="word-rank-right">
-        <p v-for="(item, index) of 10" :key="index">{{`${index}-美康粉黛（35）`}}</p>
+        <p
+          v-for="(item, index) of word.slice(10, 20)"
+          :key="index"
+        >{{`${index + 10}-${item.name}（${item.value}）`}}</p>
       </a-col>
     </a-row>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component
-export default class WordRank extends Vue {}
+export default class WordRank extends Vue {
+  @Prop({ default: () => [] }) private word!: []
+}
 </script>
 
 <style lang="less" scoped>
@@ -38,7 +46,8 @@ export default class WordRank extends Vue {}
       justify-content: space-around;
 
       p {
-        text-align: center;
+        text-align: left;
+        padding-left: 24px;
       }
     }
   }

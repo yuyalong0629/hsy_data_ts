@@ -3,11 +3,12 @@
     <!-- search -->
     <a-row>
       <a-col :span="24" :style="{ marginBottom: '12px' }">
-        <a-radio-group name="radioGroup" :defaultValue="1" @change="changeRadio">
-          <a-radio :value="1">全部</a-radio>
-          <a-radio :value="2">作品标题+简介</a-radio>
-          <a-radio :value="3">作品标签+评论</a-radio>
-          <a-radio :value="4">纯评论内容</a-radio>
+        <a-radio-group name="radioGroup" :defaultValue="0" @change="changeRadio">
+          <a-radio :value="0">全部视频</a-radio>
+          <a-radio :value="1">作品标题+简介</a-radio>
+          <a-radio :value="2">作品标签+评论</a-radio>
+          <a-radio :value="3">纯评论内容</a-radio>
+          <a-radio :value="4">相簿动态</a-radio>
         </a-radio-group>
       </a-col>
 
@@ -25,18 +26,48 @@
       </a-col>
 
       <a-col :span="24">
-        <Tabs :tagInfos="platformInfos" @onChangeTag="onChangeTagPlat" tagName="支持平台" />
-        <Tabs :tagInfos="themeInfos" @onChangeTag="onChangeTagTheme" tagName="行业分类" />
+        <Tabs
+          v-if="platformInfos.length"
+          :tagInfos="platformInfos"
+          @onChangeTag="onChangeTagPlat"
+          tagName="支持平台"
+        />
+        <Tabs
+          v-if="themeInfos.length"
+          :tagInfos="themeInfos"
+          @onChangeTag="onChangeTagTheme"
+          tagName="行业分类"
+        />
         <Tabs
           v-if="themeInfosTwo.length"
           :tagInfos="themeInfosTwo"
           @onChangeTag="onChangeTagTTwo"
           tagName="二级分类"
         />
-        <Tabs :tagInfos="fansBasicDatas" @onChangeTag="onChangeTagFans" tagName="粉丝数量" />
-        <Tabs :tagInfos="playBasicDatas" @onChangeTag="onChangeTagPlay" tagName="播放数量" />
-        <Tabs :tagInfos="praiseBasicDatas" @onChangeTag="onChangeTagPraise" tagName="点赞数量" />
-        <Tabs :tagInfos="publishTimeBasicDatas" @onChangeTag="onChangeTagTime" tagName="发布时间" />
+        <Tabs
+          v-if="fansBasicDatas.length"
+          :tagInfos="fansBasicDatas"
+          @onChangeTag="onChangeTagFans"
+          tagName="粉丝数量"
+        />
+        <Tabs
+          v-if="playBasicDatas.length"
+          :tagInfos="playBasicDatas"
+          @onChangeTag="onChangeTagPlay"
+          tagName="浏览数量"
+        />
+        <Tabs
+          v-if="praiseBasicDatas.length"
+          :tagInfos="praiseBasicDatas"
+          @onChangeTag="onChangeTagPraise"
+          tagName="点赞数量"
+        />
+        <Tabs
+          v-if="publishTimeBasicDatas.length"
+          :tagInfos="publishTimeBasicDatas"
+          @onChangeTag="onChangeTagTime"
+          tagName="发布时间"
+        />
       </a-col>
     </a-row>
 
@@ -68,6 +99,7 @@ import Tabs from '@/components/Tabs/Tabs.vue'
 import ContentList from '@/components/List/ContentList.vue'
 import { navFilter, twoSortFlag } from '@/api/index'
 import { searchKeyword, searchContent } from '@/api/search'
+import { vipNotice } from '@/utils/util'
 
 interface Params {
   [key: string]: string | number
@@ -112,6 +144,7 @@ export default class ContentQuery extends Vue {
       praiseNum: '', // 点赞数
       publishTime: '', // 发布时间
       cType: '1', // 标签
+      type: '1', // 标签
       pageNo: 0
     }
   ]
@@ -165,14 +198,30 @@ export default class ContentQuery extends Vue {
   // Radio
   private changeRadio(e: any): void {
     const { params } = this
+
+    if (e.target.value === 4) {
+      const target = params.map((item: any) => {
+        return {
+          ...item,
+          cType: e.target.value,
+          type: '2',
+          pageNo: 0
+        }
+      })
+
+      this.params = [...target]
+      return
+    }
+
     const target = params.map((item: any) => {
       return {
         ...item,
         cType: e.target.value,
+        type: '1',
         pageNo: 0
       }
     })
-    console.log(target)
+
     this.params = [...target]
   }
 
@@ -322,6 +371,10 @@ export default class ContentQuery extends Vue {
           this.keyword = res.keyword
           this.total = res.page.count
           this.current = +res.page.index + 1
+        }
+        // 非会员无权限访问
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {})
         }
       })
       .catch(() => this.$message.error('请求超时'))

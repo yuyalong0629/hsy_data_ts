@@ -137,8 +137,8 @@ export default class Pay extends Vue {
 
   private level: any[] = [
     { id: 0, name: '高级版会员' },
-    { id: 1, name: '专业级会员' },
-    { id: 2, name: '企业级会员' }
+    { id: 1, name: '专业版会员' },
+    { id: 2, name: '企业版会员' }
   ]
   private way: any[] = [
     { id: 0, src: require('@/assets/images/weixin.png') },
@@ -152,6 +152,8 @@ export default class Pay extends Vue {
   private price: any = {}
   private visible: boolean = false
   private applyImg: string = ''
+
+  public userType: number = 2
 
   private mounted() {
     if (this.$route.query.priceType) {
@@ -172,7 +174,7 @@ export default class Pay extends Vue {
   }
 
   // 获取价格列表
-  private getPrice(params?: { type: string }): any {
+  private async getPrice(params?: { type: string }) {
     return buyPrice(params)
       .then((res: any) => {
         if (res.code === 200) {
@@ -187,6 +189,39 @@ export default class Pay extends Vue {
           this.price = res.monthlyPriceInfos.filter(
             (item: any) => item.isDefault === 1
           )[0]
+
+          // 判断续费
+          this.userType = res.userType
+        }
+      })
+      .then(() => {
+        // 新用户购买
+        if (this.userType === 0) {
+          this.level = [
+            { id: 0, name: '高级版会员' },
+            { id: 1, name: '专业版会员' },
+            { id: 2, name: '企业版会员' }
+          ]
+        }
+        // 高级版续费
+        if (this.userType === 1) {
+          this.level = [
+            { id: 0, name: '高级版会员' },
+            { id: 1, name: '专业版会员' },
+            { id: 2, name: '企业版会员' }
+          ]
+        }
+        // 专业版续费
+        if (this.userType === 2) {
+          this.level = [
+            { id: 1, name: '专业版会员' },
+            { id: 2, name: '企业版会员' }
+          ]
+        }
+        // 企业版续费
+        if (this.userType === 3) {
+          this.level = [{ id: 2, name: '企业版会员' }]
+          this.isLevel = 2
         }
       })
       .catch(() => this.$message.error('请求超时'))

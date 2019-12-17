@@ -20,12 +20,6 @@ router.beforeEach((to, from, next) => {
     document.title = `火烧云数据-${to.meta.title}`
   }
 
-  if (to.fullPath === '/index') {
-    store.commit('user/SET_HOT', false)
-  } else {
-    store.commit('user/SET_HOT', true)
-  }
-
   if (to.meta.hidden) {
     const isLogin = store.getters['user/GET_STORAGE']
 

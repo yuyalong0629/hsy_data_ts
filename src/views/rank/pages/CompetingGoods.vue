@@ -6,10 +6,10 @@
       </a-col>
       <a-col :span="12">
         <a-radio-group @change="onChangeRadio" v-model="type">
-          <a-radio :value="1">30天内</a-radio>
-          <a-radio :value="2">60天内</a-radio>
-          <a-radio :value="3">90天内</a-radio>
-          <a-radio :value="4">180天内</a-radio>
+          <a-radio :value="30">30天内</a-radio>
+          <a-radio :value="60">60天内</a-radio>
+          <a-radio :value="90">90天内</a-radio>
+          <a-radio :value="180">180天内</a-radio>
         </a-radio-group>
       </a-col>
       <a-col :span="12">
@@ -33,10 +33,6 @@
           <span class="competingGoods-report-time">
             <p>查询时间：{{ `${publishTimeStart} - ${publishTimeEnd}` }}</p>
           </span>
-          <!-- <span class="competingGoods-report-change">
-            <a href="javascript:;">上一篇</a>
-            <a href="javascript:;">下一篇</a>
-          </span>-->
         </a-col>
 
         <a-col :span="24" class="competingGoods-progress">
@@ -71,11 +67,6 @@
           <strong>曝光数据</strong>
           <PieChart :title="titleExposure" :legend="legendExposure" :series="seriesExposure" />
         </a-col>
-
-        <!-- <a-col :span="24" class="competingGoods-conversion">
-          <strong>转化数据</strong>
-          <FunnelChart />
-        </a-col>-->
       </a-row>
 
       <a-empty v-else />
@@ -89,6 +80,7 @@ import { boutiqueAnalysis } from '@/api/rank'
 import BarChart from '@/components/Echart/BarChart.vue'
 import FunnelChart from '@/components/Echart/FunnelChart.vue'
 import PieChart from '@/components/Echart/PieChart.vue'
+import { vipNotice } from '@/utils/util'
 
 @Component({
   components: {
@@ -101,7 +93,7 @@ export default class CompetingGoods extends Vue {
   @Prop({ default: () => {} }) private pageInfo!: any
   @Prop({ default: 0 }) private videoNum!: number
 
-  private type: number = 1
+  private type: number = 30
   private keyword: string = ''
   private spinning: boolean = false
   private dataNum: number = 0
@@ -193,6 +185,10 @@ export default class CompetingGoods extends Vue {
               data: seriesExposure
             }
           ]
+        }
+        // 非会员无权限访问
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {})
         }
       })
       .finally(() => (this.spinning = false))

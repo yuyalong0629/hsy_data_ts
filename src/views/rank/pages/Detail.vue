@@ -56,6 +56,7 @@ import UpDataTrend from './UpDataTrend.vue'
 import Advertisements from './Advertisements.vue'
 import CompetingGoods from './CompetingGoods.vue'
 import Permissions from '@/components/Permissions/Permissions.vue'
+import { vipNotice } from '@/utils/util'
 
 interface Params {
   [key: string]: number | string
@@ -118,6 +119,13 @@ export default class Detail extends Vue {
           }
           this.updateTime = res.kolTotalData.updateTime
           this.isCollect = res.isCollect
+        }
+
+        // 非会员无权限访问
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {
+            window.close()
+          })
         }
       })
       .catch(() => this.$message.error('请求超时'))
@@ -238,8 +246,10 @@ export default class Detail extends Vue {
             type: params.type,
             keyword: params.keyword
           }
-        } else {
-          this.$message.error(res.message)
+        }
+        // 非会员无权限访问
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {})
         }
       })
       .catch(() => this.$message.error('请求超时'))
