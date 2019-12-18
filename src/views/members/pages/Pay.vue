@@ -8,7 +8,7 @@
             v-for="item of level"
             :class="{ activeIndex: isLevel === item.id }"
             :key="item.id"
-            @click="handleLevel(item)"
+            @click="item.isClick && handleLevel(item)"
           >
             <img v-if="isLevel === item.id" v-lazy="require('@/assets/images/gouzi.png')" alt />
             <span>{{ item.name }}</span>
@@ -136,9 +136,9 @@ export default class Pay extends Vue {
   @user.Mutation SET_LOGIN!: (params: any) => void
 
   private level: any[] = [
-    { id: 0, name: '高级版会员' },
-    { id: 1, name: '专业版会员' },
-    { id: 2, name: '企业版会员' }
+    { id: 0, isClick: true, name: '高级版会员' },
+    { id: 1, isClick: true, name: '专业版会员' },
+    { id: 2, isClick: true, name: '企业版会员' }
   ]
   private way: any[] = [
     { id: 0, src: require('@/assets/images/weixin.png') },
@@ -195,33 +195,29 @@ export default class Pay extends Vue {
         }
       })
       .then(() => {
-        // 新用户购买
-        if (this.userType === 0) {
+        // 新用户购买 ||  高级版会员
+        if (this.userType === 0 || this.userType === 1) {
           this.level = [
-            { id: 0, name: '高级版会员' },
-            { id: 1, name: '专业版会员' },
-            { id: 2, name: '企业版会员' }
-          ]
-        }
-        // 高级版续费
-        if (this.userType === 1) {
-          this.level = [
-            { id: 0, name: '高级版会员' },
-            { id: 1, name: '专业版会员' },
-            { id: 2, name: '企业版会员' }
+            { id: 0, isClick: true, name: '高级版会员' },
+            { id: 1, isClick: true, name: '专业版会员' },
+            { id: 2, isClick: true, name: '企业版会员' }
           ]
         }
         // 专业版续费
         if (this.userType === 2) {
           this.level = [
-            { id: 1, name: '专业版会员' },
-            { id: 2, name: '企业版会员' }
+            { id: 0, isClick: false, name: '高级版会员' },
+            { id: 1, isClick: true, name: '专业版会员' },
+            { id: 2, isClick: true, name: '企业版会员' }
           ]
         }
         // 企业版续费
         if (this.userType === 3) {
-          this.level = [{ id: 2, name: '企业版会员' }]
-          this.isLevel = 2
+          this.level = [
+            { id: 0, isClick: false, name: '高级版会员' },
+            { id: 1, isClick: false, name: '专业版会员' },
+            { id: 2, isClick: true, name: '企业版会员' }
+          ]
         }
       })
       .catch(() => this.$message.error('请求超时'))

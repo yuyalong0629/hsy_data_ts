@@ -12,7 +12,8 @@ const api = {
   newsContentInfoList: '/api/newsContentInfoList',
   newsContentInfoDetail: '/api/newsContentInfoDetail',
   navFilter: '/api/searchFilter',
-  twoSortFlag: '/api/twoSortFlag'
+  twoSortFlag: '/api/twoSortFlag',
+  operateLimitList: '/api/operateLimitList'
 }
 
 /**
@@ -89,5 +90,19 @@ export function twoSortFlag(parameter: any) {
     method: 'get',
     url: api.twoSortFlag,
     params: parameter
+  })
+}
+
+/**
+ * @description: 会员权限 Table
+ * @param {string} method [请求方式]
+ * @param {object} params [传入参数]
+ * @return: operateLimitList
+ */
+
+export function operateLimitList() {
+  return axios({
+    method: 'get',
+    url: api.operateLimitList
   })
 }

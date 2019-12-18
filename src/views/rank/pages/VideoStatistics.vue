@@ -41,7 +41,7 @@
             </a>
           </div>
           <div class="video-content-info">
-            <h3 class="video-content-info-title">
+            <h3 class="video-content-info-title" v-if="item.title">
               <a
                 :href="item.sourceUrl"
                 target="_blank"
@@ -52,13 +52,15 @@
               class="video-content-info-text"
               v-html="decodeURI(decodeURI(pageInfo.keyword)) ? heightLight(item.summary, decodeURI(decodeURI(pageInfo.keyword))) :  item.summary"
             ></p>
-            <a-tag
-              color="pink"
-              :style="{ marginBottom: '6px' }"
-              v-for="(item, index) in JSON.parse(item.tags)"
-              :key="index"
-              v-html="decodeURI(decodeURI(pageInfo.keyword)) ? heightLight(item, decodeURI(decodeURI(pageInfo.keyword))) :  item"
-            ></a-tag>
+            <template v-if="item.tags">
+              <a-tag
+                color="pink"
+                :style="{ marginBottom: '6px' }"
+                v-for="(item, index) of JSON.parse(item.tags)"
+                :key="index"
+                v-html="decodeURI(decodeURI(pageInfo.keyword)) ? heightLight(item, decodeURI(decodeURI(pageInfo.keyword))) :  item"
+              ></a-tag>
+            </template>
             <div class="video-content-info-label">
               <p class="video-content-info-label-time">发布时间：{{ item.publishTime | formatDate }}</p>
               <ul class="video-content-info-label-num">
@@ -72,11 +74,7 @@
                 </li>
                 <li v-if="detailType === '2'" :style="{ paddingLeft: '8px', cursor: 'pointer' }">
                   浏览：
-                  <span>{{ item.playNum }}</span>
-                </li>
-                <li v-if="detailType === '2'" :style="{ paddingLeft: '8px', cursor: 'pointer' }">
-                  支持：
-                  <span>{{ item.playNum }}</span>
+                  <span>{{ item.readNum }}</span>
                 </li>
                 <li :style="{ paddingLeft: '8px', cursor: 'pointer' }">
                   <a-icon type="like" theme="filled" />
@@ -156,22 +154,27 @@ const MyIcon: any = Icon.createFromIconfontCN({
   }
 })
 export default class Video extends Vue {
-  @Prop({ default: {} }) private pageInfo!: object
+  @Prop({ default: {} }) private videoInfo!: object
   @Prop({ default: 0 }) private videoType!: number
   @Prop({ default: '1' }) private detailType!: string
   @Prop({ default: '' }) private updateTime!: string
 
+  private pageInfo?: object
   // 分页
-  private total: number = 0
-  private current: number = 1
-  private pageSize: number = 20
+  private total?: number
+  private current?: number
+  private pageSize?: number
 
   private type: number = 0
   private activeKey?: string
   private data() {
     return {
       heightLight,
-      activeKey: '-1'
+      activeKey: '-1',
+      pageInfo: {},
+      total: 0,
+      current: 1,
+      pageSize: 20
     }
   }
 
@@ -207,8 +210,10 @@ export default class Video extends Vue {
     return pageInfo
   }
 
-  @Watch('pageInfo')
+  @Watch('videoInfo', { immediate: true, deep: true })
   private watchPageInfo(params: any): void {
+    this.pageInfo = params
+
     this.total = params.count
     this.current = +params.index + 1
 

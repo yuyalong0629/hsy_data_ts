@@ -1,76 +1,81 @@
 <template>
   <div class="competingGoods">
-    <a-row :gutter="16">
-      <a-col :span="24" class="competingGoods-title">
-        <h4>竞品投放解析</h4>
-      </a-col>
-      <a-col :span="12">
-        <a-radio-group @change="onChangeRadio" v-model="type">
-          <a-radio :value="30">30天内</a-radio>
-          <a-radio :value="60">60天内</a-radio>
-          <a-radio :value="90">90天内</a-radio>
-          <a-radio :value="180">180天内</a-radio>
-        </a-radio-group>
-      </a-col>
-      <a-col :span="12">
-        <a-input-search placeholder="号内搜 请输入关键词、商品名称、品牌名" @search="onSearch" enterButton />
-      </a-col>
-      <a-col :span="24" class="competingGoods-express">
-        <p>报告包含：1.商品植入作品详情，2.商品广告曝光数据，3.作品互动数据，4.转化漏斗数据等</p>
-      </a-col>
-    </a-row>
-
-    <a-spin :spinning="spinning">
-      <a-row :gutter="16" v-if="dataNum !== 0">
+    <div v-if="permission" class="competingGoods-permisson">
+      <img v-lazy="require('@/assets/images/jiashuju2.png')" alt />
+    </div>
+    <div v-else>
+      <a-row :gutter="16">
         <a-col :span="24" class="competingGoods-title">
-          <h4>竞品投放报告（{{ dataNum }}）</h4>
+          <h4>竞品投放解析</h4>
         </a-col>
-        <a-col :span="24" class="competingGoods-report">
-          <span class="competingGoods-report-name">
-            <p>竞品名称：</p>
-            <p>{{ keyword }}</p>
-          </span>
-          <span class="competingGoods-report-time">
-            <p>查询时间：{{ `${publishTimeStart} - ${publishTimeEnd}` }}</p>
-          </span>
+        <a-col :span="12">
+          <a-radio-group @change="onChangeRadio" v-model="type">
+            <a-radio :value="30">30天内</a-radio>
+            <a-radio :value="60">60天内</a-radio>
+            <a-radio :value="90">90天内</a-radio>
+            <a-radio :value="180">180天内</a-radio>
+          </a-radio-group>
         </a-col>
-
-        <a-col :span="24" class="competingGoods-progress">
-          <span>
-            <strong>关联作品</strong>
-            <a-progress
-              :percent="percent"
-              :strokeWidth="12"
-              strokeColor="#00a1d6"
-              :showInfo="false"
-            />
-          </span>
-          <span>
-            <p>{{ dataNum }}部</p>
-            <p>{{ videoNum }}部（发布总数）</p>
-          </span>
+        <a-col :span="12">
+          <a-input-search placeholder="号内搜 请输入关键词、商品名称、品牌名" @search="onSearch" enterButton />
         </a-col>
-
-        <a-col :span="24" class="competingGoods-steps">
-          <strong>关联作品</strong>
-          <a-timeline mode="left">
-            <a-timeline-item v-for="(item, index) of datasPublish" :key="index">{{ item.name }}</a-timeline-item>
-          </a-timeline>
-        </a-col>
-
-        <a-col :span="24" class="competingGoods-zone">
-          <strong>商品广告作品发布时区</strong>
-          <BarChart :xAis="dataMapListX" :legend="legend" :series="dataMapListY" />
-        </a-col>
-
-        <a-col :span="24" class="competingGoods-exposure">
-          <strong>曝光数据</strong>
-          <PieChart :title="titleExposure" :legend="legendExposure" :series="seriesExposure" />
+        <a-col :span="24" class="competingGoods-express">
+          <p>报告包含：1.商品植入作品详情，2.商品广告曝光数据，3.作品互动数据，4.转化漏斗数据等</p>
         </a-col>
       </a-row>
 
-      <a-empty v-else />
-    </a-spin>
+      <a-spin :spinning="spinning">
+        <a-row :gutter="16" v-if="dataNum !== 0">
+          <a-col :span="24" class="competingGoods-title">
+            <h4>竞品投放报告（{{ dataNum }}）</h4>
+          </a-col>
+          <a-col :span="24" class="competingGoods-report">
+            <span class="competingGoods-report-name">
+              <p>竞品名称：</p>
+              <p>{{ keyword }}</p>
+            </span>
+            <span class="competingGoods-report-time">
+              <p>查询时间：{{ `${publishTimeStart} - ${publishTimeEnd}` }}</p>
+            </span>
+          </a-col>
+
+          <a-col :span="24" class="competingGoods-progress">
+            <span>
+              <strong>关联作品</strong>
+              <a-progress
+                :percent="percent"
+                :strokeWidth="12"
+                strokeColor="#00a1d6"
+                :showInfo="false"
+              />
+            </span>
+            <span>
+              <p>{{ dataNum }}部</p>
+              <p>{{ videoNum }}部（发布总数）</p>
+            </span>
+          </a-col>
+
+          <a-col :span="24" class="competingGoods-steps">
+            <strong>关联作品</strong>
+            <a-timeline mode="left">
+              <a-timeline-item v-for="(item, index) of datasPublish" :key="index">{{ item.name }}</a-timeline-item>
+            </a-timeline>
+          </a-col>
+
+          <a-col :span="24" class="competingGoods-zone">
+            <strong>商品广告作品发布时区</strong>
+            <BarChart :xAis="dataMapListX" :legend="legend" :series="dataMapListY" />
+          </a-col>
+
+          <a-col :span="24" class="competingGoods-exposure">
+            <strong>曝光数据</strong>
+            <PieChart :title="titleExposure" :legend="legendExposure" :series="seriesExposure" />
+          </a-col>
+        </a-row>
+
+        <a-empty v-else />
+      </a-spin>
+    </div>
   </div>
 </template>
 
@@ -96,6 +101,7 @@ export default class CompetingGoods extends Vue {
   private type: number = 30
   private keyword: string = ''
   private spinning: boolean = false
+  private permission: boolean = false
   private dataNum: number = 0
   private percent: number = 0
   private datasPublish: any[] = []
@@ -189,6 +195,7 @@ export default class CompetingGoods extends Vue {
         // 非会员无权限访问
         if (res.code === -1) {
           vipNotice.call(this, res.message, () => {})
+          this.permission = true
         }
       })
       .finally(() => (this.spinning = false))
@@ -217,6 +224,11 @@ export default class CompetingGoods extends Vue {
 @import '~@/assets/styles/variable.less';
 
 .competingGoods {
+  .competingGoods-permisson {
+    img {
+      width: 100%;
+    }
+  }
   border: 1px solid #d9d9d9;
   border-radius: 4px;
   padding: 12px;

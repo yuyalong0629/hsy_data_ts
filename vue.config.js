@@ -7,7 +7,7 @@ function resolve(dir) {
 
 module.exports = {
   publicPath: '/',
-  productionSourceMap: false,
+  productionSourceMap: true,
   chainWebpack: config => {
     config.resolve.alias.set('@', resolve('src'))
     config

@@ -11,7 +11,7 @@
         <p
           v-for="(item, index) of word.slice(10, 20)"
           :key="index"
-        >{{`${index + 10}-${item.name}（${item.value}）`}}</p>
+        >{{`${index + 11}-${item.name}（${item.value}）`}}</p>
       </a-col>
     </a-row>
   </div>

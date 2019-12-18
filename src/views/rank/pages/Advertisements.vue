@@ -1,108 +1,113 @@
 <template>
   <div class="advertisements">
-    <a-spin :spinning="spinning">
-      <a-row>
-        <a-col :span="24" class="advertisements-content-title">
-          <h4>商品分类报告</h4>
-        </a-col>
+    <div v-if="permission" class="advertisements-permission">
+      <img v-lazy="require('@/assets/images/jiashuju.png')" alt />
+    </div>
+    <div v-else>
+      <a-spin :spinning="spinning">
+        <a-row>
+          <a-col :span="24" class="advertisements-content-title">
+            <h4>商品分类报告</h4>
+          </a-col>
 
-        <a-col :span="24" class="advertisements-class">
-          <strong :style="{ marginRight: 8 }">商品分类:&nbsp;</strong>
-          <div>
-            <template v-for="(tag, index) in goodsBrandMapList">
-              <a-checkable-tag :key="index">{{ `${tag.brandName}-${tag.countNum}` }}</a-checkable-tag>
-            </template>
-          </div>
-        </a-col>
+          <a-col :span="24" class="advertisements-class">
+            <strong :style="{ marginRight: 8 }">商品分类:&nbsp;</strong>
+            <div>
+              <template v-for="(tag, index) in goodsBrandMapList">
+                <a-checkable-tag :key="index">{{ `${tag.brandName}-${tag.countNum}` }}</a-checkable-tag>
+              </template>
+            </div>
+          </a-col>
 
-        <a-col :span="24" class="advertisements-class">
-          <strong :style="{ marginRight: 8 }">APP分类:&nbsp;</strong>
-          <div>
-            <template v-for="(tag, index) in appBrandMapList">
-              <a-checkable-tag :key="index">{{ `${tag.brandName}-${tag.countNum}` }}</a-checkable-tag>
-            </template>
-          </div>
-        </a-col>
+          <a-col :span="24" class="advertisements-class">
+            <strong :style="{ marginRight: 8 }">APP分类:&nbsp;</strong>
+            <div>
+              <template v-for="(tag, index) in appBrandMapList">
+                <a-checkable-tag :key="index">{{ `${tag.brandName}-${tag.countNum}` }}</a-checkable-tag>
+              </template>
+            </div>
+          </a-col>
 
-        <a-col :span="24" class="advertisements-class">
-          <strong :style="{ marginRight: 8 }">游戏分类:&nbsp;</strong>
-          <div>
-            <template v-for="(tag, index) in gameBrandMapList">
-              <a-checkable-tag :key="index">{{ `${tag.brandName}-${tag.countNum}` }}</a-checkable-tag>
-            </template>
-          </div>
-        </a-col>
-      </a-row>
+          <a-col :span="24" class="advertisements-class">
+            <strong :style="{ marginRight: 8 }">游戏分类:&nbsp;</strong>
+            <div>
+              <template v-for="(tag, index) in gameBrandMapList">
+                <a-checkable-tag :key="index">{{ `${tag.brandName}-${tag.countNum}` }}</a-checkable-tag>
+              </template>
+            </div>
+          </a-col>
+        </a-row>
 
-      <a-row :gutter="16" class="advertisements-word-cloud">
-        <a-col :span="24" class="advertisements-content-title">
-          <h4>商品关键词云图</h4>
-        </a-col>
-      </a-row>
+        <a-row :gutter="16" class="advertisements-word-cloud">
+          <a-col :span="24" class="advertisements-content-title">
+            <h4>商品关键词云图</h4>
+          </a-col>
+        </a-row>
 
-      <a-row :gutter="16">
-        <a-col :span="12">
-          <h5>作品标题-简介商品关键词云库</h5>
-          <Wordcloud
-            v-if="kolBrandKeywordsStatisticsMapList1.length"
-            :title="kolBrandKeywordsStatisticsMapList1Title"
-            :words="kolBrandKeywordsStatisticsMapList1"
-          />
-        </a-col>
-        <a-col :span="11" :offset="1">
-          <h5>品牌关键词榜单</h5>
-          <WordRank
-            v-if="kolBrandKeywordsStatisticsMapList1Word.length"
-            :word="kolBrandKeywordsStatisticsMapList1Word"
-          />
-        </a-col>
-        <a-col :span="24">
-          <a-empty v-if="!kolBrandKeywordsStatisticsMapList1.length" />
-        </a-col>
-      </a-row>
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <h5>作品标题-简介商品关键词云图</h5>
+            <Wordcloud
+              v-if="kolBrandKeywordsStatisticsMapList1.length"
+              :title="kolBrandKeywordsStatisticsMapList1Title"
+              :words="kolBrandKeywordsStatisticsMapList1"
+            />
+          </a-col>
+          <a-col :span="11" :offset="1">
+            <h5>品牌关键词榜单</h5>
+            <WordRank
+              v-if="kolBrandKeywordsStatisticsMapList1Word.length"
+              :word="kolBrandKeywordsStatisticsMapList1Word"
+            />
+          </a-col>
+          <a-col :span="24">
+            <a-empty v-if="!kolBrandKeywordsStatisticsMapList1.length" />
+          </a-col>
+        </a-row>
 
-      <a-row :gutter="16">
-        <a-col :span="12">
-          <h5>作品标签-评论商品关键词云库</h5>
-          <Wordcloud
-            v-if="kolBrandKeywordsStatisticsMapList2.length"
-            :title="kolBrandKeywordsStatisticsMapList2Title"
-            :words="kolBrandKeywordsStatisticsMapList2"
-          />
-        </a-col>
-        <a-col :span="11" :offset="1">
-          <h5>品牌关键词榜单</h5>
-          <WordRank
-            v-if="kolBrandKeywordsStatisticsMapList2Word.length"
-            :word="kolBrandKeywordsStatisticsMapList2Word"
-          />
-        </a-col>
-        <a-col :span="24">
-          <a-empty v-if="!kolBrandKeywordsStatisticsMapList2.length" />
-        </a-col>
-      </a-row>
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <h5>作品标签-评论商品关键词云图</h5>
+            <Wordcloud
+              v-if="kolBrandKeywordsStatisticsMapList2.length"
+              :title="kolBrandKeywordsStatisticsMapList2Title"
+              :words="kolBrandKeywordsStatisticsMapList2"
+            />
+          </a-col>
+          <a-col :span="11" :offset="1">
+            <h5>品牌关键词榜单</h5>
+            <WordRank
+              v-if="kolBrandKeywordsStatisticsMapList2Word.length"
+              :word="kolBrandKeywordsStatisticsMapList2Word"
+            />
+          </a-col>
+          <a-col :span="24">
+            <a-empty v-if="!kolBrandKeywordsStatisticsMapList2.length" />
+          </a-col>
+        </a-row>
 
-      <a-row :gutter="16">
-        <a-col :span="12">
-          <h5>标注广告-作品关键词云库</h5>
-          <Wordcloud
-            v-if="kolBrandKeywordsStatisticsMapList0.length"
-            :title="kolBrandKeywordsStatisticsMapList0Title"
-            :words="kolBrandKeywordsStatisticsMapList0"
-          />
-        </a-col>
-        <a-col :span="11" :offset="1">
-          <h5>品牌关键词榜单</h5>
-          <WordRank
-            v-if="kolBrandKeywordsStatisticsMapList0Word.length"
-            :word="kolBrandKeywordsStatisticsMapList0Word"
-          />
-        </a-col>
-        <a-col :span="24">
-          <a-empty v-if="!kolBrandKeywordsStatisticsMapList0.length" />
-        </a-col>
-      </a-row>
-    </a-spin>
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <h5>图文动态-关键词云图</h5>
+            <Wordcloud
+              v-if="kolBrandKeywordsStatisticsMapList0.length"
+              :title="kolBrandKeywordsStatisticsMapList0Title"
+              :words="kolBrandKeywordsStatisticsMapList0"
+            />
+          </a-col>
+          <a-col :span="11" :offset="1">
+            <h5>品牌关键词榜单</h5>
+            <WordRank
+              v-if="kolBrandKeywordsStatisticsMapList0Word.length"
+              :word="kolBrandKeywordsStatisticsMapList0Word"
+            />
+          </a-col>
+          <a-col :span="24">
+            <a-empty v-if="!kolBrandKeywordsStatisticsMapList0.length" />
+          </a-col>
+        </a-row>
+      </a-spin>
+    </div>
   </div>
 </template>
 
@@ -123,6 +128,7 @@ import { vipNotice, objectSort } from '@/utils/util'
 })
 export default class Advertisements extends Vue {
   private spinning: boolean = false
+  private permission: boolean = false
   private classification: any[] = []
   private classificationTwo: any[] = []
 
@@ -223,6 +229,7 @@ export default class Advertisements extends Vue {
         // 非会员无权限访问
         if (res.code === -1) {
           vipNotice.call(this, res.message, () => {})
+          this.permission = true
         }
       })
       .finally(() => (this.spinning = false))
@@ -235,6 +242,12 @@ export default class Advertisements extends Vue {
 @import '~@/assets/styles/mixins.less';
 
 .advertisements {
+  .advertisements-permission {
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
   .advertisements-content-title {
     display: flex;
     justify-content: space-between;

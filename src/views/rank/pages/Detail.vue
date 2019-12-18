@@ -25,7 +25,7 @@
           <a-spin :spinning="spinning">
             <component
               :is="componentId"
-              :pageInfo="pageInfo"
+              :videoInfo="pageInfo"
               :detailType="detailType"
               :updateTime="updateTime"
               :videoNum="kolTotalData.videoNum"
@@ -82,25 +82,37 @@ export default class Detail extends Vue {
 
   private spinning: boolean = false
   private componentId: string = 'VideoStatistics'
-  private kolInfo: object = {}
-  private kolTotalData: object = {}
-  private pageInfo: object = {}
+  private kolInfo?: object
+  private kolTotalData?: object
+  private pageInfo?: object
   private isCollect: boolean = false
   private updateTime?: string = ''
-
   // 视频 |图文 默认 type
-  private detailType: string = '1'
+  private detailType?: string
 
-  private mounted() {
-    this.getDetails({
-      kolId: (this.$route.query as any).kolId,
-      type: this.detailType,
-      pageNo: 0
-    })
+  private data() {
+    return {
+      kolInfo: {},
+      kolTotalData: {},
+      pageInfo: {},
+      isCollect: false,
+      updateTime: '',
+      detailType: '1'
+    }
+  }
+
+  private created() {
+    if (this.detailType === '1') {
+      this.getDetails({
+        kolId: (this.$route.query as any).kolId,
+        type: this.detailType,
+        pageNo: 0
+      })
+    }
   }
 
   // 初始化账号详情 Function
-  private getDetails(params?: Params) {
+  private async getDetails(params?: Params) {
     this.spinning = true
     return details(params)
       .then((res: any) => {
@@ -113,10 +125,12 @@ export default class Detail extends Vue {
             indexNum: res.kolTotalData.indexNum
           }
           this.kolTotalData = res.kolTotalData
+
           this.pageInfo = {
             ...res.page,
             type: 0
           }
+
           this.updateTime = res.kolTotalData.updateTime
           this.isCollect = res.isCollect
         }

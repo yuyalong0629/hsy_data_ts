@@ -126,3 +126,51 @@ export const collection = [
     scopedSlots: { customRender: 'id' }
   }
 ]
+
+// 会员权限Tab Title
+export const permissionColumns = [
+  {
+    slots: { title: 'summaryTitle' },
+    dataIndex: 'summary',
+    align: 'center',
+    width: 220,
+    key: 'summary'
+  },
+  {
+    slots: { title: 'LV-1Title' },
+    dataIndex: 'LV-1',
+    align: 'center',
+    width: 150,
+    key: 'LV-1',
+    scopedSlots: { customRender: 'LV-1' }
+  },
+  {
+    slots: { title: 'LV0Title' },
+    dataIndex: 'LV0',
+    align: 'center',
+    width: 160,
+    key: 'LV0',
+    scopedSlots: { customRender: 'LV0' }
+  },
+  {
+    slots: { title: 'LV1Title' },
+    dataIndex: 'LV1',
+    align: 'center',
+    key: 'LV1',
+    scopedSlots: { customRender: 'LV1' }
+  },
+  {
+    slots: { title: 'LV2Title' },
+    dataIndex: 'LV2',
+    align: 'center',
+    key: 'LV2',
+    scopedSlots: { customRender: 'LV2' }
+  },
+  {
+    slots: { title: 'LV3Title' },
+    dataIndex: 'LV3',
+    align: 'center',
+    key: 'LV3',
+    scopedSlots: { customRender: 'LV3' }
+  }
+]

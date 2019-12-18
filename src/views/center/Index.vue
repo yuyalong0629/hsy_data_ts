@@ -47,42 +47,7 @@
       </a-col>
 
       <a-col :span="24">
-        <a-table
-          class="members-table"
-          bordered
-          :columns="columns"
-          :dataSource="data"
-          :pagination="false"
-        >
-          <template slot="enterpriseTitle">
-            <div class="members-enterprise">
-              <div class="members-enterprise-head">
-                <p>企业版会员</p>
-              </div>
-            </div>
-          </template>
-
-          <template slot="senior" slot-scope="text">
-            <div>
-              <a-icon v-if="text === '0'" type="close" />
-              <span v-else>{{ text }}</span>
-            </div>
-          </template>
-
-          <template slot="professional" slot-scope="text">
-            <div>
-              <a-icon v-if="text === '1'" type="check" />
-              <span v-else>{{ text }}</span>
-            </div>
-          </template>
-
-          <template slot="enterprise" slot-scope="text">
-            <div>
-              <a-icon v-if="text === '1'" type="check" />
-              <span v-else>{{ text }}</span>
-            </div>
-          </template>
-        </a-table>
+        <CenterTable />
       </a-col>
     </a-row>
 
@@ -111,11 +76,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Upload from '@/components/Upload/Upload.vue'
 import { userInfo, setCoverImage } from '@/api/user'
-import { columns, data } from './index'
 import { Mutation, namespace } from 'vuex-class'
 import Wecahrt from './pages/Wechart.vue'
 import Retrieve from './pages/Retrieve.vue'
 import Phone from './pages/Phone.vue'
+import CenterTable from '@/components/Table/CenterTable.vue'
 
 const user = namespace('user')
 
@@ -124,7 +89,8 @@ const user = namespace('user')
     Upload,
     Wecahrt,
     Retrieve,
-    Phone
+    Phone,
+    CenterTable
   }
 })
 export default class Center extends Vue {
@@ -137,12 +103,6 @@ export default class Center extends Vue {
   private isOldPassword: boolean = false
   private thirdAccountInfo?: string = ''
   private userId?: string = ''
-  private data() {
-    return {
-      columns,
-      data
-    }
-  }
 
   private mounted() {
     // 初始化用户信息
@@ -272,19 +232,6 @@ export default class Center extends Vue {
       a {
         line-height: 24px;
       }
-    }
-  }
-
-  .members-table {
-    border: 3px solid @active;
-
-    /deep/ .ant-table-thead > tr > th {
-      background: @active;
-      color: #fff;
-    }
-
-    /deep/ .ant-table-tbody > tr:nth-child(even) {
-      background: #fcefef;
     }
   }
 }
