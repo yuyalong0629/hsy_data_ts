@@ -341,6 +341,7 @@ export default class Menu extends Vue {
       .router-link-active {
         color: @active;
         position: relative;
+
         &::before {
           content: '';
           display: block;
@@ -398,7 +399,7 @@ export default class Menu extends Vue {
       margin: 0 24px;
 
       img {
-        height: 70px;
+        height: 60px;
       }
     }
 

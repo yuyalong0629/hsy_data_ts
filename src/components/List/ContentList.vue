@@ -44,7 +44,9 @@
             <div class="similar-content-left-fans">
               <p>
                 评论:
-                <span>暂无</span>
+                <span
+                  v-html="item.commentContentStr.length && heightLight(JSON.parse(item.commentContentStr)[0]['ct'], pageInfo.keyword)"
+                >}</span>
               </p>
             </div>
           </div>
@@ -172,7 +174,8 @@ export default class ConentList extends Vue {
       p {
         line-height: 24px;
         flex: 3;
-        // .ellipisisClamp();
+        .ellipsisMore();
+        -webkit-line-clamp: 3;
       }
       p:last-child {
         flex: 1;

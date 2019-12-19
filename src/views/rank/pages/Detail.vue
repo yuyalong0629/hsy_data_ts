@@ -10,13 +10,62 @@
 
       <div :style="{ margin: '16px 0' }">
         <a-radio-group defaultValue="0" buttonStyle="solid">
-          <a-radio-button value="0" @click="onChangeRadio('0')">视频作品统计</a-radio-button>
-          <a-radio-button value="1" @click="onChangeRadio('1')">图文动态统计</a-radio-button>
-          <a-radio-button value="2" @click="onChangeRadio('2')">UP主数据趋势</a-radio-button>
-          <a-radio-button value="3" @click="onChangeRadio('3')">监测UP主新作</a-radio-button>
-          <a-radio-button value="4" @click="onChangeRadio('4')">投前分析</a-radio-button>
-          <a-radio-button value="5" @click="onChangeRadio('5')">商品广告报告</a-radio-button>
-          <a-radio-button value="6" @click="onChangeRadio('6')">竞品投放查询</a-radio-button>
+          <a-radio-button value="0" @click="onChangeRadio('0')">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>统计和展现UP主视频作品详情以及数据情况</span>
+              </template>
+              视频作品统计
+            </a-tooltip>
+          </a-radio-button>
+          <a-radio-button value="1" @click="onChangeRadio('1')">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>统计和展现UP主图文动态详情以及数据情况</span>
+              </template>
+              图文动态统计
+            </a-tooltip>
+          </a-radio-button>
+          <a-radio-button value="2" @click="onChangeRadio('2')">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>统计UP主6大维度数据分析周增量、总量趋势变化</span>
+              </template>
+              UP主数据趋势
+            </a-tooltip>
+          </a-radio-button>
+          <a-radio-button value="3" @click="onChangeRadio('3')">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>监测UP主下次发文，查看最新数据动态</span>
+              </template>
+              监测UP主新作
+            </a-tooltip>
+          </a-radio-button>
+          <a-radio-button value="4" @click="onChangeRadio('4')">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>根据UP主单作品数据趋势、粉丝画像、作品画像确定投放方案</span>
+              </template>
+              投前分析
+            </a-tooltip>
+          </a-radio-button>
+          <a-radio-button value="5" @click="onChangeRadio('5')">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>分析UP主商品/产品广告信息量及品牌云图和排名</span>
+              </template>
+              商品广告报告
+            </a-tooltip>
+          </a-radio-button>
+          <a-radio-button value="6" @click="onChangeRadio('6')">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>查询竞品及相似品牌投放，更准确甄别UP主价值</span>
+              </template>
+              竞品投放查询
+            </a-tooltip>
+          </a-radio-button>
         </a-radio-group>
       </div>
 
@@ -236,13 +285,24 @@ export default class Detail extends Vue {
     }
 
     if (this.detailType === '2') {
-      this.insearchData({
-        kolId: this.$route.query.kolId,
-        pageNo: +pageNumber - 1,
-        keyword: encodeURI(encodeURI(pageInfo.keyword)),
-        type: '0',
-        searchType: '2'
-      })
+      // 初始化分页
+      if (pageInfo.type === 0) {
+        this.getDetails({
+          kolId: (this.$route.query as any).kolId,
+          type: '2',
+          pageNo: +pageNumber - 1
+        })
+      }
+      // 号内搜分页
+      if (pageInfo.type !== 0) {
+        this.insearchData({
+          kolId: this.$route.query.kolId,
+          pageNo: +pageNumber - 1,
+          keyword: encodeURI(encodeURI(pageInfo.keyword)),
+          type: '0',
+          searchType: '2'
+        })
+      }
     }
 
     // 锚点

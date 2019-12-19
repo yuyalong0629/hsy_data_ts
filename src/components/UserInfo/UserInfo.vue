@@ -10,7 +10,7 @@
       <a-icon type="question-circle" :style="{ color: '#fff' }" />
     </a-popover>
 
-    <a href="javascript:;" class="userInfo-avatar">
+    <a href="javascript:;" @click="handleDetail(kolInfo.kolId)" class="userInfo-avatar">
       <a-avatar :size="80" :src="kolInfo.kolImg" icon="user" />
     </a>
 
@@ -57,6 +57,20 @@
 
     <ul class="userInfo-operation">
       <li>
+        <a-tooltip placement="bottom">
+          <template slot="title">
+            <span>收藏账号</span>
+          </template>
+          <a-icon
+            type="star"
+            :theme="collect ? 'filled' : 'outlined'"
+            :style="{ fontSize: '36px', color: '#FFBE31' }"
+            class="hoverStar"
+            @click="onChangeStart(kolInfo.kolId)"
+          />
+        </a-tooltip>
+      </li>
+      <li>
         <a-tooltip
           placement="bottom"
           :style="{ color: '#DA5054', fontSize: '36px',  fontWeight: '400', lineHeight: '23px' }"
@@ -69,20 +83,6 @@
             :style="{ cursor: 'pointer' }"
             type="team"
             @click="onChangeSimilar(kolInfo.kolId)"
-          />
-        </a-tooltip>
-      </li>
-      <li>
-        <a-tooltip placement="bottom">
-          <template slot="title">
-            <span>收藏账号</span>
-          </template>
-          <a-icon
-            type="star"
-            :theme="collect ? 'filled' : 'outlined'"
-            :style="{ fontSize: '36px', color: '#FFBE31' }"
-            class="hoverStar"
-            @click="onChangeStart(kolInfo.kolId)"
           />
         </a-tooltip>
       </li>
@@ -122,6 +122,17 @@ export default class UserInfo extends Vue {
   // Modal
   private handleCancel(): void {
     this.visible = false
+  }
+
+  // 查看详情
+  private handleDetail(kolId: string): void {
+    const { href } = this.$router.resolve({
+      path: '/rank/detail',
+      query: {
+        kolId: kolId
+      }
+    })
+    window.open(href, '_blank')
   }
 
   // 查看相似号

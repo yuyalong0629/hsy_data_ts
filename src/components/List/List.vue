@@ -4,7 +4,7 @@
       <div
         class="search-content"
         v-for="(item, index) of pageInfo.result"
-        :key="item.kolId"
+        :key="index"
         @mouseenter.stop="onMoveEnter(index)"
         @mouseleave.stop="onMoveLeave(index)"
       >

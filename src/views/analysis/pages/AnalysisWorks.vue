@@ -39,7 +39,7 @@
 
       <a-row :gutter="16">
         <a-col :span="24" :style="{ marginBottom: '12px' }">
-          <strong>作品简介 前20</strong>
+          <strong>作品简介</strong>
         </a-col>
         <a-col :span="12">
           <Wordcloud
@@ -113,7 +113,6 @@ import { vipNotice } from '@/utils/util'
 
 interface Params {
   kolId: string
-  type: string
 }
 
 @Component({
@@ -191,8 +190,7 @@ export default class Analysiswork extends Vue {
   private mounted() {
     this.getWorkDataAnalysis({
       kolId:
-        (this.$route.query as any).kolId || (this.$route.query as any).videoId,
-      type: '1'
+        (this.$route.query as any).kolId || (this.$route.query as any).videoId
     })
   }
 
@@ -204,13 +202,21 @@ export default class Analysiswork extends Vue {
         if (res.code === 200) {
           // 作品发布时间分布 柱状图
           if (this.barTimeValue === '1') {
-            this.dataMapListX = Object.keys(res.dataMap).map((item: any) => {
-              return `${item}: 00`
-            })
+            this.dataMapListX =
+              res.KolPublishVideoTimeStatisticsList.length &&
+              Object.keys(
+                JSON.parse(res.KolPublishVideoTimeStatisticsList[2].datajson)
+              ).map((item: any) => {
+                return `${item}`
+              })
 
-            const dataMapListY = Object.values(res.dataMap).map((item: any) => {
-              return item
-            })
+            const dataMapListY =
+              res.KolPublishVideoTimeStatisticsList.length &&
+              Object.values(
+                JSON.parse(res.KolPublishVideoTimeStatisticsList[2].datajson)
+              ).map((item: any) => {
+                return item
+              })
 
             this.dataMapListY = [
               {
@@ -224,17 +230,25 @@ export default class Analysiswork extends Vue {
           }
 
           if (this.barTimeValue === '2') {
-            this.dataMapListX = Object.keys(res.dataMap).map((item: any) => {
-              return `${item}: 00`
-            })
+            this.dataMapListX =
+              res.KolPublishVideoTimeStatisticsList.length &&
+              Object.keys(
+                JSON.parse(res.KolPublishVideoTimeStatisticsList[1].datajson)
+              ).map((item: any) => {
+                return `${item}`
+              })
 
-            const dataMapListY = Object.values(res.dataMap).map((item: any) => {
-              return item
-            })
+            const dataMapListY =
+              res.KolPublishVideoTimeStatisticsList.length &&
+              Object.values(
+                JSON.parse(res.KolPublishVideoTimeStatisticsList[1].datajson)
+              ).map((item: any) => {
+                return item
+              })
 
             this.dataMapListY = [
               {
-                name: '发布条数',
+                name: '作品发布条数',
                 type: 'bar',
                 smooth: true,
                 stack: '总量',
@@ -244,17 +258,25 @@ export default class Analysiswork extends Vue {
           }
 
           if (this.barTimeValue === '3') {
-            this.dataMapListX = Object.keys(res.dataMap).map((item: any) => {
-              return `${item}: 00`
-            })
+            this.dataMapListX =
+              res.KolPublishVideoTimeStatisticsList.length &&
+              Object.keys(
+                JSON.parse(res.KolPublishVideoTimeStatisticsList[0].datajson)
+              ).map((item: any) => {
+                return `${item}`
+              })
 
-            const dataMapListY = Object.values(res.dataMap).map((item: any) => {
-              return item
-            })
+            const dataMapListY =
+              res.KolPublishVideoTimeStatisticsList.length &&
+              Object.values(
+                JSON.parse(res.KolPublishVideoTimeStatisticsList[0].datajson)
+              ).map((item: any) => {
+                return item
+              })
 
             this.dataMapListY = [
               {
-                name: '发布条数',
+                name: '作品发布条数',
                 type: 'bar',
                 smooth: true,
                 stack: '总量',
@@ -414,8 +436,7 @@ export default class Analysiswork extends Vue {
     this.barTimeValue = e.target.value
 
     this.getWorkDataAnalysis({
-      kolId: (this.$route.query as any).kolId,
-      type: e.target.value
+      kolId: (this.$route.query as any).kolId
     })
   }
 }

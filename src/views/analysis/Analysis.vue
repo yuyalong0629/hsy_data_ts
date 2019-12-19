@@ -8,9 +8,30 @@
 
       <div :style="{ margin: '16px 0' }">
         <a-radio-group defaultValue="0" buttonStyle="solid" @change="onChangeRadio">
-          <a-radio-button value="0">作品数据趋势</a-radio-button>
-          <a-radio-button value="1">作品画像分析</a-radio-button>
-          <a-radio-button value="2">粉丝画像分析</a-radio-button>
+          <a-radio-button value="0">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>作品发布后72小时内分钟级数据趋势图</span>
+              </template>
+              作品数据趋势
+            </a-tooltip>
+          </a-radio-button>
+          <a-radio-button value="1">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>大数据分析UP主视频视频作品高频词，准确定位UP主内容调性</span>
+              </template>
+              作品画像分析
+            </a-tooltip>
+          </a-radio-button>
+          <a-radio-button value="2">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>五大维度解析UP主粉丝属性，提高广告人群精准度</span>
+              </template>
+              粉丝画像分析
+            </a-tooltip>
+          </a-radio-button>
         </a-radio-group>
       </div>
 
