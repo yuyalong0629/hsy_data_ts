@@ -103,40 +103,49 @@ export default class ConentList extends Vue {
 
 .similar-content {
   display: flex;
+
   .similar-content-left {
     flex: 1;
     display: flex;
     flex-direction: column;
     padding-right: 20px;
+
     .similar-content-left-info {
       display: flex;
       flex-direction: column;
+
       .similar-avatar {
         display: flex;
         margin-bottom: 10px;
+
         .similar-userinfo {
           flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: center;
           margin-left: 0px;
+
           .similar-userinfo-title {
             height: auto;
             line-height: 22px;
             margin-bottom: 6px;
+
             span {
               font-weight: 700;
               font-size: 16px;
             }
           }
+
           .similar-userinfo-link {
             min-height: 20px;
             line-height: 20px;
           }
         }
+
         .similar-cloud {
           flex: 0 0 100px;
           text-align: center;
+
           h2 {
             width: 100%;
             line-height: 45px;
@@ -144,20 +153,24 @@ export default class ConentList extends Vue {
             font-size: 26px;
             text-align: center;
           }
+
           .user-right-icon {
             width: 100%;
             text-align: center;
           }
         }
       }
+
       .similar-label {
         display: flex;
         margin: 12px 0;
         flex-wrap: wrap;
+
         .ant-tag {
           margin-bottom: 8px;
         }
       }
+
       .similar-time {
         display: flex;
         justify-content: space-between;
@@ -165,24 +178,28 @@ export default class ConentList extends Vue {
         color: #999;
       }
     }
+
     .similar-content-left-fans {
       margin-top: 10px;
       padding: 10px 20px 0 0;
       border-top: 1px solid #d9d9d9;
       display: flex;
       justify-content: space-between;
+
       p {
         line-height: 24px;
         flex: 3;
         .ellipsisMore();
         -webkit-line-clamp: 3;
       }
+
       p:last-child {
         flex: 1;
         text-align: left;
       }
     }
   }
+
   .similar-content-right {
     flex: 0 0 150px;
     border-left: 1px solid #d9d9d9;
@@ -191,11 +208,13 @@ export default class ConentList extends Vue {
     justify-content: center;
     align-items: center;
     padding-left: 18px;
+
     img {
       width: 102px;
       height: 102px;
       border-radius: 50%;
     }
+
     span {
       width: 100%;
       text-align: center;
