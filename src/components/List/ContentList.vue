@@ -28,13 +28,17 @@
                 <p>
                   <span style="margin: 0 12px 0 20px; font-weight: 600;">
                     <a-icon type="youtube" theme="filled" />
-                    {{ numFixed(+item.playNum) }}
+                    {{ numFixed(+item.playNum) || numFixed(+item.readNum) }}
                   </span>
                   <span style="margin-right: 12px">
                     <a-icon type="like" theme="filled" />
                     {{item.praiseNum}}
                   </span>
-                  <span style="margin-right: 12px">
+                  <span v-if="item.commentNum" style="margin-right: 12px">
+                    <a-icon type="message" theme="filled" />
+                    {{item.commentNum}}
+                  </span>
+                  <span v-if="item.barrageNum" style="margin-right: 12px">
                     <icon-font type="icon-danmu" />
                     {{item.barrageNum}}
                   </span>
@@ -45,7 +49,7 @@
               <p>
                 评论:
                 <span
-                  v-html="item.commentContentStr.length && heightLight(JSON.parse(item.commentContentStr)[0]['ct'], pageInfo.keyword)"
+                  v-html="item.commentContentStr && heightLight(JSON.parse(item.commentContentStr)[0]['ct'], pageInfo.keyword)"
                 >}</span>
               </p>
             </div>

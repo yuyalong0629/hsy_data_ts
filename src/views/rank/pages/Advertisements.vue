@@ -10,7 +10,7 @@
             <h4>商品分类报告</h4>
           </a-col>
 
-          <a-col :span="24" class="advertisements-class">
+          <a-col v-if="goodsBrandMapList.length" :span="24" class="advertisements-class">
             <strong :style="{ marginRight: 8 }">商品分类:&nbsp;</strong>
             <div>
               <template v-for="(tag, index) in goodsBrandMapList">
@@ -19,7 +19,7 @@
             </div>
           </a-col>
 
-          <a-col :span="24" class="advertisements-class">
+          <a-col v-if="appBrandMapList.length" :span="24" class="advertisements-class">
             <strong :style="{ marginRight: 8 }">APP分类:&nbsp;</strong>
             <div>
               <template v-for="(tag, index) in appBrandMapList">
@@ -28,7 +28,7 @@
             </div>
           </a-col>
 
-          <a-col :span="24" class="advertisements-class">
+          <a-col v-if="gameBrandMapList.length" :span="24" class="advertisements-class">
             <strong :style="{ marginRight: 8 }">游戏分类:&nbsp;</strong>
             <div>
               <template v-for="(tag, index) in gameBrandMapList">
@@ -167,64 +167,79 @@ export default class Advertisements extends Vue {
       .then((res: any) => {
         if (res.code === 200) {
           this.goodsBrandMapList =
+            res.kolBrandKeywordsStatisticsList.length &&
             res.kolBrandKeywordsStatisticsList[0].goodsBrandMapList
 
           this.appBrandMapList =
+            res.kolBrandKeywordsStatisticsList.length &&
             res.kolBrandKeywordsStatisticsList[1].appBrandMapList
 
           this.gameBrandMapList =
+            res.kolBrandKeywordsStatisticsList.length &&
             res.kolBrandKeywordsStatisticsList[2].gameBrandMapList
 
           // 作品标题
-          const kolBrandKeywordsStatisticsMapList1 = res.kolBrandKeywordsStatisticsList[3].kolBrandKeywordsStatisticsMapList1.map(
-            (item: any) => {
-              const name = Object.keys(item).join('')
-              const value = Object.values(item).join('')
-              return { name: name, value: +value }
-            }
-          )
+          const kolBrandKeywordsStatisticsMapList1 =
+            res.kolBrandKeywordsStatisticsList.length &&
+            res.kolBrandKeywordsStatisticsList[3].kolBrandKeywordsStatisticsMapList1.map(
+              (item: any) => {
+                const name = Object.keys(item).join('')
+                const value = Object.values(item).join('')
+                return { name: name, value: +value }
+              }
+            )
 
-          this.kolBrandKeywordsStatisticsMapList1 = [
-            ...kolBrandKeywordsStatisticsMapList1
-          ]
+          if (kolBrandKeywordsStatisticsMapList1.length) {
+            this.kolBrandKeywordsStatisticsMapList1 = [
+              ...kolBrandKeywordsStatisticsMapList1
+            ]
 
-          this.kolBrandKeywordsStatisticsMapList1Word = kolBrandKeywordsStatisticsMapList1
-            .sort(objectSort('value'))
-            .slice(0, 20)
+            this.kolBrandKeywordsStatisticsMapList1Word = kolBrandKeywordsStatisticsMapList1
+              .sort(objectSort('value'))
+              .slice(0, 20)
+          }
 
           // 作品标签
-          const kolBrandKeywordsStatisticsMapList2 = res.kolBrandKeywordsStatisticsList[4].kolBrandKeywordsStatisticsMapList2.map(
-            (item: any) => {
-              const name = Object.keys(item).join('')
-              const value = Object.values(item).join('')
-              return { name: name, value: +value }
-            }
-          )
+          const kolBrandKeywordsStatisticsMapList2 =
+            res.kolBrandKeywordsStatisticsList.length &&
+            res.kolBrandKeywordsStatisticsList[4].kolBrandKeywordsStatisticsMapList2.map(
+              (item: any) => {
+                const name = Object.keys(item).join('')
+                const value = Object.values(item).join('')
+                return { name: name, value: +value }
+              }
+            )
 
-          this.kolBrandKeywordsStatisticsMapList2 = [
-            ...kolBrandKeywordsStatisticsMapList2
-          ]
+          if (kolBrandKeywordsStatisticsMapList2.length) {
+            this.kolBrandKeywordsStatisticsMapList2 = [
+              ...kolBrandKeywordsStatisticsMapList2
+            ]
 
-          this.kolBrandKeywordsStatisticsMapList2Word = kolBrandKeywordsStatisticsMapList2
-            .sort(objectSort('value'))
-            .slice(0, 20)
+            this.kolBrandKeywordsStatisticsMapList2Word = kolBrandKeywordsStatisticsMapList2
+              .sort(objectSort('value'))
+              .slice(0, 20)
+          }
 
           // 相册
-          const kolBrandKeywordsStatisticsMapList0 = res.kolBrandKeywordsStatisticsList[5].kolBrandKeywordsStatisticsMapList0.map(
-            (item: any) => {
-              const name = Object.keys(item).join('')
-              const value = Object.values(item).join('')
-              return { name: name, value: +value }
-            }
-          )
+          const kolBrandKeywordsStatisticsMapList0 =
+            res.kolBrandKeywordsStatisticsList.length &&
+            res.kolBrandKeywordsStatisticsList[5].kolBrandKeywordsStatisticsMapList0.map(
+              (item: any) => {
+                const name = Object.keys(item).join('')
+                const value = Object.values(item).join('')
+                return { name: name, value: +value }
+              }
+            )
 
-          this.kolBrandKeywordsStatisticsMapList0 = [
-            ...kolBrandKeywordsStatisticsMapList0
-          ]
+          if (kolBrandKeywordsStatisticsMapList0.length) {
+            this.kolBrandKeywordsStatisticsMapList0 = [
+              ...kolBrandKeywordsStatisticsMapList0
+            ]
 
-          this.kolBrandKeywordsStatisticsMapList0Word = kolBrandKeywordsStatisticsMapList0
-            .sort(objectSort('value'))
-            .slice(0, 20)
+            this.kolBrandKeywordsStatisticsMapList0Word = kolBrandKeywordsStatisticsMapList0
+              .sort(objectSort('value'))
+              .slice(0, 20)
+          }
         }
         // 非会员无权限访问
         if (res.code === -1) {

@@ -52,7 +52,7 @@
       <a-radio-group :value="monitorTime">
         <a-radio @click="onChangeMonitorTime(24)" :value="24">24小时</a-radio>
         <a-radio @click="onChangeMonitorTime(48)" :value="48">48小时</a-radio>
-        <a-radio @click="onChangeMonitorTime(72)" :value="72" v-if="this.monitor === 2">72小时</a-radio>
+        <a-radio @click="onChangeMonitorTime(72)" :value="72">72小时</a-radio>
       </a-radio-group>
 
       <div class="monitor-start">
@@ -159,7 +159,10 @@ export default class Monitoring extends Vue {
 
   // Can not select days before today and today
   private disabledDate(current: any) {
-    return current && current < moment().startOf('day')
+    return (
+      (current && current < moment().startOf('day')) ||
+      current > moment().add(3, 'day')
+    )
   }
 
   // 监控时长 radio
@@ -230,14 +233,17 @@ export default class Monitoring extends Vue {
   private addMonitor(params: any) {
     return addMonitor(params).then((res: any) => {
       if (res.code === 200) {
-        console.log(res)
         this.$message.success(res.message)
-        // 每次添加初始化列表
+        return
       }
+
       // 非会员无权限访问
       if (res.code === -1) {
         vipNotice.call(this, res.message, () => {})
+        return
       }
+
+      this.$message.success(res.message)
     })
   }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="home-rote">
-    <h3 class="home-rote-title">火烧云核心功能</h3>
+    <h3 class="home-rote-title">火烧云数据价值</h3>
     <div class="home-core-container">
       <div class="home-core-bigRote"></div>
       <div class="home-core-smallRote"></div>

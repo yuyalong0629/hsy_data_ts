@@ -80,14 +80,15 @@
               :videoNum="kolTotalData.videoNum"
               @videoChangePage="videoChangePage"
               @videoSearch="videoSearch"
+              @changeSearch="changeSearch"
             ></component>
           </a-spin>
         </a-col>
       </a-row>
 
-      <a-row v-if="GET_STORAGE.userType !== 1" :style="{ margin: '12px 0' }">
+      <a-row v-if="!GET_STORAGE || GET_STORAGE.userType === 0" :style="{ margin: '12px 0' }">
         <a-col :span="24">
-          <!-- <Permissions alert="免费版仅可查看20个信息" /> -->
+          <Permissions alert="免费版暂不可查看更多信息" />
         </a-col>
       </a-row>
     </div>
@@ -328,6 +329,27 @@ export default class Detail extends Vue {
       })
       .catch(() => this.$message.error('请求超时'))
       .finally(() => (this.spinning = false))
+  }
+
+  // 清空输入框时 初始化数据
+  private changeSearch(e: any): void {
+    if (!e.target.value) {
+      if (this.detailType === '1') {
+        this.getDetails({
+          kolId: (this.$route.query as any).kolId,
+          type: this.detailType,
+          pageNo: 0
+        })
+      }
+
+      if (this.detailType === '2') {
+        this.getDetails({
+          kolId: (this.$route.query as any).kolId,
+          type: this.detailType,
+          pageNo: 0
+        })
+      }
+    }
   }
 
   // 视频作品统计 搜索

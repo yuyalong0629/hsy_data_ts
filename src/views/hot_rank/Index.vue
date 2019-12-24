@@ -5,7 +5,6 @@
       <a-col :span="24">
         <div class="hot-bilibili-title">
           <img v-lazy="require('@/assets/images/BILIBILI_LOGO.png')" alt />
-          <strong>排行榜</strong>
         </div>
 
         <div class="hot-bilibili-wrapper">
@@ -45,10 +44,14 @@
                     <h3>{{ +index + 1 }}</h3>
                   </div>
                   <div class="hot-bilibili-content-img">
-                    <img v-lazy="item.coverImg" alt />
+                    <a :href="item.sourceUrl" target="_blank">
+                      <img v-lazy="item.coverImg" alt />
+                    </a>
                   </div>
                   <div class="hot-bilibili-content-text">
-                    <h4>{{ item.title }}</h4>
+                    <a :href="item.sourceUrl" target="_blank">
+                      <h4>{{ item.title }}</h4>
+                    </a>
                     <ul class="hot-bilibili-content-text-label">
                       <li>
                         <a-icon type="youtube" theme="filled" />

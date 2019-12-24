@@ -89,7 +89,6 @@ export default class AnalysisFans extends Vue {
     this.spinning = true
     return fansPortrait(params)
       .then((res: any) => {
-        console.log(res.fansPortraitDataMap)
         if (res.code === 200) {
           // 性别
           const genderPortrait = JSON.parse(

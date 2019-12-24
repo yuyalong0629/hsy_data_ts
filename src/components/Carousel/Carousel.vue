@@ -1,6 +1,6 @@
 <template>
   <div class="carousel">
-    <h3 class="carousel-title">海量账号 随意搜索</h3>
+    <h3 class="carousel-title">平台功能页展示</h3>
 
     <div class="carousel-container">
       <div class="carousel-swiper">
@@ -70,13 +70,26 @@ export default class Carousel extends Vue {
     {
       index: 1,
       title: '排行榜单',
-      text: ['总榜\t月周涨粉榜\t月周掉粉榜']
+      text: [
+        'up主排行榜——58个细分垂直领域榜单排行',
+        '总榜 月涨/掉粉榜 周涨/掉粉榜 日涨/掉粉榜'
+      ]
     },
-    { index: 2, title: '投前分析', text: ['历史数据统计\t粉丝画像'] },
+    {
+      index: 2,
+      title: '价值发掘',
+      text: [
+        'UP主视频作品,相簿作品全维度解析分析',
+        '投前分析——粉丝活跃趋势 作品/ 粉丝画像'
+      ]
+    },
     {
       index: 3,
-      title: '内容搜索',
-      text: ['作品标题+简介\t作品标签+评论\t纯评论内容']
+      title: '产品搜索',
+      text: [
+        '用产品/品牌定位广告内容,锁定UP主',
+        '分类解锁视频/相簿作品产品广告信息'
+      ]
     },
     {
       index: 4,

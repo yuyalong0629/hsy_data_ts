@@ -44,7 +44,7 @@
     </a-row>
 
     <a-spin :spinning="spinning">
-      <a-divider>{{ `关键词 '${keyword}' 共计 ${pageInfo.count || 0} 条结果` }}</a-divider>
+      <a-divider>{{ `关键词 '${keyword}' 共计 ${pageInfo.num || 0} 条结果` }}</a-divider>
       <a-empty v-if="!pageInfo.result" />
       <List v-else :pageInfo="pageInfo" />
 
@@ -61,16 +61,26 @@
         </a-col>
       </a-row>
     </a-spin>
+
+    <a-row v-if="!GET_STORAGE || GET_STORAGE.userType === 0" :style="{ margin: '12px 0' }">
+      <a-col :span="24">
+        <Permissions alert="搜索意向账号" />
+      </a-col>
+    </a-row>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Ref } from 'vue-property-decorator'
+import { Getter, namespace } from 'vuex-class'
 import { navFilter, twoSortFlag } from '@/api/index'
 import { searchKeyword, searchKol } from '@/api/search'
 import { vipNotice } from '@/utils/util'
 import Tabs from '@/components/Tabs/Tabs.vue'
 import List from '@/components/List/List.vue'
+import Permissions from '@/components/Permissions/Permissions.vue'
+
+const user = namespace('user')
 
 interface Params {
   [key: string]: string | number
@@ -79,10 +89,13 @@ interface Params {
 @Component({
   components: {
     Tabs,
-    List
+    List,
+    Permissions
   }
 })
 export default class Search extends Vue {
+  @user.Getter GET_STORAGE!: () => any
+
   @Ref() readonly anchor?: any
 
   private tags: any[] = []
@@ -238,7 +251,7 @@ export default class Search extends Vue {
     return searchKol(params)
       .then((res: any) => {
         if (res.code === 200) {
-          this.pageInfo = { ...res.page, keyword: res.keyword }
+          this.pageInfo = { ...res.page, keyword: res.keyword, num: res.count }
           this.keyword = res.keyword
           this.total = res.page.count
           this.current = +res.page.index + 1

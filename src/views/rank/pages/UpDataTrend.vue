@@ -1,6 +1,10 @@
 <template>
   <div class="trend">
-    <a-spin :spinning="spinning">
+    <div v-if="permission" class="trend-permission">
+      <img v-lazy="require('@/assets/images/jiashuju.png')" alt />
+    </div>
+
+    <a-spin v-else :spinning="spinning">
       <div class="trend-content-title">
         <h4>{{ `UP主数据趋势统计` }}</h4>
         <!-- <p>数据更新时间：2019-11-18 15:05</p> -->
@@ -45,6 +49,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { histordatas } from '@/api/rank'
 import LineChart from '@/components/Echart/LineChart.vue'
+import { vipNotice } from '@/utils/util'
 
 interface Params {
   [key: string]: string
@@ -58,6 +63,8 @@ interface Params {
 export default class UPTrend extends Vue {
   private spinning: boolean = false
   private activeNum: string = '0'
+  private permission: boolean = false
+
   // 周增量
   private weekAddxAis?: any[] = []
   private weekAddseries?: any[] = []
@@ -229,6 +236,11 @@ export default class UPTrend extends Vue {
             })
           }
         }
+        // 非会员无权限访问
+        if (res.code === -1) {
+          vipNotice.call(this, res.message, () => {})
+          this.permission = true
+        }
       })
       .finally(() => (this.spinning = false))
   }
@@ -251,6 +263,13 @@ export default class UPTrend extends Vue {
   border: 1px solid #d9d9d9;
   padding: 12px;
   border-radius: 4px;
+
+  .trend-permission {
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 
   .trend-content-title {
     display: flex;

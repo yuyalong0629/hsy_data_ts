@@ -130,13 +130,14 @@ export default class Menu extends Vue {
   @user.Mutation REGISTER_MODAL!: (modal: boolean) => void
 
   private iconType: string = 'caret-down'
-  private visible: boolean = false
+  private visible!: boolean
   private componentId: string = 'Login'
   private taId?: string
 
   private data() {
     return {
-      taId: ''
+      taId: '',
+      visible: false
     }
   }
 

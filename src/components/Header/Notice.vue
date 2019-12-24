@@ -17,7 +17,7 @@
       </a-spin>
     </template>
     <span @click="fetchNotice" class="header-notice">
-      <a-badge dot>
+      <a-badge :count="0" dot>
         <a-icon style="font-size: 16px;" type="bell" />
       </a-badge>
     </span>

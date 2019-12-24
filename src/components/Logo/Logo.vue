@@ -9,13 +9,13 @@ import { Component, Vue, Emit } from 'vue-property-decorator'
 
 @Component
 export default class Logo extends Vue {
-  private logo: string = require('../../assets/images/logo.png')
+  private logo: string = require('@/assets/images/huoshaoyun.png')
 }
 </script>
 
 <style lang="less" scoped>
 .logo {
   height: 80px;
-  width: 144px;
+  width: 160px;
 }
 </style>

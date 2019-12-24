@@ -14,17 +14,17 @@
         </div>
       </template>
 
-      <template slot="LV-1Title">
+      <!-- <template slot="LV-1Title">
         <div class="members-privilege">
           <p>&nbsp;</p>
           <h4>未登录</h4>
         </div>
-      </template>
+      </template>-->
 
       <template slot="LV0Title">
         <div class="members-privilege">
           <p>&nbsp;</p>
-          <h4>普通用户</h4>
+          <h4 :style="{ fontSize: '16px' }">普通用户</h4>
         </div>
       </template>
 
@@ -156,18 +156,18 @@ export default class PermissionTable extends Vue {
     background: #fff;
   }
 
+  /deep/ .ant-table-thead > tr > th:nth-child(3) {
+    background: url('../../assets/images/gao3.png') no-repeat top;
+    background-size: cover;
+  }
+
   /deep/ .ant-table-thead > tr > th:nth-child(4) {
-    background: url('../../assets/images/gao3.png') no-repeat center;
+    background: url('../../assets/images/gao2.png') no-repeat top;
     background-size: cover;
   }
 
   /deep/ .ant-table-thead > tr > th:nth-child(5) {
-    background: url('../../assets/images/gao2.png') no-repeat left;
-    background-size: cover;
-  }
-
-  /deep/ .ant-table-thead > tr > th:nth-child(6) {
-    background: url('../../assets/images/gao1.png') no-repeat center;
+    background: url('../../assets/images/gao1.png') no-repeat top;
     background-size: cover;
   }
 
@@ -200,7 +200,7 @@ export default class PermissionTable extends Vue {
       p:nth-child(1) {
         color: #212020;
         font-size: 16px;
-        font-weight: 500;
+        font-weight: 600;
       }
 
       p:nth-child(2) {
@@ -243,7 +243,7 @@ export default class PermissionTable extends Vue {
       p:nth-child(1) {
         color: #212020;
         font-size: 16px;
-        font-weight: 500;
+        font-weight: 600;
       }
 
       p:nth-child(2) {
@@ -286,7 +286,7 @@ export default class PermissionTable extends Vue {
       p:nth-child(1) {
         color: #212020;
         font-size: 16px;
-        font-weight: 500;
+        font-weight: 600;
       }
 
       p:nth-child(2) {

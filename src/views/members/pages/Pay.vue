@@ -60,9 +60,15 @@
         <strong>支付金额：</strong>
         <div class="pay-amount-wrapper">
           <p class="pay-amount-wrapper-price">
-            <span>{{ price.price }}</span> 元(原价
+            <span>{{ price.price - surplusPrice }}</span> 元(原价
             <del>{{ price.originalPrice }}</del>元，节省
-            <span>{{ price.saveMoney }}</span>元)
+            <span>{{ price.saveMoney }}</span>元
+            <span
+              v-if="surplusPrice !== 0"
+              class="pay-amount-wrapper-price-surplusPrice"
+            >，减去会员未消耗时长抵扣费用</span>
+            <span v-if="surplusPrice !== 0">{{ surplusPrice }}</span>
+            <span v-if="surplusPrice !== 0" class="pay-amount-wrapper-price-surplusPrice">元</span>)
           </p>
           <a-popover placement="topLeft" :title="false">
             <template slot="content">
@@ -79,8 +85,8 @@
         </div>
       </a-col>
 
-      <a-col :span="24" class="pay-timeLimit">
-        <span>会员有限期至：2019年05月20日</span>
+      <a-col v-if="maturityTime" :span="24" class="pay-timeLimit">
+        <span>{{ `会员有限期至：${maturityTime}` }}</span>
       </a-col>
 
       <a-col :span="24" class="pay-agreement">
@@ -100,7 +106,7 @@
       </a-col>
 
       <a-col :span="24" class="pay-submit">
-        <a-button type="primary" size="large" @click="handlePayment">立即支付</a-button>
+        <a-button type="primary" size="large" @click="handlePayment">{{ subText }}</a-button>
       </a-col>
 
       <!-- Modal -->
@@ -153,7 +159,10 @@ export default class Pay extends Vue {
   private visible: boolean = false
   private applyImg: string = ''
 
-  public userType: number = 2
+  private userType: number = 2
+  private subText: string = '立即支付'
+  private maturityTime: string = ''
+  private surplusPrice: number = 0
 
   private mounted() {
     if (this.$route.query.priceType) {
@@ -161,7 +170,7 @@ export default class Pay extends Vue {
       this.getPrice({ type: (this.$route.query as any).priceType })
       this.isLevel = +(this.$route.query as any).priceType - 1
     } else {
-      this.getPrice({ type: '2' })
+      this.getPrice({ type: '' })
     }
 
     // 支付订单回调
@@ -185,13 +194,33 @@ export default class Pay extends Vue {
             return item.isDefault === 1
           })
 
+          this.isLevel = +res.type - 1
+
           // 支付金额
-          this.price = res.monthlyPriceInfos.filter(
+          const price = res.monthlyPriceInfos.filter(
             (item: any) => item.isDefault === 1
           )[0]
 
+          this.price = { ...price }
+
+          this.surplusPrice = res.surplusPrice || 0
+
+          this.maturityTime = res.maturityTime || ''
+
           // 判断续费
           this.userType = res.userType
+
+          if (this.isLevel + 1 === this.userType) {
+            this.subText = '立即续费'
+          }
+
+          if (this.isLevel + 1 > this.userType) {
+            this.subText = '立即升级'
+          }
+
+          if (this.isLevel + 1 === 0) {
+            this.subText = '立即支付'
+          }
         }
       })
       .then(() => {
@@ -538,6 +567,11 @@ export default class Pay extends Vue {
         text-align: center;
         font-size: 16px;
         color: #999;
+
+        .pay-amount-wrapper-price-surplusPrice {
+          color: #999;
+          font-size: 16px;
+        }
 
         span {
           color: #bd8e4f;

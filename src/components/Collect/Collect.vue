@@ -117,16 +117,20 @@ export default class Collect extends Vue {
     addCollect({
       kolId: this.kolId || this.$route.query.kolId,
       themeId: id
-    }).then((res: any) => {
-      if (res.code === 200) {
-        this.$message.success(res.message)
-        this.visible = false
-        this.lightUp(true, this.kolId)
-      } else {
-        this.$message.error(res.message)
-        this.lightUp(false)
-      }
     })
+      .then((res: any) => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.visible = false
+          this.lightUp(true, this.kolId)
+        } else {
+          this.$message.error(res.message)
+          this.lightUp(false)
+        }
+      })
+      .finally(() => {
+        this.collectGroupList()
+      })
   }
 
   // 回调

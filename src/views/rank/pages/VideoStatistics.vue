@@ -11,13 +11,23 @@
         </a-radio-group>
       </a-col>
       <a-col :span="12">
-        <a-input-search placeholder="号内搜  请输入关键词、商品名称、品牌名" @search="onSearch" enterButton />
+        <a-input-search
+          placeholder="号内搜  请输入关键词、商品名称、品牌名"
+          @change="onChangeSearch"
+          @search="onSearch"
+          enterButton
+        />
       </a-col>
     </a-row>
 
     <a-row :gutter="16" v-if="detailType === '2'">
       <a-col :span="24">
-        <a-input-search placeholder="号内搜  请输入关键词、商品名称、品牌名" @search="onSearch" enterButton />
+        <a-input-search
+          placeholder="号内搜  请输入关键词、商品名称、品牌名"
+          @change="onChangeSearch"
+          @search="onSearch"
+          enterButton
+        />
       </a-col>
     </a-row>
 
@@ -85,7 +95,7 @@
                   <span :style="{ paddingLeft: '4px' }">{{ item.collectNum }}</span>
                 </li>
                 <li :style="{ paddingLeft: '8px', cursor: 'pointer' }">
-                  <a-icon :style="{ color: '#DA5054' }" type="message" theme="filled" />
+                  <a-icon type="message" theme="filled" />
                   <span :style="{ paddingLeft: '4px' }">{{ item.commentNum }}</span>
                 </li>
               </ul>
@@ -187,6 +197,9 @@ export default class Video extends Vue {
     e.preventDefault()
     return type
   }
+
+  @Emit('changeSearch')
+  private onChangeSearch(e: any): void {}
 
   // copy
   private copylink(link: string) {

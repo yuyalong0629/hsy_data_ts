@@ -5,6 +5,7 @@
     </div>
     <div class="similar-right">
       <a-spin :spinning="spinning">
+        <a-divider>{{ `共查找到 ${pageInfo.count || 0} 个, '${kolInfo.kolName}'的相似号` }}</a-divider>
         <a-empty v-if="!pageInfo.result" />
         <List v-else :pageInfo="pageInfo" />
 

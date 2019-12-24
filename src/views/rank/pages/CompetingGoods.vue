@@ -3,6 +3,7 @@
     <div v-if="permission" class="competingGoods-permisson">
       <img v-lazy="require('@/assets/images/jiashuju2.png')" alt />
     </div>
+
     <div v-else>
       <a-row :gutter="16">
         <a-col :span="24" class="competingGoods-title">
@@ -20,7 +21,7 @@
           <a-input-search placeholder="号内搜 请输入关键词、商品名称、品牌名" @search="onSearch" enterButton />
         </a-col>
         <a-col :span="24" class="competingGoods-express">
-          <p>报告包含：1.商品植入作品详情，2.商品广告曝光数据，3.作品互动数据，4.转化漏斗数据等</p>
+          <p>报告包含：1.商品植入作品详情，2.商品广告曝光数据，3.作品互动数据</p>
         </a-col>
       </a-row>
 
@@ -66,10 +67,41 @@
             <strong>商品广告作品发布时区</strong>
             <BarChart :xAis="dataMapListX" :legend="legend" :series="dataMapListY" />
           </a-col>
+        </a-row>
 
+        <a-row v-if="dataNum !== 0" :gutter="16" type="flex" justify="space-between" align="middle">
           <a-col :span="24" class="competingGoods-exposure">
             <strong>曝光数据</strong>
-            <PieChart :title="titleExposure" :legend="legendExposure" :series="seriesExposure" />
+            <!-- <PieChart :title="titleExposure" :legend="legendExposure" :series="seriesExposure" /> -->
+          </a-col>
+          <a-col :span="6">
+            <AnimateHover
+              :setStyle="{ color: '#4f71ef', height: '180px', width: '180px', text: '品牌曝光量', num: seriesExposure.playNum }"
+            />
+          </a-col>
+          <a-col :span="6">
+            <AnimateHover
+              :setStyle="{ color: '#ffce2c', height: '140px', width: '140px', text: '获得弹幕量', num: seriesExposure.barrageNum }"
+            />
+            <AnimateHover
+              :setStyle="{ color: 'pink', height: '140px', width: '140px', text: '获得收藏量', num: seriesExposure.collectNum }"
+            />
+          </a-col>
+          <a-col :span="6">
+            <AnimateHover
+              :setStyle="{ color: '#01c5d2', height: '140px', width: '140px', text: '获得评论量', num: seriesExposure.commentNum }"
+            />
+            <AnimateHover
+              :setStyle="{ color: '#ff812d', height: '140px', width: '140px', text: '获得分享量', num: seriesExposure.shareNum }"
+            />
+          </a-col>
+          <a-col :span="6">
+            <AnimateHover
+              :setStyle="{ color: 'orange', height: '140px', width: '140px', text: '获得点赞量', num: seriesExposure.praiseNum }"
+            />
+            <AnimateHover
+              :setStyle="{ color: '#87d068', height: '140px', width: '140px', text: '获得投币量', num: seriesExposure.castCurrencyNum }"
+            />
           </a-col>
         </a-row>
 
@@ -85,13 +117,15 @@ import { boutiqueAnalysis } from '@/api/rank'
 import BarChart from '@/components/Echart/BarChart.vue'
 import FunnelChart from '@/components/Echart/FunnelChart.vue'
 import PieChart from '@/components/Echart/PieChart.vue'
+import AnimateHover from '@/components/Animation/Hover.vue'
 import { vipNotice } from '@/utils/util'
 
 @Component({
   components: {
     BarChart,
     FunnelChart,
-    PieChart
+    PieChart,
+    AnimateHover
   }
 })
 export default class CompetingGoods extends Vue {
@@ -113,13 +147,7 @@ export default class CompetingGoods extends Vue {
   private dataMapListY: any[] = []
   private legend: string[] = ['作品发布时区']
 
-  // 饼状图 => 曝光数据
-  private titleExposure: object = {
-    subtext: false,
-    x: 'center'
-  }
-  private legendExposure: object = {}
-  private seriesExposure: any = []
+  private seriesExposure: object = {}
 
   // 竞品投放 Function
   private getBoutiqueAnalysis(params?: any): any {
@@ -154,43 +182,15 @@ export default class CompetingGoods extends Vue {
             }
           ]
 
-          // 曝光数据
-          this.legendExposure = {
-            orient: 'vertical',
-            x: 'left',
-            data: []
+          this.seriesExposure = {
+            playNum: res.playNum,
+            barrageNum: res.barrageNum,
+            commentNum: res.commentNum,
+            praiseNum: res.praiseNum,
+            collectNum: res.collectNum,
+            shareNum: res.shareNum,
+            castCurrencyNum: res.castCurrencyNum
           }
-
-          const seriesExposure = [
-            { name: '品牌曝光量', value: res.playNum },
-            { name: '获得弹幕量', value: res.barrageNum },
-            { name: '获得评论量', value: res.commentNum },
-            { name: '获得点赞量', value: res.praiseNum },
-            { name: '获得收藏量', value: res.collectNum },
-            { name: '获得分享量', value: res.shareNum },
-            { name: '获得投币量', value: res.castCurrencyNum }
-          ]
-
-          this.seriesExposure = [
-            {
-              name: '曝光数据',
-              type: 'pie',
-              minAngle: '10',
-              radius: ['50%', '80%'],
-              avoidLabelOverlap: false,
-              label: {
-                formatter: '{b}: {c}',
-                emphasis: {
-                  show: true,
-                  textStyle: {
-                    fontSize: '20',
-                    fontWeight: '600'
-                  }
-                }
-              },
-              data: seriesExposure
-            }
-          ]
         }
         // 非会员无权限访问
         if (res.code === -1) {

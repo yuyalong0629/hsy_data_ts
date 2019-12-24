@@ -16,7 +16,7 @@
       <a-col :span="5" class="members-user-phone">
         <p>
           <span>{{ userInfo.nickname || userInfo.phone }}</span>
-          <span>{{ userInfo.userType === 1 ? 'VIP会员' : '免费版' }}</span>
+          <span>{{ userInfo.userType === 0 ? '免费版会员' : userInfo.userType === 1 ? '高级版会员' : userInfo.userType === 2 ? '专业版会员' : '企业版会员' }}</span>
         </p>
         <p v-if="userInfo.userType === 1 && maturityTime">
           <span>会员到期时间：{{ maturityTime }}</span>

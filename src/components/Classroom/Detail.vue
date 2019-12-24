@@ -20,7 +20,7 @@ import { Icon } from 'ant-design-vue'
 import { newsContentInfoDetail } from '@/api/index'
 
 const MyIcon: any = Icon.createFromIconfontCN({
-  scriptUrl: require('../../assets/font/iconfont') // 在 iconfont.cn 上生成
+  scriptUrl: require('@/assets/font/iconfont') // 在 iconfont.cn 上生成
 })
 
 @Component({

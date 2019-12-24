@@ -5,15 +5,15 @@
       <a-col :span="24" :style="{ marginBottom: '12px' }">
         <a-radio-group name="radioGroup" :defaultValue="0" @change="changeRadio">
           <a-radio :value="0">全部视频</a-radio>
-          <a-radio :value="1">作品标题+简介</a-radio>
-          <a-radio :value="2">作品标签+评论</a-radio>
-          <a-radio :value="3">纯评论内容</a-radio>
-          <a-radio :value="4">相簿动态</a-radio>
+          <a-radio :value="5">作品标题+简介</a-radio>
+          <a-radio :value="6">作品标签+评论</a-radio>
+          <a-radio :value="4">纯评论内容</a-radio>
+          <a-radio :value="7">相簿动态</a-radio>
         </a-radio-group>
       </a-col>
 
       <a-col :span="18">
-        <a-input-search placeholder="请输入账号名称,达人名等关键词搜索" @search="onSearch" size="large">
+        <a-input-search placeholder="请输入产品 , 品牌名称等关键词搜索" @search="onSearch" size="large">
           <a-button type="primary" slot="enterButton">搜索</a-button>
         </a-input-search>
       </a-col>
@@ -72,7 +72,7 @@
     </a-row>
 
     <a-spin :spinning="spinning">
-      <a-divider>{{ `关键词 '${keyword}' 共计 ${pageInfo.count || 0} 条结果` }}</a-divider>
+      <a-divider>{{ `关键词 '${keyword}' 共计 ${pageInfo.num || 0} 条结果` }}</a-divider>
       <a-empty v-if="!pageInfo.result" />
 
       <ContentList v-else :pageInfo="pageInfo" />
@@ -90,16 +90,26 @@
         </a-col>
       </a-row>
     </a-spin>
+
+    <a-row v-if="!GET_STORAGE || GET_STORAGE.userType === 0" :style="{ margin: '12px 0' }">
+      <a-col :span="24">
+        <Permissions alert="想查询产品广告" />
+      </a-col>
+    </a-row>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Ref } from 'vue-property-decorator'
+import { Getter, namespace } from 'vuex-class'
+import Permissions from '@/components/Permissions/Permissions.vue'
 import Tabs from '@/components/Tabs/Tabs.vue'
 import ContentList from '@/components/List/ContentList.vue'
 import { navFilter, twoSortFlag } from '@/api/index'
 import { searchKeyword, searchContent } from '@/api/search'
 import { vipNotice } from '@/utils/util'
+
+const user = namespace('user')
 
 interface Params {
   [key: string]: string | number
@@ -108,10 +118,13 @@ interface Params {
 @Component({
   components: {
     Tabs,
-    ContentList
+    ContentList,
+    Permissions
   }
 })
 export default class ContentQuery extends Vue {
+  @user.Getter GET_STORAGE!: () => any
+
   @Ref() readonly anchor?: any
 
   private tags: any[] = []
@@ -199,7 +212,7 @@ export default class ContentQuery extends Vue {
   private changeRadio(e: any): void {
     const { params } = this
 
-    if (e.target.value === 4) {
+    if (e.target.value === 7) {
       const target = params.map((item: any) => {
         return {
           ...item,
@@ -367,7 +380,7 @@ export default class ContentQuery extends Vue {
     return searchContent(params)
       .then((res: any) => {
         if (res.code === 200) {
-          this.pageInfo = { ...res.page, keyword: res.keyword }
+          this.pageInfo = { ...res.page, keyword: res.keyword, num: res.count }
           this.keyword = res.keyword
           this.total = res.page.count
           this.current = +res.page.index + 1

@@ -34,7 +34,7 @@ import { Icon } from 'ant-design-vue'
 import { newsContentInfoList } from '@/api/index'
 
 const MyIcon: any = Icon.createFromIconfontCN({
-  scriptUrl: require('../../assets/font/iconfont') // 在 iconfont.cn 上生成
+  scriptUrl: require('@/assets/font/iconfont') // 在 iconfont.cn 上生成
 })
 
 interface Page {
@@ -66,7 +66,7 @@ export default class List extends Vue {
         },
         pageSize: 5,
         total: 0,
-        hideOnSinglePage: false
+        hideOnSinglePage: true
       }
     }
   }

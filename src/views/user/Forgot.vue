@@ -230,8 +230,12 @@ export default class Name extends Vue {
           .then((res: any) => {
             if (res.code === 200) {
               this.$message.success(res.message)
+
+              // 自动跳转登录
+              this.handleLogin()
               return
             }
+
             this.$message.error(res.message)
           })
           .catch(() => this.$message.error('请求超时'))

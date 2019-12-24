@@ -128,17 +128,17 @@ const routes = [
         children: [
           {
             path: '/',
-            meta: { title: '火烧云数据 - B站大数据分析平台', hidden: true },
+            meta: { title: '火烧云数据 - B站大数据分析平台', hidden: false },
             redirect: '/mine/list'
           },
           {
             path: '/mine/list',
-            meta: { title: '火烧云数据 - B站大数据分析平台', hidden: true },
+            meta: { title: '火烧云数据 - B站大数据分析平台', hidden: false },
             component: () => import('../components/Classroom/List.vue')
           },
           {
             path: '/mine/detail',
-            meta: { title: '火烧云数据 - B站大数据分析平台', hidden: true },
+            meta: { title: '火烧云数据 - B站大数据分析平台', hidden: false },
             component: () => import('../components/Classroom/Detail.vue')
           }
         ]

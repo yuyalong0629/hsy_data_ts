@@ -1,6 +1,10 @@
 <template>
   <div class="analysiswork">
-    <a-spin :spinning="spinning">
+    <div v-if="permission" class="analysiswork-permission">
+      <img v-lazy="require('@/assets/images/jiashuju.png')" alt />
+    </div>
+
+    <a-spin v-else :spinning="spinning">
       <a-row :gutter="16">
         <a-col :span="24" class="analysiswork-title">
           <h4>作品类型分布</h4>
@@ -9,7 +13,7 @@
 
       <a-row :gutter="16">
         <a-col :span="24" :style="{ marginBottom: '12px' }">
-          <strong>TA发布作品总量 (112)</strong>
+          <strong>TA发布作品总量 ({{ videoNum }})</strong>
         </a-col>
         <a-col :span="12" v-if="legendAllOne.data.length">
           <PieChart :title="titleAllOne" :legend="legendAllOne" :series="seriesAllOne" />
@@ -38,9 +42,6 @@
       </a-row>
 
       <a-row :gutter="16">
-        <a-col :span="24" :style="{ marginBottom: '12px' }">
-          <strong>作品简介</strong>
-        </a-col>
         <a-col :span="12">
           <Wordcloud
             v-if="seriesAllExpress.length"
@@ -103,7 +104,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 import PieChart from '@/components/Echart/PieChart.vue'
 import Wordcloud from '@/components/Echart/Wordcloud.vue'
 import BarChart from '@/components/Echart/BarChart.vue'
@@ -124,7 +125,10 @@ interface Params {
   }
 })
 export default class Analysiswork extends Vue {
+  @Prop({ default: 0 }) private videoNum!: number
+
   private spinning: boolean = false
+  private permission: boolean = false
   private barTimeValue: string = '1'
   private bilibiliKolVideoInfoMostPlayList: any[] = []
   private bilibiliKolVideoInfoMostCollectList: any[] = []
@@ -423,6 +427,7 @@ export default class Analysiswork extends Vue {
         // 非会员无权限访问
         if (res.code === -1) {
           vipNotice.call(this, res.message, () => {})
+          this.permission = true
         }
       })
       .catch((err: any) => {
@@ -447,6 +452,13 @@ export default class Analysiswork extends Vue {
 @import '~@/assets/styles/variable.less';
 
 .analysiswork {
+  .analysiswork-permission {
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
   .ant-empty {
     padding: 24px 0;
   }

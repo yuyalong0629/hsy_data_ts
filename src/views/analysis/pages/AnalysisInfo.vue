@@ -1,6 +1,6 @@
 <template>
   <div class="analysisInfo">
-    <div class="analysisInfo-content-title">
+    <div class="analysisInfo-content-title" v-if="kolVideoInfoMap.title">
       <h4>{{ `历史作品数据统计` }}</h4>
       <a-button-group size="small">
         <a-button
@@ -21,7 +21,7 @@
       </a-button-group>
     </div>
 
-    <a-card hoverable style="margin: 20px 0; background: #f1f5f6;">
+    <a-card hoverable style="margin: 20px 0; background: #f1f5f6;" v-if="kolVideoInfoMap.title">
       <div class="analysisInfo-list">
         <a href="JavaScript:;" target="_blank" style="color: #00a1d6;">
           <div class="analysisInfo-list-title">{{ kolVideoInfoMap.title }}</div>
@@ -68,14 +68,12 @@
 
       <a-col :span="12" class="analysisInfo-time">
         <a-radio-group
-          defaultValue="24"
+          :defaultValue="24"
           size="small"
           @change="onChangeRadioTime"
           :style="{ margin: '12px 0', float: 'right' }"
         >
-          <a-radio-button value="24">24H</a-radio-button>
-          <a-radio-button value="48">48H</a-radio-button>
-          <a-radio-button value="72">72H</a-radio-button>
+          <a-radio-button :value="item" v-for="item of times" :key="item">{{ `${item}H` }}</a-radio-button>
         </a-radio-group>
       </a-col>
 
@@ -87,6 +85,8 @@
         <LineChart :xAis="playAddxAis" :series="playAddseries" :legend="playAddList" />
       </a-col>
     </a-row>
+
+    <a-empty v-else />
   </div>
 </template>
 
@@ -108,6 +108,7 @@ interface Params {
 export default class AnalysisInfo extends Vue {
   @Prop({ default: () => {} }) private kolVideoInfoMap!: object
   @Prop({ default: () => {} }) private dayDataMap!: object
+  @Prop({ default: () => [] }) private times!: []
 
   // 增量 平均数
   private dataAddxAis?: any[] = []
@@ -122,18 +123,18 @@ export default class AnalysisInfo extends Vue {
   // 上一页
   @Emit('handlePageNo')
   private clickPrev(num: number) {
-    return num
+    return num - 1
   }
 
   // 下一页
   @Emit('handlePageNo')
   private clickNext(num: number) {
-    return num
+    return num + 1
   }
 
   // 日期切换
   private onChangeRadioTime(e: any) {
-    console.log((this.kolVideoInfoMap as any).id)
+    console.log(this.kolVideoInfoMap)
     this.getVideoDayData({
       videoId: (this.kolVideoInfoMap as any).id,
       num: e.target.value
@@ -215,6 +216,8 @@ export default class AnalysisInfo extends Vue {
               }
             })
           }
+        } else {
+          this.$message.error(res.message)
         }
       })
       .catch((err: any) => console.log(err))

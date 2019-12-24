@@ -7,8 +7,8 @@
       <UserNumber :kolTotalData="kolTotalData" />
 
       <div :style="{ margin: '16px 0' }">
-        <a-radio-group defaultValue="0" buttonStyle="solid" @change="onChangeRadio">
-          <a-radio-button value="0">
+        <a-radio-group defaultValue="0" buttonStyle="solid">
+          <a-radio-button value="0" @click="onChangeRadio('0')">
             <a-tooltip placement="top" :mouseEnterDelay="0.5">
               <template slot="title">
                 <span>作品发布后72小时内分钟级数据趋势图</span>
@@ -16,20 +16,20 @@
               作品数据趋势
             </a-tooltip>
           </a-radio-button>
-          <a-radio-button value="1">
-            <a-tooltip placement="top" :mouseEnterDelay="0.5">
-              <template slot="title">
-                <span>大数据分析UP主视频视频作品高频词，准确定位UP主内容调性</span>
-              </template>
-              作品画像分析
-            </a-tooltip>
-          </a-radio-button>
-          <a-radio-button value="2">
+          <a-radio-button value="2" @click="onChangeRadio('2')">
             <a-tooltip placement="top" :mouseEnterDelay="0.5">
               <template slot="title">
                 <span>五大维度解析UP主粉丝属性，提高广告人群精准度</span>
               </template>
               粉丝画像分析
+            </a-tooltip>
+          </a-radio-button>
+          <a-radio-button value="1" @click="onChangeRadio('1')">
+            <a-tooltip placement="top" :mouseEnterDelay="0.5">
+              <template slot="title">
+                <span>大数据分析UP主视频作品高频词，准确定位UP主内容调性</span>
+              </template>
+              作品画像分析
             </a-tooltip>
           </a-radio-button>
         </a-radio-group>
@@ -41,6 +41,8 @@
             :is="componentId"
             :kolVideoInfoMap="kolVideoInfoMap"
             :dayDataMap="dayDataMap"
+            :videoNum="videoNum"
+            :times="times"
             @handlePageNo="handlePageNo"
           ></component>
         </a-spin>
@@ -76,6 +78,16 @@ export default class Analysis extends Vue {
   private componentId: string = 'AnalysisInfo'
   private kolVideoInfoMap: object = {}
   private dayDataMap: object = {}
+  private videoNum?: number
+  // 日期切换
+  private times!: []
+
+  private data() {
+    return {
+      videoNum: 0,
+      times: []
+    }
+  }
 
   private mounted() {
     // 监控 =>
@@ -94,9 +106,8 @@ export default class Analysis extends Vue {
   }
 
   // Radio
-  private onChangeRadio(e: any): void {
-    e.preventDefault()
-    if (e.target.value === '0') {
+  private onChangeRadio(key: string): void {
+    if (key === '0') {
       this.componentId = 'AnalysisInfo'
 
       if (this.$route.query.videoId) {
@@ -111,10 +122,10 @@ export default class Analysis extends Vue {
         })
       }
     }
-    if (e.target.value === '1') {
+    if (key === '1') {
       this.componentId = 'AnalysisWork'
     }
-    if (e.target.value === '2') {
+    if (key === '2') {
       this.componentId = 'AnalysisFans'
     }
   }
@@ -133,12 +144,23 @@ export default class Analysis extends Vue {
             indexNum: res.kolTotalDataMap.indexNum
           }
 
-          this.kolVideoInfoMap = res.kolVideoInfoMap || {}
+          this.kolVideoInfoMap = {
+            ...res.kolVideoInfoMap,
+            next: res.isNext,
+            prev: res.isPrev,
+            pageNo: res.pageNo
+          }
+
           this.dayDataMap = res.dayDataMap || {}
 
           this.isCollect = res.isCollect
 
           this.kolTotalData = res.kolTotalDataMap
+
+          this.times = res.times
+
+          // 作品数
+          this.videoNum = res.kolTotalDataMap.videoNum
         }
 
         // 非会员无权限访问
@@ -154,6 +176,7 @@ export default class Analysis extends Vue {
 
   // @Emit
   private handlePageNo(val: number): void {
+    console.log(val)
     this.getVideoData({ kolId: this.$route.query.kolId, pageNo: val })
   }
 }

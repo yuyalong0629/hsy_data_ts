@@ -50,8 +50,8 @@ export default class Home extends Vue {
 
   private mounted() {
     pkData().then((res: any) => {
-      if (res.code === 200) {
-        this.fansInfo = res.bilibiliKolPkDatas || []
+      if (res.code === 200 || res.code === 1) {
+        // this.fansInfo = res.bilibiliKolPkDatas || []
         this.helpUserData = res.helpUserData || {}
         this.newsContentInfoList = res.newsContentInfoList || []
       }

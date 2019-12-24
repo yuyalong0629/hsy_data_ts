@@ -1,6 +1,11 @@
 <template>
   <div class="other-table">
-    <a-row :gutter="16">
+    <a-row v-if="!dataSource.result">
+      <a-col :span="24" class="other-table-img">
+        <img v-lazy="require(`@/assets/images/${rankPic}.png`)" alt />
+      </a-col>
+    </a-row>
+    <a-row :gutter="16" v-else>
       <a-col :span="12">
         <a-table
           :columns="rankRose"
@@ -14,7 +19,7 @@
             <p>{{ text.kolName }}</p>
           </template>
           <template slot="fansNum" slot-scope="text">
-            <p class="other-table-fansNum" :style="{ color: '#3F8600' }">
+            <p class="other-table-fansNum" :style="{ color: '#CF1322' }">
               <span>{{ text }}</span>
               <a-icon type="arrow-up" />
             </p>
@@ -42,7 +47,7 @@
             <p>{{ text.kolName }}</p>
           </template>
           <template slot="fansNum" slot-scope="text">
-            <p class="other-table-fansNum" :style="{ color: '#CF1322' }">
+            <p class="other-table-fansNum" :style="{ color: '#3F8600' }">
               <span>{{ text }}</span>
               <a-icon type="arrow-down" />
             </p>
@@ -68,6 +73,8 @@ import { rankRose, rankOff } from './index'
 export default class OtherTable extends Vue {
   @Prop({ default: {} }) private dataSource!: object
   @Prop({ default: {} }) private dataSourceasc!: object
+  @Prop({ default: {} }) private rankPic!: string
+
   private rankRose: any[] = rankRose
   private rankOff: any[] = rankOff
 
@@ -93,7 +100,15 @@ export default class OtherTable extends Vue {
 
 <style lang="less" scoped>
 .other-table {
-  height: 42px;
+  // height: 42px;
+
+  .other-table-img {
+    img {
+      height: 100%;
+      width: 100%;
+      border-radius: 0;
+    }
+  }
 
   /deep/ .ant-table-tbody > tr {
     cursor: pointer;

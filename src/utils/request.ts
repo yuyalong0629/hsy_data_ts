@@ -36,6 +36,10 @@ service.interceptors.response.use(response => {
     store.commit('user/SET_LOGIN', null)
     router.replace({ path: '/' })
   }
+
+  if (response.data.code === 1) {
+    store.commit('user/SET_LOGIN', null)
+  }
   return response.data
 }, err)
 

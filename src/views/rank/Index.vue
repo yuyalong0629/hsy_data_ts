@@ -41,7 +41,12 @@
     <a-row :style="{ marginTop: '12px' }" class="permission">
       <a-col :span="24">
         <a-spin :spinning="spinning">
-          <component :is="componentId" :dataSource="dataSource" :dataSourceasc="dataSourceasc"></component>
+          <component
+            :is="componentId"
+            :rankPic="rankPic"
+            :dataSource="dataSource"
+            :dataSourceasc="dataSourceasc"
+          ></component>
         </a-spin>
       </a-col>
 
@@ -57,9 +62,10 @@
       </a-col>
     </a-row>
 
-    <a-row v-if="GET_STORAGE && GET_STORAGE.userType !== 1" :style="{ margin: '12px 0' }">
+    <a-row :style="{ margin: '12px 0' }">
       <a-col :span="24">
-        <!-- <Permissions alert="免费版仅可查看100个结果" /> -->
+        <Permissions v-if="!GET_STORAGE" alert="当前帐号未登录, 仅可查看20个结果" :isLogin="true" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 0" alert="免费版仅可查看20个结果" />
       </a-col>
     </a-row>
   </div>
@@ -117,6 +123,14 @@ export default class Rank extends Vue {
   private dataSourceasc: object = {}
   private dateLists?: string[] = []
   private dateValue?: string = undefined
+  private rankPic: string = ''
+  private rankPicList: string[] = [
+    '',
+    'week_modal',
+    'month_modal',
+    'month_modal'
+  ]
+
   // 分页
   private total: number = 0
   private current: number = 1
@@ -208,6 +222,7 @@ export default class Rank extends Vue {
   private onChangeRadio(e: any): void {
     // 清空 select 初始值
     this.dateValue = undefined
+    this.rankPic = this.rankPicList[Number(e.target.value)]
 
     const { params } = this
     // 总榜
@@ -260,7 +275,7 @@ export default class Rank extends Vue {
     this.dataSourceasc = {}
     return ranklist(params)
       .then((res: any) => {
-        if (res.code === 200) {
+        if (res.code === 200 || res.code === 1) {
           // 总数
           const target =
             res.page &&
@@ -336,6 +351,7 @@ export default class Rank extends Vue {
 
 .rank {
   .basicWidth();
+
   .ant-pagination {
     display: flex;
     justify-content: flex-end;

@@ -136,14 +136,14 @@ export const permissionColumns = [
     width: 220,
     key: 'summary'
   },
-  {
-    slots: { title: 'LV-1Title' },
-    dataIndex: 'LV-1',
-    align: 'center',
-    width: 150,
-    key: 'LV-1',
-    scopedSlots: { customRender: 'LV-1' }
-  },
+  // {
+  //   slots: { title: 'LV-1Title' },
+  //   dataIndex: 'LV-1',
+  //   align: 'center',
+  //   width: 150,
+  //   key: 'LV-1',
+  //   scopedSlots: { customRender: 'LV-1' }
+  // },
   {
     slots: { title: 'LV0Title' },
     dataIndex: 'LV0',
