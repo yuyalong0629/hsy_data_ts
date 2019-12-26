@@ -106,7 +106,11 @@
       </a-col>
 
       <a-col :span="24" class="pay-submit">
-        <a-button type="primary" size="large" @click="handlePayment">{{ subText }}</a-button>
+        <a-button
+          type="primary"
+          size="large"
+          @click="handlePayment"
+        >{{ subText === '0' ? '立即支付' : subText === '1' ? '立即续费' : '立即升级' }}</a-button>
       </a-col>
 
       <!-- Modal -->
@@ -119,7 +123,7 @@
           @cancel="handleCancel"
           :footer="null"
         >
-          <div class="wechart">
+          <div class="wechart" :style="{ textAlign: 'center' }">
             <img v-if="applyImg" class="wechart-img" :src="applyImg" alt="微信支付" />
           </div>
           <a-divider>请使用微信扫码支付，支付完成后关闭窗口</a-divider>
@@ -160,9 +164,10 @@ export default class Pay extends Vue {
   private applyImg: string = ''
 
   private userType: number = 2
-  private subText: string = '立即支付'
+  private subText: string = '0'
   private maturityTime: string = ''
   private surplusPrice: number = 0
+  private routerData: string = ''
 
   private mounted() {
     if (this.$route.query.priceType) {
@@ -210,16 +215,16 @@ export default class Pay extends Vue {
           // 判断续费
           this.userType = res.userType
 
-          if (this.isLevel + 1 === this.userType) {
-            this.subText = '立即续费'
-          }
+          if (res.userType === 0) {
+            this.subText = '0'
+          } else {
+            if (this.isLevel + 1 === this.userType) {
+              this.subText = '1'
+            }
 
-          if (this.isLevel + 1 > this.userType) {
-            this.subText = '立即升级'
-          }
-
-          if (this.isLevel + 1 === 0) {
-            this.subText = '立即支付'
+            if (this.isLevel + 1 > this.userType) {
+              this.subText = '2'
+            }
           }
         }
       })
@@ -257,14 +262,14 @@ export default class Pay extends Vue {
     return alipayReturn(params)
       .then((res: any) => {
         if (res.code === 200) {
-          this.$message.success('支付成功')
+          this.$message.success(res.message)
           return
         }
         if (res.code === 303) {
-          this.$message.warn('订单取消')
+          this.$message.warn(res.message)
           return
         }
-        this.$message.error('支付失败')
+        this.$message.error(res.message)
       })
       .finally(() => {
         // 更新会员信息
@@ -295,26 +300,40 @@ export default class Pay extends Vue {
 
   // 支付
   private handlePayment(): void {
-    confirmPay({
-      type: 1,
-      priceId: this.price.id,
-      payType: this.isWay === 0 ? '2' : '1'
-    }).then((res: any) => {
-      if (res.code === 200) {
-        // 支付宝
-        if (this.isWay !== 0) {
+    if (this.isWay !== 0) {
+      // 支付宝
+      let href: any = window.open('about:blank')
+
+      confirmPay({
+        type: this.subText === '0' ? 1 : 2,
+        priceId: this.price.id,
+        payType: '1'
+      }).then((res: any) => {
+        if (res.code === 200) {
+          // 支付宝
           const routerData = this.$router.resolve({
             path: '/apply',
             query: { htmls: res.payResult }
           })
-          // 打开新页面
-          window.open(routerData.href, '_ blank')
+          href.location.href = `${routerData.href}`
         } else {
-          // 微信
-          this.visible = true
-          if (res.imgStr) {
-            this.applyImg = `data:image/png;base64,${res.imgStr}`
-          }
+          this.$message.error(res.message)
+        }
+      })
+      return
+    }
+
+    // 微信
+    confirmPay({
+      type: this.subText === '0' ? 1 : 2,
+      priceId: this.price.id,
+      payType: '2'
+    }).then((res: any) => {
+      if (res.code === 200) {
+        // 微信
+        this.visible = true
+        if (res.imgStr) {
+          this.applyImg = `data:image/png;base64,${res.imgStr}`
         }
       } else {
         this.$message.error(res.message)
@@ -329,11 +348,10 @@ export default class Pay extends Vue {
     payQuery()
       .then((res: any) => {
         if (res.code === 200) {
-          this.$message.success('支付成功', 3)
-          // this.$router.push('/buyMembers')
+          this.$message.success(res.message, 3)
           return
         }
-        this.$message.error('支付失败', 3)
+        this.$message.error(res.message)
       })
       .finally(() => {
         // 更新会员信息

@@ -1,7 +1,7 @@
 <template>
   <div class="analysiswork">
     <div v-if="permission" class="analysiswork-permission">
-      <img v-lazy="require('@/assets/images/jiashuju.png')" alt />
+      <img v-lazy="require('@/assets/images/zuopinhs.png')" alt />
     </div>
 
     <a-spin v-else :spinning="spinning">

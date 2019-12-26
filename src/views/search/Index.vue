@@ -3,7 +3,12 @@
     <!-- search -->
     <a-row>
       <a-col :span="18">
-        <a-input-search placeholder="请输入账号名称,达人名等关键词搜索" @search="onSearch" size="large">
+        <a-input-search
+          placeholder="请输入账号名称 , 达人名等关键词搜索"
+          v-model="seachValue"
+          @search="onSearch"
+          size="large"
+        >
           <a-button type="primary" slot="enterButton">搜索</a-button>
         </a-input-search>
       </a-col>
@@ -62,9 +67,11 @@
       </a-row>
     </a-spin>
 
-    <a-row v-if="!GET_STORAGE || GET_STORAGE.userType === 0" :style="{ margin: '12px 0' }">
+    <a-row :style="{ margin: '12px 0' }">
       <a-col :span="24">
-        <Permissions alert="搜索意向账号" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 0" alert="想搜索意向账号" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 1" alert="高级版会员可查看100个账号" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 2" alert="专业版会员可查看500个账号" />
       </a-col>
     </a-row>
   </div>
@@ -105,6 +112,7 @@ export default class Search extends Vue {
   private spinning: boolean = false
   private keyword: string = ''
   private themeInfosTwo: object[] = [] // 行业分类 Tag 二级分类
+  private seachValue: string = '' // 输入框值
 
   // 分页
   private total: number = 0
@@ -170,7 +178,8 @@ export default class Search extends Vue {
 
   // 搜索记录
   private handleChangeTag(tag: { id: string; word: string }): void {
-    console.log(tag)
+    this.seachValue = tag.word
+
     const { params } = this
     const target: any[] = params.map((item: any) => {
       return {
@@ -290,6 +299,10 @@ export default class Search extends Vue {
 .search {
   padding: 24px 0;
   .basicWidth();
+
+  .ant-empty {
+    padding: 24px 0;
+  }
 
   .ant-pagination {
     display: flex;

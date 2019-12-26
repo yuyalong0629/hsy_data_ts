@@ -4,7 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="renderer" content="webkit" />
-  <meta name="referrer" content="no-referrer" />
+  <!-- <meta name="referrer" content="no-referrer" /> -->
+  <meta id="referrer" name="referrer" content="always" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <meta name="baidu_union_verify" content="08bdf43c3029db249ed7a10d75c7837c" />
@@ -15,6 +16,39 @@
     content="火烧云数据是B站广告投放权威的大数据分析平台，聚合280万个UP主数据，分析挖掘其广告价值；助你快速查找优质UP主资源，洞察竞品投放情报，挖掘高匹配UP主，监测广告投放效果等，是你投B站广告的专业数据工具" />
   <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
   <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+
+  <script>
+    (function (b, a, e, h, f, c, g, s) {
+      b[h] = b[h] || function () { (b[h].c = b[h].c || []).push(arguments) };
+      b[h].s = !!c; g = a.getElementsByTagName(e)[0]; s = a.createElement(e);
+      s.src = "//s.union.360.cn/" + f + ".js"; s.defer = !0; s.async = !0; g.parentNode.insertBefore(s, g)
+    })(window, document, "script", "_qha", 331841, false);
+  </script>
+
+  <script>
+    var _hmt = _hmt || [];
+    (function () {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c35a7e292998364fb14502feef170a6b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+  <script>
+    ; (function () {
+      var bp = document.createElement('script')
+      var curProtocol = window.location.protocol.split(':')[0]
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js'
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js'
+      }
+      var s = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(bp, s)
+    })()
+  </script>
+
   <title>火烧云数据 - B站大数据分析平台</title>
   <style>
     #loading-mask {
@@ -127,29 +161,6 @@
     </div>
   </div>
   <!-- built files will be auto injected -->
-  <script>
-    var _hmt = _hmt || []
-      ; (function () {
-        var hm = document.createElement('script')
-        hm.src = 'https://hm.baidu.com/hm.js?c35a7e292998364fb14502feef170a6b'
-        var s = document.getElementsByTagName('script')[0]
-        s.parentNode.insertBefore(hm, s)
-      })()
-  </script>
-
-  <script>
-      ; (function () {
-        var bp = document.createElement('script')
-        var curProtocol = window.location.protocol.split(':')[0]
-        if (curProtocol === 'https') {
-          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js'
-        } else {
-          bp.src = 'http://push.zhanzhang.baidu.com/push.js'
-        }
-        var s = document.getElementsByTagName('script')[0]
-        s.parentNode.insertBefore(bp, s)
-      })()
-  </script>
 </body>
 
 </html>

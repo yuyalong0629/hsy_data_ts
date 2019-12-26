@@ -2,7 +2,12 @@
   <div class="monitor-list">
     <div class="monitor-list-title">
       <p>监控历史</p>
-      <p>关注公众号获得监控通知</p>
+      <a-popover placement="top">
+        <template slot="content">
+          <img width="120" height="120" v-lazy="require('@/assets/images/wechart.png')" alt />
+        </template>
+        <p :style="{ cursor: 'pointer' }">关注公众号获得监控通知</p>
+      </a-popover>
     </div>
     <a-divider />
     <div class="monitor-list-content">

@@ -32,4 +32,9 @@ export default class Name extends Vue {
 </script>
 
 <style lang="less" scoped>
+.attention-img {
+  img {
+    width: 100%;
+  }
+}
 </style>

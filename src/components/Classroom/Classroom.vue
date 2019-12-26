@@ -40,7 +40,7 @@ export default class Classroom extends Vue {
     this.isActiveClassroom = index
     ;(this.$router as any).push({
       path: '/mine/list',
-      query: { oType: index + 1, type: '1' }
+      query: { type: index + 1 }
     })
   }
 }

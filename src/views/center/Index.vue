@@ -5,7 +5,7 @@
         <a-button type="primary">会员信息</a-button>
       </a-col>
       <a-col :span="2">
-        <p class="center-invoice">申请发票</p>
+        <p class="center-invoice"></p>
       </a-col>
     </a-row>
 
@@ -119,7 +119,6 @@ export default class Center extends Vue {
 
   // upload
   private propsFile(val: string) {
-    console.log(val)
     setCoverImage({
       imageUrl: val
     }).then((res: any) => {

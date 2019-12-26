@@ -65,7 +65,9 @@
     <a-row :style="{ margin: '12px 0' }">
       <a-col :span="24">
         <Permissions v-if="!GET_STORAGE" alert="当前帐号未登录, 仅可查看20个结果" :isLogin="true" />
-        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 0" alert="免费版仅可查看20个结果" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 0" alert="免费版可查看榜单TOP20" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 1" alert="高级版可查看榜单TOP100" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 2" alert="专业版可查看榜单TOP500" />
       </a-col>
     </a-row>
   </div>
@@ -124,12 +126,7 @@ export default class Rank extends Vue {
   private dateLists?: string[] = []
   private dateValue?: string = undefined
   private rankPic: string = ''
-  private rankPicList: string[] = [
-    '',
-    'week_modal',
-    'month_modal',
-    'month_modal'
-  ]
+  private rankPicList: string[] = ['', 'week_modal', 'month_modal', 'day_modal']
 
   // 分页
   private total: number = 0

@@ -36,7 +36,7 @@
           <div class="nav-user-icon">
             <a-avatar :size="42" :src="GET_STORAGE.userImage" icon="user" />
             <div class="nav-user-icon-userinfo">
-              <p class="nav-user-icon-name">{{ GET_STORAGE.username }}</p>
+              <p class="nav-user-icon-name">{{ GET_STORAGE.username || GET_STORAGE.nickname }}</p>
               <p
                 class="nav-user-icon-vip"
               >{{ GET_STORAGE.userType === 0 ? '免费版会员' : GET_STORAGE.userType === 1 ? '高级版会员' : GET_STORAGE.userType === 2 ? '专业版会员' : '企业版会员' }}</p>
@@ -185,7 +185,7 @@ export default class Menu extends Vue {
         this.$ls.set('attention', res.isSubscribe)
         this.$ls.set('imgUrl', res.imgUrl)
         if (res.isBindingUser) {
-          this.$message.success(res.message)
+          this.$message.success(res.message, 1)
           this.SET_LOGIN(res.userInfoMap)
         } else {
           // 绑定账号
@@ -195,7 +195,7 @@ export default class Menu extends Vue {
         }
         this.splitCodeUrl()
       } else {
-        this.$message.error(res.message)
+        this.$message.error(res.message, 1)
         this.splitCodeUrl()
       }
     })
@@ -206,14 +206,14 @@ export default class Menu extends Vue {
     return weixinBinding(params).then((res: any) => {
       if (res.code === 200) {
         console.log(res)
-        this.$message.success(res.message)
+        this.$message.success(res.message, 1)
         this.SET_LOGIN(res.userInfoMap)
         this.splitCodeUrl()
         this.$router.push({
           path: '/members'
         })
       } else {
-        this.$message.error(res.message)
+        this.$message.error(res.message, 1)
         this.splitCodeUrl()
         this.$router.push({
           path: '/members'

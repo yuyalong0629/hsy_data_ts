@@ -6,7 +6,9 @@
     <div class="similar-right">
       <a-spin :spinning="spinning">
         <a-divider>{{ `共查找到 ${pageInfo.count || 0} 个, '${kolInfo.kolName}'的相似号` }}</a-divider>
+
         <a-empty v-if="!pageInfo.result" />
+
         <List v-else :pageInfo="pageInfo" />
 
         <a-row>
@@ -21,6 +23,13 @@
             />
           </a-col>
         </a-row>
+
+        <a-row :style="{ margin: '12px 0' }">
+          <a-col :span="24">
+            <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 1" alert="高级版会员可查看40个相似账号" />
+            <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 2" alert="专业版会员可查看500个相似账号" />
+          </a-col>
+        </a-row>
       </a-spin>
     </div>
   </div>
@@ -28,20 +37,27 @@
 
 <script lang="ts">
 import { Component, Vue, Ref } from 'vue-property-decorator'
+import { Getter, namespace } from 'vuex-class'
 import UserInfo from '@/components/UserInfo/UserInfo.vue'
 import Tabs from '@/components/Tabs/Tabs.vue'
 import List from '@/components/List/List.vue'
+import Permissions from '@/components/Permissions/Permissions.vue'
 import { similarKolList } from '@/api/similar'
 import { vipNotice } from '@/utils/util'
+
+const user = namespace('user')
 
 @Component({
   components: {
     UserInfo,
     Tabs,
-    List
+    List,
+    Permissions
   }
 })
 export default class Similar extends Vue {
+  @user.Getter GET_STORAGE!: () => any
+
   @Ref() readonly anchor?: any
 
   private isCollect: boolean = false
@@ -73,7 +89,7 @@ export default class Similar extends Vue {
           }
 
           // 收藏
-          this.isCollect = res.isCollect
+          this.isCollect = res.kolTotalData.isCollect
 
           // List
           this.pageInfo = res.page

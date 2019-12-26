@@ -50,11 +50,6 @@ interface Page {
   }
 })
 export default class List extends Vue {
-  private classroom: object[] = [
-    { index: 0, icon: 'right', text: '互联网广告知识' },
-    { index: 1, icon: 'right', text: '短视频广告投放' },
-    { index: 2, icon: 'right', text: '短视频广告投放' }
-  ]
   private isActiveClassroom: number = 0
   private pagination!: Page
   private data() {
@@ -62,7 +57,7 @@ export default class List extends Vue {
       pagination: {
         onChange: (page: any) => {
           const type = this.$route.query.type
-          this.contentInfoList({ type: type, pageNo: page - 1 })
+          this.contentInfoList({ oType: type, type: '1', pageNo: page - 1 })
         },
         pageSize: 5,
         total: 0,
@@ -75,7 +70,7 @@ export default class List extends Vue {
 
   // 初始化请求分页数据
   private mounted() {
-    this.contentInfoList({ type: this.$route.query.type || 1 })
+    this.contentInfoList({ oType: this.$route.query.type || 1, type: '1' })
   }
 
   private contentInfoList(params: any) {
@@ -100,7 +95,7 @@ export default class List extends Vue {
 
   @Watch('$route')
   private function(to: any, from: any) {
-    this.contentInfoList({ type: to.query.type })
+    this.contentInfoList({ oType: to.query.type, type: '1' })
   }
 }
 </script>

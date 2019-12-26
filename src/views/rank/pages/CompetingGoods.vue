@@ -1,7 +1,7 @@
 <template>
   <div class="competingGoods">
     <div v-if="permission" class="competingGoods-permisson">
-      <img v-lazy="require('@/assets/images/jiashuju2.png')" alt />
+      <img v-lazy="require('@/assets/images/jingpingtf.png')" alt />
     </div>
 
     <div v-else>
@@ -113,12 +113,15 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Getter, namespace } from 'vuex-class'
 import { boutiqueAnalysis } from '@/api/rank'
 import BarChart from '@/components/Echart/BarChart.vue'
 import FunnelChart from '@/components/Echart/FunnelChart.vue'
 import PieChart from '@/components/Echart/PieChart.vue'
 import AnimateHover from '@/components/Animation/Hover.vue'
 import { vipNotice } from '@/utils/util'
+
+const user = namespace('user')
 
 @Component({
   components: {
@@ -129,6 +132,8 @@ import { vipNotice } from '@/utils/util'
   }
 })
 export default class CompetingGoods extends Vue {
+  @user.Getter GET_STORAGE!: () => any
+
   @Prop({ default: () => {} }) private pageInfo!: any
   @Prop({ default: 0 }) private videoNum!: number
 
@@ -148,6 +153,18 @@ export default class CompetingGoods extends Vue {
   private legend: string[] = ['作品发布时区']
 
   private seriesExposure: object = {}
+
+  private mounted() {
+    // 非专业级会员以上禁止使用
+    if ((this.GET_STORAGE as any).userType < 2) {
+      vipNotice.call(
+        this,
+        '竞品投放查询是专业版及以上会员尊享，我要升级会员',
+        () => {}
+      )
+      this.permission = true
+    }
+  }
 
   // 竞品投放 Function
   private getBoutiqueAnalysis(params?: any): any {
@@ -193,10 +210,10 @@ export default class CompetingGoods extends Vue {
           }
         }
         // 非会员无权限访问
-        if (res.code === -1) {
-          vipNotice.call(this, res.message, () => {})
-          this.permission = true
-        }
+        // if (res.code === -1) {
+        //   vipNotice.call(this, res.message, () => {})
+        //   this.permission = true
+        // }
       })
       .finally(() => (this.spinning = false))
   }

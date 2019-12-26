@@ -1,7 +1,7 @@
 <template>
   <div class="trend">
     <div v-if="permission" class="trend-permission">
-      <img v-lazy="require('@/assets/images/jiashuju.png')" alt />
+      <img v-lazy="require('@/assets/images/shujuqs.png')" alt />
     </div>
 
     <a-spin v-else :spinning="spinning">

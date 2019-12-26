@@ -1,6 +1,7 @@
 <template>
-  <a-alert message="权限不足" type="warning" showIcon>
+  <a-alert :message="false" type="warning">
     <p slot="description">
+      <a-icon type="question-circle" />
       {{ alert }}，我要立即
       <a v-if="isLogin" @click="handleLogin" :style="{ fontSize: '16px' }">立即登录</a>
       <router-link

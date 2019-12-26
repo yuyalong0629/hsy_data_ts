@@ -15,11 +15,20 @@ import 'moment/locale/zh-cn'
 @Component
 export default class App extends Vue {
   private locale!: any
+  private referrer?: any
 
   private data() {
     return {
       locale: zhCN
     }
+  }
+
+  // 等待百度统计加载完成之后 设置防盗链 'no-referrer'
+  private beforeCreate() {
+    setTimeout(() => {
+      let referrer: any = document.getElementById('referrer')
+      referrer.setAttribute('content', 'never')
+    }, 2000)
   }
 }
 </script>

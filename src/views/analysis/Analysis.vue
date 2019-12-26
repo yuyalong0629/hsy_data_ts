@@ -153,7 +153,7 @@ export default class Analysis extends Vue {
 
           this.dayDataMap = res.dayDataMap || {}
 
-          this.isCollect = res.isCollect
+          this.isCollect = res.kolTotalDataMap.isCollect
 
           this.kolTotalData = res.kolTotalDataMap
 

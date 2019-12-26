@@ -21,12 +21,8 @@
       <img v-lazy="text.kolImg" alt />
       <p>{{ text.kolName }}</p>
     </template>
-    <template slot="kolId" slot-scope="text">
-      <router-link
-        tag="a"
-        target="_blank"
-        :to="{ path: '/rank/detail', query: { kolId: text } }"
-      >查看详情</router-link>
+    <template slot="kolId">
+      <a>查看详情</a>
     </template>
   </a-table>
 </template>

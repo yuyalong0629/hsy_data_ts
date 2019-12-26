@@ -65,9 +65,8 @@ export default class Upload extends Vue {
     })
   }
 
-  @Emit()
+  @Emit('propsFile')
   private propsFile(propsFile: any): void {
-    console.log('1')
     return propsFile
   }
 

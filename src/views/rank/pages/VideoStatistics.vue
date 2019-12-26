@@ -33,8 +33,8 @@
 
     <div class="video-container">
       <div class="video-content-title">
-        <h4 v-if="detailType === '1'">{{ `历史作品数据(${pageInfo.count})` }}</h4>
-        <h4 v-if="detailType === '2'">{{ `相册图文数据(${pageInfo.count})` }}</h4>
+        <h4 v-if="detailType === '1'">{{ `历史作品数据(${pageInfo.num})` }}</h4>
+        <h4 v-if="detailType === '2'">{{ `相簿图文数据(${pageInfo.num})` }}</h4>
         <p v-if="updateTime">{{ `数据更新时间：${updateTime}` }}</p>
       </div>
 
@@ -105,7 +105,7 @@
         <!-- 评论 -->
         <div class="video-comments">
           <a-collapse :bordered="false" :activeKey="activeKey">
-            <a-collapse-panel header="展开评论" key="1">
+            <a-collapse-panel header="展开精选20条评论" key="1">
               <a-list
                 class="comment-list"
                 :header="false"
@@ -276,7 +276,7 @@ export default class Video extends Vue {
       p {
         font-size: 12px;
         font-weight: 400;
-        color: #505050;
+        color: #c6c6c6;
       }
     }
 

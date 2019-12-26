@@ -178,11 +178,12 @@ export default class Detail extends Vue {
 
           this.pageInfo = {
             ...res.page,
+            num: res.count,
             type: 0
           }
 
           this.updateTime = res.kolTotalData.updateTime
-          this.isCollect = res.isCollect
+          this.isCollect = res.kolTotalData.isCollect
         }
 
         // 非会员无权限访问
@@ -318,6 +319,7 @@ export default class Detail extends Vue {
         if (res.code === 200) {
           this.pageInfo = {
             ...res.page,
+            num: res.count,
             type: params.type,
             keyword: params.keyword
           }

@@ -5,6 +5,7 @@
         <img v-lazy="require(`@/assets/images/${rankPic}.png`)" alt />
       </a-col>
     </a-row>
+
     <a-row :gutter="16" v-else>
       <a-col :span="12">
         <a-table

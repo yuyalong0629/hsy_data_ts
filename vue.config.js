@@ -7,7 +7,7 @@ function resolve(dir) {
 
 module.exports = {
   publicPath: '/',
-  productionSourceMap: true,
+  productionSourceMap: false,
   chainWebpack: config => {
     config.resolve.alias.set('@', resolve('src'))
     config
@@ -19,7 +19,7 @@ module.exports = {
     devtool: 'source-map'
   },
   css: {
-    sourceMap: true,
+    sourceMap: false,
     loaderOptions: {
       less: {
         modifyVars: {
@@ -37,8 +37,8 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        // target: 'http://hsyapi.hsydata.com',
-        target: 'http://192.168.0.106:8089',
+        target: 'http://hsyapi.hsydata.com',
+        // target: 'http://192.168.0.106:8089',
         // target: 'http://192.168.0.85:8089',
         ws: false,
         changeOrigin: true,

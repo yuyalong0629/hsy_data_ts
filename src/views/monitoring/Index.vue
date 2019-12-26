@@ -131,6 +131,16 @@ export default class Monitoring extends Vue {
       }).then((res: any) => {
         if (res.code === 200) {
           this.searchInfo = res.kolInfos
+
+          // Input 赋值
+          this.wiseName = res.kolInfos.filter(
+            (item: any) => (this.$route.query as any).kolId === item.kolId + ''
+          )[0].kolName
+
+          // 获取对应下标
+          this.isActive = res.kolInfos.findIndex(
+            (item: any) => (this.$route.query as any).kolId === item.kolId + ''
+          )
         } else {
           this.$message.error(res.message)
         }
@@ -147,6 +157,7 @@ export default class Monitoring extends Vue {
 
   // 预约监控 搜索
   private onSearch(value: string): void {
+    this.wiseName = value
     // 搜索列表
     searchKol({ keyword: encodeURI(encodeURI(value)) }).then((res: any) => {
       if (res.code === 200) {
@@ -181,7 +192,6 @@ export default class Monitoring extends Vue {
 
   // 预约监控 列表选中
   private onClickActive(id: string, key: number) {
-    console.log(id)
     this.isActive = key
   }
 
@@ -300,17 +310,21 @@ export default class Monitoring extends Vue {
       .monitor-search-result {
         .active {
           border: 1px solid @active;
+          box-shadow: 0 2px 8px @active;
         }
+
         li {
           cursor: pointer;
           border: 1px solid #e8e8e8;
           border-radius: 4px;
           margin: 10px 0;
           padding: 10px;
+
           .ant-avatar {
             width: 40px;
             height: 40px;
           }
+
           .monitor-search-result-name {
             color: rgba(0, 0, 0, 0.65);
             transition: all 0.3s;
@@ -323,11 +337,13 @@ export default class Monitoring extends Vue {
           }
         }
       }
+
       .monitor-search-time {
         line-height: 30px;
         margin: 12px 0;
         font-size: 16px;
         font-weight: 600;
+
         span {
           color: #999;
           font-size: 14px;
@@ -335,6 +351,7 @@ export default class Monitoring extends Vue {
         }
       }
     }
+
     .monitor-time {
       line-height: 50px;
       font-size: 16px;

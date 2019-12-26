@@ -1,14 +1,20 @@
 <template>
   <a-row>
     <a-col :span="24">
-      <a-card hoverable style="margin: 20px 0;" v-for="item of pageInfo.result" :key="item.id">
+      <a-card
+        hoverable
+        style="margin: 20px 0;"
+        v-for="item of pageInfo.result"
+        :key="item.id"
+        @click.stop="handleBlank(item.sourceUrl)"
+      >
         <div class="similar-content">
           <div class="similar-content-left">
             <div class="similar-content-left-info">
               <div class="similar-avatar">
                 <div class="similar-userinfo">
                   <div class="similar-userinfo-title">
-                    <a :href="item.sourceUrl" target="_blank" style="color: #333;">
+                    <a href="javascript:;" target="_blank" style="color: #333;">
                       <span v-html="item && heightLight(item.title, pageInfo.keyword)"></span>
                     </a>
                   </div>
@@ -55,13 +61,9 @@
             </div>
           </div>
           <div class="similar-content-right">
-            <router-link
-              tag="a"
-              target="_blank"
-              :to="{path: '/rank/detail', query: {kolId: item.kolId}}"
-            >
+            <a href="javascript:;" @click.stop="handleDetail(item.kolId)">
               <img :src="item.kolImg" alt />
-            </router-link>
+            </a>
             <span>{{ item.kolName }}</span>
             <span>
               粉丝数:
@@ -97,6 +99,20 @@ export default class ConentList extends Vue {
       heightLight,
       numFixed
     }
+  }
+
+  // 跳转B站
+  private handleBlank(href: string): void {
+    window.open(href)
+  }
+
+  // 跳转详情
+  private handleDetail(kolId: string): void {
+    const { href } = this.$router.resolve({
+      path: '/rank/detail',
+      query: { kolId: kolId }
+    })
+    window.open(href, '_blank')
   }
 }
 </script>

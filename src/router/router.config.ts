@@ -97,14 +97,14 @@ const routes = [
       {
         path: '/members/pay',
         name: 'pay',
-        meta: { title: '支付中心- 火烧云数据', hidden: true },
+        meta: { title: '支付中心- 火烧云数据', hidden: false },
         component: () => import('../views/members/pages/Pay.vue')
       },
       // 支付宝
       {
         path: '/apply',
         name: 'apply',
-        meta: { title: '支付中心- 火烧云数据', hidden: true },
+        meta: { title: '支付中心- 火烧云数据', hidden: false },
         component: () => import('../views/members/pages/Apply.vue')
       },
       // 付款协议

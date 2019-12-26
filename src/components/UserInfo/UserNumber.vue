@@ -3,7 +3,7 @@
     <li>总数</li>
     <li>
       <h5>{{ kolTotalData.videoNum }}</h5>
-      <p>作品数</p>
+      <p>现有作品数</p>
     </li>
     <li>
       <h5>{{ kolTotalData.barrageNum }}</h5>

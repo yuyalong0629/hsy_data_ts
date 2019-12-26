@@ -13,7 +13,12 @@
       </a-col>
 
       <a-col :span="18">
-        <a-input-search placeholder="请输入产品 , 品牌名称等关键词搜索" @search="onSearch" size="large">
+        <a-input-search
+          placeholder="请输入产品 , 品牌名称等关键词搜索"
+          v-model="seachValue"
+          @search="onSearch"
+          size="large"
+        >
           <a-button type="primary" slot="enterButton">搜索</a-button>
         </a-input-search>
       </a-col>
@@ -91,9 +96,11 @@
       </a-row>
     </a-spin>
 
-    <a-row v-if="!GET_STORAGE || GET_STORAGE.userType === 0" :style="{ margin: '12px 0' }">
+    <a-row :style="{ margin: '12px 0' }">
       <a-col :span="24">
-        <Permissions alert="想查询产品广告" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 0" alert="想查询产品广告" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 1" alert="高级版会员可查看100个内容" />
+        <Permissions v-if="GET_STORAGE && GET_STORAGE.userType === 2" alert="专业版会员可查看500个内容" />
       </a-col>
     </a-row>
   </div>
@@ -137,6 +144,7 @@ export default class ContentQuery extends Vue {
   private spinning: boolean = false
   private keyword: string = ''
   private themeInfosTwo: object[] = [] // 行业分类 Tag 二级分类
+  private seachValue: string = '' // 输入框值
 
   // 分页
   private total: number = 0
@@ -260,6 +268,7 @@ export default class ContentQuery extends Vue {
 
   // 搜索记录
   private handleChangeTag(tag: { id: string; word: string }): void {
+    this.seachValue = tag.word
     const { params } = this
     const target: any[] = params.map((item: any) => {
       return {
