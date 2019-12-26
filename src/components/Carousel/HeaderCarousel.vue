@@ -24,14 +24,18 @@ export default class Carousel extends Vue {
   private list: any[] = [
     {
       index: '0',
-      img: require('@/assets/images/hbanner1.png')
+      img: require('@/assets/images/hbanner0.png')
     },
     {
       index: '1',
-      img: require('@/assets/images/hbanner2.png')
+      img: require('@/assets/images/hbanner1.png')
     },
     {
       index: '2',
+      img: require('@/assets/images/hbanner2.png')
+    },
+    {
+      index: '3',
       img: require('@/assets/images/hbanner3.png')
     }
   ]
