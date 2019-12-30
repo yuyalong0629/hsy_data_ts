@@ -22,7 +22,7 @@
           </a-radio-button>
           <a-radio-button value="1">月涨 / 掉粉榜</a-radio-button>
           <a-radio-button value="2">周涨 / 掉粉榜</a-radio-button>
-          <a-radio-button value="3">日涨 / 掉粉榜</a-radio-button>
+          <!-- <a-radio-button value="3">日涨 / 掉粉榜</a-radio-button> -->
         </a-radio-group>
       </a-col>
 

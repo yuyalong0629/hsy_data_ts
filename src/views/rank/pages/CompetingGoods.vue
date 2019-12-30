@@ -36,7 +36,7 @@
               <p>{{ keyword }}</p>
             </span>
             <span class="competingGoods-report-time">
-              <p>查询时间：{{ `${publishTimeStart} - ${publishTimeEnd}` }}</p>
+              <p>查询时间：{{ publishTimeStart | formatDate }} - {{ publishTimeEnd | formatDate }}</p>
             </span>
           </a-col>
 

@@ -110,7 +110,7 @@ export default class AnalysisFans extends Vue {
 
           this.seriesGender = [
             {
-              name: '作品数量',
+              name: '性别比例',
               type: 'pie',
               minAngle: '5',
               radius: ['30%', '50%'],
@@ -152,7 +152,7 @@ export default class AnalysisFans extends Vue {
 
           this.seriesAge = [
             {
-              name: '作品数量',
+              name: '年龄比例',
               type: 'pie',
               minAngle: '5',
               radius: ['30%', '50%'],

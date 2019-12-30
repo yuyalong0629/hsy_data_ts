@@ -16,6 +16,13 @@ const router = new VueRouter({
 // 路由守卫
 router.beforeEach((to, from, next) => {
   NProgress.start()
+
+  // 等待百度统计加载完成之后 设置防盗链 'no-referrer'
+  setTimeout(() => {
+    let referrer: any = document.getElementById('referrer')
+    referrer.setAttribute('content', 'never')
+  }, 1000)
+
   if (to.meta.title) {
     document.title = `${to.meta.title}`
   }

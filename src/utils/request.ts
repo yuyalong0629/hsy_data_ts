@@ -32,9 +32,10 @@ service.interceptors.request.use(config => {
 // response interceptor
 service.interceptors.response.use(response => {
   if (response.data.code === 0) {
-    message.error('用户未登录或登录失效')
+    // message.error('用户未登录或登录失效')
     store.commit('user/SET_LOGIN', null)
-    router.replace({ path: '/' })
+    store.commit('user/LOGIN_MODAL', true)
+    // router.replace({ path: '/' })
   }
 
   if (response.data.code === 1) {
