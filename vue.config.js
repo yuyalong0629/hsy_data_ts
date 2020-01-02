@@ -35,6 +35,7 @@ module.exports = {
     }
   },
   devServer: {
+    historyApiFallback: true,
     proxy: {
       '/api': {
         target: 'http://hsyapi.hsydata.com',
