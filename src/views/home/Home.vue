@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <HeaderCarousel />
+    <HeaderCarousel :adContents="adContents" />
 
     <div ref="core">
       <rote />
@@ -44,6 +44,7 @@ import Classroom from './pages/Classroom.vue'
 })
 export default class Home extends Vue {
   private fansInfo: any[] = []
+  private adContents: any[] = []
   private helpUserData: object = {}
   private newsContentInfoList: object[] = []
   private autoplay: boolean = false
@@ -54,6 +55,7 @@ export default class Home extends Vue {
         // this.fansInfo = res.bilibiliKolPkDatas || []
         this.helpUserData = res.helpUserData || {}
         this.newsContentInfoList = res.newsContentInfoList || []
+        this.adContents = res.adContents || []
       }
     })
     // 监听滚动事件

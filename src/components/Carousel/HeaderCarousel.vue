@@ -2,9 +2,9 @@
   <div class="carousel">
     <swiper :options="swiperOption" ref="mySwiper">
       <!-- slides -->
-      <swiper-slide v-for="item of list" :key="item.index">
+      <swiper-slide v-for="item of adContents" :key="item.index">
         <div class="inner">
-          <img :src="item.img" alt />
+          <img :src="item.images" alt />
         </div>
       </swiper-slide>
       <!-- Optional controls -->
@@ -17,28 +17,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component
 export default class Carousel extends Vue {
-  private list: any[] = [
-    {
-      index: '0',
-      img: require('@/assets/images/hbanner0.png')
-    },
-    {
-      index: '1',
-      img: require('@/assets/images/hbanner1.png')
-    },
-    {
-      index: '2',
-      img: require('@/assets/images/hbanner2.png')
-    },
-    {
-      index: '3',
-      img: require('@/assets/images/hbanner3.png')
-    }
-  ]
+  @Prop({ default: () => [] }) private adContents!: any
 
   private data() {
     const _this = this

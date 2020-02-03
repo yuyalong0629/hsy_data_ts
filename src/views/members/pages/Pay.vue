@@ -157,7 +157,7 @@ export default class Pay extends Vue {
 
   private isLevel: number = 1
   private isInterval: number = 0
-  private isWay: number = 0
+  private isWay: number = 1
   private monthlyPriceInfos: any[] = []
   private price: any = {}
   private visible: boolean = false

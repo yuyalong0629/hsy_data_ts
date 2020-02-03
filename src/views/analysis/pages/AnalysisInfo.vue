@@ -113,7 +113,7 @@ export default class AnalysisInfo extends Vue {
   // 增量 平均数
   private dataAddxAis?: any[] = []
   private dataAddseries?: any[] = []
-  private dataAddList: string[] = ['弹幕数', '收藏数', '点赞数', '评论数']
+  private dataAddList: string[] = ['弹幕数', '点赞数', '收藏数', '评论数']
 
   // 增量 播放数
   private playAddxAis?: any[] = []
