@@ -128,6 +128,7 @@ export default class Login extends Vue {
             if (res.code === 200) {
               // commit info
               this.SET_LOGIN(res.userInfoMap)
+              this.$ls.set('USER_INFO', JSON.stringify(res.userInfoMap))
               // this.$router.replace({ path: '/rank' })
               window.location.reload()
             } else {

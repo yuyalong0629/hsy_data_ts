@@ -32,7 +32,7 @@ const getters: any = {
 
 const mutations: any = {
   SET_LOGIN(state: any, info: any) {
-    Vue.ls.set('USER_INFO', JSON.stringify(info))
+    // Vue.ls.set('USER_INFO', JSON.stringify(info))
     state.info = info
   },
 
